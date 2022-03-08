@@ -48,6 +48,7 @@ boolean animating;
 PGraphics previewCanvas, uiCanvas;
 PGraphics[] canvasFrames;
 int currentCanvas;
+boolean uiHide;
 
 
 // TODO
@@ -55,7 +56,7 @@ int currentCanvas;
 // [ ] A way to select the type of block, line segment, end
 // [ ] Store Arms in separate ArrayLists within a larger array.
 // [ ] Undo for a specific arm if it sucks?
-// [ ] Might be able to record & play back the animation itself
+// [ ] Record animation as data & play it back procedurally
 // [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
 
 // DONE
@@ -72,6 +73,8 @@ int currentCanvas;
 // [X] Random sprite selection is now in Stamp
 // [X] Added 3 frameCanvases for animation
 // [X] Stamp to frameCanvas instead of directly to screen
+// [X] UI now displays above animated frames
+// [X] Updated UI to display active modes, and to hide itself
 
 void setup()
 {
@@ -86,8 +89,6 @@ void setup()
   armBlocks = new ArrayList<Block>();
 
   canvasSetup();
-
-
 }
 
 void draw()
@@ -97,9 +98,12 @@ void draw()
     currentCanvas = frameCount/3%3;
   }
   image(canvasFrames[currentCanvas], 0, 0);
-  
-  drawUI();
-  image(uiCanvas, 0, 1040);
+
+  if (!uiHide)
+  {
+    drawUI();
+    image(uiCanvas, 0, 1040);
+  }
 
   //if (mousePressed)
   //{
@@ -157,19 +161,24 @@ void keyReleased()
     animating = !animating;
   }
 
-  if (key=='1')
+  if (key=='H' || key == 'h')
   {
-    animating = false;
-    currentCanvas = 1;
+    uiHide = !uiHide;
   }
 
   if (key=='2')
   {
     animating = false;
+    currentCanvas = 1;
+  }
+
+  if (key=='3')
+  {
+    animating = false;
     currentCanvas = 2;
   }
 
-  if (key=='0')
+  if (key=='1')
   {
     animating = false;
     currentCanvas = 0;
@@ -291,9 +300,9 @@ void stamp(PImage[] spriteSheet, float rotation, float offsetX, float offsetY, i
     stampToCanvas(i, index, spriteSheet, rotation, offsetX, offsetY, flipX);
 
     if (recording && (animating || i == currentCanvas))
-      {
-        saveFrame(i);
-      }
+    {
+      saveFrame(i);
+    }
   }
 
   // STAMP DIRECTLY ONTO WINDOW
@@ -443,15 +452,59 @@ void drawDebug()
 void drawUI()
 {
   uiCanvas.beginDraw();
-  uiCanvas.background(255);
-  uiCanvas.fill(64);
-  uiCanvas.textSize(18);
-  uiCanvas.text("[S]ave  [R]ecord   [D]ebug   [C]lear   [A]nimating   [0]   [1]   [2]", 10, 20);
+  uiCanvas.background(200);
+  uiCanvas.rectMode(CORNER);
+  uiCanvas.noStroke();
+
+  uiCanvas.fill (255, 0, 0);
+
   if (recording)
   {
-    uiCanvas.fill (255, 0, 0);
-    uiCanvas.text("RECORDING", 900, 20);
+    uiCanvas.rect(100, 0, 100, 40);
+    uiCanvas.text("RECORDING", 900, 25);
   }
+
+
+  uiCanvas.fill(128);
+
+  if (debugging)
+  {
+    uiCanvas.rect(200, 0, 100, 40);
+  }
+
+  if (animating)
+  {
+    uiCanvas.rect(500, 0, 120, 40);
+  }
+
+  if (currentCanvas == 0)
+  {
+    uiCanvas.rect(640, 0, 40, 40);
+  }
+
+  if (currentCanvas == 1)
+  {
+    uiCanvas.rect(690, 0, 40, 40);
+  }
+
+  if (currentCanvas == 2)
+  {
+    uiCanvas.rect(740, 0, 40, 40);
+  }
+
+
+  uiCanvas.fill(64);
+  uiCanvas.textSize(18);
+  uiCanvas.text("[S]ave", 10, 25);
+  uiCanvas.text("[R]ecord", 110, 25);
+  uiCanvas.text("[D]ebug", 210, 25);
+  uiCanvas.text("[C]lear", 310, 25);
+  uiCanvas.text("[H]ide UI", 410, 25);
+  uiCanvas.text("[A]nimating", 510, 25);
+  uiCanvas.text("[1]", 650, 25);
+  uiCanvas.text("[2]", 700, 25);
+  uiCanvas.text("[3]", 750, 25);
+
   uiCanvas.endDraw();
 }
 
