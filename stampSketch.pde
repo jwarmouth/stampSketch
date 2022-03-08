@@ -87,7 +87,7 @@ void setup()
 
   canvasSetup();
 
-  //drawUI();
+
 }
 
 void draw()
@@ -97,6 +97,9 @@ void draw()
     currentCanvas = frameCount/3%3;
   }
   image(canvasFrames[currentCanvas], 0, 0);
+  
+  drawUI();
+  image(uiCanvas, 0, 1040);
 
   //if (mousePressed)
   //{
@@ -439,9 +442,17 @@ void drawDebug()
 
 void drawUI()
 {
-  fill(64);
-  textSize(14);
-  text("[S]ave  [R]ecord   [D]ebug   [C]lear   [A]nimating   [0]   [1]   [2]", 10, 1070);
+  uiCanvas.beginDraw();
+  uiCanvas.background(255);
+  uiCanvas.fill(64);
+  uiCanvas.textSize(18);
+  uiCanvas.text("[S]ave  [R]ecord   [D]ebug   [C]lear   [A]nimating   [0]   [1]   [2]", 10, 20);
+  if (recording)
+  {
+    uiCanvas.fill (255, 0, 0);
+    uiCanvas.text("RECORDING", 900, 20);
+  }
+  uiCanvas.endDraw();
 }
 
 
@@ -478,12 +489,12 @@ void loadSprites(PImage[] array, String fileName)
 void canvasSetup()
 {
   previewCanvas = createGraphics(1920, 1080);
-  uiCanvas = createGraphics(1920, 1080);
+  uiCanvas = createGraphics(1920, 40);
 
   canvasFrames = new PGraphics[3];
   for (int i=0; i<canvasFrames.length; i++)
   {
-    canvasFrames[i] = createGraphics(1920, 1080);
+    canvasFrames[i] = createGraphics(width, height);
     canvasFrames[i].beginDraw();
     canvasFrames[i].background(255);
     canvasFrames[i].endDraw();
