@@ -22,6 +22,7 @@ SpriteSet[] handSpriteSets;
 String saveFolder = "saved/";
 String clipFolder;
 String fileName = "stamp";
+String tempName;
 String saveFormat = ".png";
 int frameIndex;
 
@@ -34,6 +35,7 @@ boolean animating;
 PGraphics previewCanvas, uiCanvas;
 PGraphics[] canvasFrames;
 int currentCanvas;
+int saveCanvasNum;
 boolean uiHide;
 
 
@@ -44,6 +46,7 @@ boolean uiHide;
 // [ ] Undo for a specific arm if it sucks?
 // [ ] Record animation as data & play it back procedurally
 // [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+// [ ] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
 
 // DONE
 // [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
@@ -160,7 +163,8 @@ void startRecording()
 {
   background(255);
   recording = true;
-  String dateTime = nf(year(), 4) + nf(month(), 2) + nf(day(), 2) + nf(hour(), 2) + "-" + nf(minute(), 2) + nf(second(), 2);
+  tempName = nf(hour(), 2) + nf(minute(), 2) + nf(second(), 2);
+  String dateTime = nf(year(), 4) + nf(month(), 2) + nf(day(), 2) + "_" + tempName;
   clipFolder = fileName + "-" + dateTime + "/";
   frameIndex = 0;
 }
@@ -179,8 +183,11 @@ void saveImage()
 
 void saveFrame(int whichCanvas)
 {
-  canvasFrames[whichCanvas].save(saveFolder + clipFolder + fileName + "-" + nf(frameIndex, 4) + saveFormat);
+  canvasFrames[whichCanvas].save(saveFolder + clipFolder + fileName + "_" + tempName + "_" + nf(frameIndex, 4) + saveFormat);
   frameIndex++;
+  saveCanvasNum = frameIndex%3;
+  print ("Saved frame" + nf(frameIndex, 4) + "\n");
+  print ("saveCanvasNum: " + saveCanvasNum + "\n");
 }
 
 /********************************************************
@@ -193,7 +200,7 @@ void stampCenterBlock()
   if (isOverlappingBlocks(armBlocks, 2)) return;
 
   float angle = randomRotation();
-  stamp (blockSpriteSet, angle, 0, 0, randomSignum());
+  stamp (blockSpriteSet, angle, 0, 0, randomSignum(), 3);
   centerBlocks.add(new Block(lastPoint.x, lastPoint.y, blockSpriteSet.width, blockSpriteSet.height, angle));
 }
 
@@ -210,7 +217,7 @@ void stampArmSegment()
   if (!findTargetPoint()) return;
 
   lastAngle = angleToMouse();
-  stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1);
+  stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1, 1);
   //stamp(sprite, angleToTarget(), 0, -sprite.height/2, 1);
 
   // Add new block to blackBlocks ArrayList
@@ -229,7 +236,7 @@ void stampEnd()
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end (hand) with rotation to mouse
   SpriteSet handSpriteSet = handSpriteSets[(int)random(handSpriteSets.length)];
-  stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.4, 1);
+  stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.4, 1, 3);
 
   if (debugging)
   {
@@ -239,9 +246,10 @@ void stampEnd()
   }
 }
 
-void stamp(SpriteSet spriteSet, float rotation, float offsetX, float offsetY, int flipX)
+void stamp(SpriteSet spriteSet, float rotation, float offsetX, float offsetY, int flipX, int maxToSave)
 {
   int index = (int)random(spriteSet.length);
+  int howManySaved = 0;
 
   for (int i=0; i<3; i++)
   {
@@ -257,9 +265,19 @@ void stamp(SpriteSet spriteSet, float rotation, float offsetX, float offsetY, in
     canvasFrames[i].popMatrix();
     canvasFrames[i].endDraw();
 
-    if (recording && (animating || i == currentCanvas))
+    //if (recording && (animating || i == currentCanvas))
+    //{
+    //  saveFrame(i);
+    //}
+
+    // Save 3 frames for MIDDLE & END but only 1 frame for ARM SEGMENT
+    if (recording && howManySaved < maxToSave)
     {
-      saveFrame(i);
+      if (maxToSave == 3 || i == saveCanvasNum)
+      {
+        saveFrame(i);
+        howManySaved ++;
+      }
     }
   }
 
