@@ -9,28 +9,14 @@ float lastAngle;
 float targetAngle;
 
 // Arm Segment Sprites
-PImage[] handSprites;
-int handSpritesLength = 5;
-String handSpriteName = "hand-right";
+PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 
-// Arm Segment Sprites
-PImage[] handLeftSprites;
-int handLeftSpritesLength = 5;
-String handLeftSpriteName = "hand-left";
-
-// Block Sprites
-PImage[] blockSprites;
-int blockSpritesLength = 3;
-String blockSpriteName = "red-block";
-
-// Arm Segment Sprites
-PImage[] armSprites;
-int armSpritesLength = 5;
-String armSpriteName = "block";
 float armSegmentDistance;
 boolean isArmStarted;
 //int armSpriteIndex;
 //float armBlockDistance;
+SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet;
+SpriteSet[] handSpriteSets;
 
 // Save Info
 String saveFolder = "saved/";
@@ -75,20 +61,32 @@ boolean uiHide;
 // [X] Stamp to frameCanvas instead of directly to screen
 // [X] UI now displays above animated frames
 // [X] Updated UI to display active modes, and to hide itself
+// [X] Create & implement SpriteSet class
 
 void setup()
 {
   size (1920, 1080);
   background(255);
 
-  loadImages();
-  armSegmentDistance = armSprites[0].height * 0.8;
+  canvasSetup();
+  loadSpriteSets();
+  armSegmentDistance = armSpriteSet.height * 0.8;
 
   // Reset array lists
   centerBlocks = new ArrayList<Block>();
   armBlocks = new ArrayList<Block>();
+}
 
-  canvasSetup();
+void loadSpriteSets()
+{
+  armSpriteSet = new SpriteSet("block", 5);
+  handRightSpriteSet = new SpriteSet("hand-right", 5);
+  handLeftSpriteSet = new SpriteSet("hand-left", 5);
+  blockSpriteSet = new SpriteSet("red-block", 3);
+  bigBlockSpriteSet = new SpriteSet("big-block", 1);
+  handSpriteSets = new SpriteSet[2];
+  handSpriteSets[0] = handRightSpriteSet;
+  handSpriteSets[1] = handLeftSpriteSet;
 }
 
 void draw()
@@ -104,10 +102,6 @@ void draw()
     drawUI();
     image(uiCanvas, 0, 1040);
   }
-
-  //if (mousePressed)
-  //{
-  //}
 }
 
 void mousePressed()
@@ -146,45 +140,17 @@ void keyReleased()
     setup();
   }
 
-  if (key=='S' || key == 's')
-  {
-    saveImage();
-  }
-
-  if (key=='D' || key == 'd')
-  {
-    debugging = !debugging;
-  }
-
-  if (key=='A' || key == 'a')
-  {
-    animating = !animating;
-  }
-
-  if (key=='H' || key == 'h')
-  {
-    uiHide = !uiHide;
-  }
-
-  if (key=='2')
+  if (key=='1' || key=='2' || key=='3')
   {
     animating = false;
-    currentCanvas = 1;
+    currentCanvas = ((int)key) - 1;
   }
 
-  if (key=='3')
-  {
-    animating = false;
-    currentCanvas = 2;
-  }
-
-  if (key=='1')
-  {
-    animating = false;
-    currentCanvas = 0;
-  }
+  if (key=='S' || key == 's') saveImage();
+  if (key=='D' || key == 'd') debugging = !debugging;
+  if (key=='A' || key == 'a') animating = !animating;
+  if (key=='H' || key == 'h') uiHide = !uiHide;
 }
-
 
 
 /********************************************************
@@ -227,9 +193,8 @@ void stampCenterBlock()
   if (isOverlappingBlocks(armBlocks, 2)) return;
 
   float angle = randomRotation();
-  PImage sprite = blockSprites[0];
-  stamp (blockSprites, angle, 0, 0, randomSignum());
-  centerBlocks.add(new Block(lastPoint.x, lastPoint.y, sprite.width, sprite.height, angle));
+  stamp (blockSpriteSet, angle, 0, 0, randomSignum());
+  centerBlocks.add(new Block(lastPoint.x, lastPoint.y, blockSpriteSet.width, blockSpriteSet.height, angle));
 }
 
 void stampArmSegment()
@@ -245,8 +210,7 @@ void stampArmSegment()
   if (!findTargetPoint()) return;
 
   lastAngle = angleToMouse();
-  PImage sprite = armSprites[0];
-  stamp(armSprites, lastAngle, 0, sprite.height/2, 1);
+  stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1);
   //stamp(sprite, angleToTarget(), 0, -sprite.height/2, 1);
 
   // Add new block to blackBlocks ArrayList
@@ -264,8 +228,8 @@ void stampEnd()
 
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end (hand) with rotation to mouse
-  PImage sprite = handSprites[0];
-  stamp (handSprites, lastAngle, 0, -sprite.height/2.4, 1);
+  SpriteSet handSpriteSet = handSpriteSets[(int)random(handSpriteSets.length)];
+  stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.4, 1);
 
   if (debugging)
   {
@@ -275,29 +239,23 @@ void stampEnd()
   }
 }
 
-
-void stamp(PImage[] spriteSheet, float rotation, float offsetX, float offsetY, int flipX)
+void stamp(SpriteSet spriteSet, float rotation, float offsetX, float offsetY, int flipX)
 {
-  //int max = ;
-  int index = (int)random(spriteSheet.length);
-  //PImage stampedImage = spriteSheet[index];
-
-  // STAMP ONTO CANVAS
-  //previewCanvas.beginDraw();
-  ////background(255);
-  //previewCanvas.blendMode(MULTIPLY); // change blend mode
-  //previewCanvas.imageMode(CENTER); // use image center instead of top left
-  //previewCanvas.pushMatrix(); // remember current drawing matrix
-  //previewCanvas.translate(lastPoint.x, lastPoint.y);
-  //previewCanvas.scale(flipX, 1);
-  //previewCanvas.rotate(rotation);
-  //previewCanvas.image(stampedImage, offsetX * flipX, offsetY);
-  //previewCanvas.popMatrix();
-  //previewCanvas.endDraw();
+  int index = (int)random(spriteSet.length);
 
   for (int i=0; i<3; i++)
   {
-    stampToCanvas(i, index, spriteSheet, rotation, offsetX, offsetY, flipX);
+    canvasFrames[i].beginDraw();
+    canvasFrames[i].blendMode(MULTIPLY); // change blend mode
+    canvasFrames[i].imageMode(CENTER); // use image center instead of top left
+    canvasFrames[i].pushMatrix(); // remember current drawing matrix
+    canvasFrames[i].translate(lastPoint.x, lastPoint.y);
+    canvasFrames[i].scale(flipX, 1);
+    canvasFrames[i].rotate(rotation);
+    canvasFrames[i].image(spriteSet.sprites[(index+i)%spriteSet.length], offsetX * flipX, offsetY);
+    //canvas1.image(previewCanvas, 0, 0);
+    canvasFrames[i].popMatrix();
+    canvasFrames[i].endDraw();
 
     if (recording && (animating || i == currentCanvas))
     {
@@ -305,44 +263,12 @@ void stamp(PImage[] spriteSheet, float rotation, float offsetX, float offsetY, i
     }
   }
 
-  // STAMP DIRECTLY ONTO WINDOW
-  //blendMode(MULTIPLY); // change blend mode
-  //imageMode(CENTER); // use image center instead of top left
-  //pushMatrix(); // remember current drawing matrix
-  //translate(lastPoint.x, lastPoint.y);
-  //scale(flipX, 1);
-  //rotate(rotation);
-  //image(stampedImage, offsetX * flipX, offsetY);
-  //popMatrix();
-
-  //if (recording)
-  //{
-  //  saveFrame();
-  //}
-
-  if (debugging)
-  {
-    drawDebug();
-  }
+  if (debugging) drawDebug();
 
   // https://discourse.processing.org/t/how-do-you-rotate-an-image-without-the-image-being-moved/6579/4
   // https://discourse.processing.org/t/solved-question-about-flipping-images/7391/2
 }
 
-void stampToCanvas(int whichCanvas, int index, PImage[] spriteSheet, float rotation, float offsetX, float offsetY, int flipX)
-{
-  canvasFrames[whichCanvas].beginDraw();
-  canvasFrames[whichCanvas].blendMode(MULTIPLY); // change blend mode
-  canvasFrames[whichCanvas].imageMode(CENTER); // use image center instead of top left
-  canvasFrames[whichCanvas].pushMatrix(); // remember current drawing matrix
-  canvasFrames[whichCanvas].translate(lastPoint.x, lastPoint.y);
-  canvasFrames[whichCanvas].scale(flipX, 1);
-  canvasFrames[whichCanvas].rotate(rotation);
-  canvasFrames[whichCanvas].image(spriteSheet[(index+whichCanvas)%spriteSheet.length], offsetX * flipX, offsetY);
-  //canvas1.image(previewCanvas, 0, 0);
-  canvasFrames[whichCanvas].popMatrix();
-  canvasFrames[whichCanvas].endDraw();
-}
 
 /********************************************************
  ***  UTILITY  *****************************************
@@ -375,8 +301,6 @@ boolean findTargetPoint()
   return false;
   // targetXY is stampLength distance along that vector
 }
-
-
 
 float angleToMouse()
 {
@@ -455,7 +379,6 @@ void drawUI()
   uiCanvas.background(200);
   uiCanvas.rectMode(CORNER);
   uiCanvas.noStroke();
-
   uiCanvas.fill (255, 0, 0);
 
   if (recording)
@@ -464,34 +387,12 @@ void drawUI()
     uiCanvas.text("RECORDING", 900, 25);
   }
 
-
-  uiCanvas.fill(128);
-
-  if (debugging)
-  {
-    uiCanvas.rect(200, 0, 100, 40);
-  }
-
-  if (animating)
-  {
-    uiCanvas.rect(500, 0, 120, 40);
-  }
-
-  if (currentCanvas == 0)
-  {
-    uiCanvas.rect(640, 0, 40, 40);
-  }
-
-  if (currentCanvas == 1)
-  {
-    uiCanvas.rect(690, 0, 40, 40);
-  }
-
-  if (currentCanvas == 2)
-  {
-    uiCanvas.rect(740, 0, 40, 40);
-  }
-
+  //uiCanvas.fill(128);
+  if (debugging) uiCanvas.rect(200, 0, 100, 40);
+  if (animating) uiCanvas.rect(500, 0, 120, 40);
+  if (currentCanvas == 0) uiCanvas.rect(640, 0, 40, 40);
+  if (currentCanvas == 1) uiCanvas.rect(690, 0, 40, 40);
+  if (currentCanvas == 2) uiCanvas.rect(740, 0, 40, 40);
 
   uiCanvas.fill(64);
   uiCanvas.textSize(18);
@@ -512,33 +413,6 @@ void drawUI()
 /********************************************************
  ***  LOAD IMAGES  ***************************************
  *********************************************************/
-void loadImages()
-{
-  armSprites = new PImage[armSpritesLength];
-  loadSprites(armSprites, armSpriteName);
-
-  handSprites = new PImage[handSpritesLength];
-  loadSprites(handSprites, handSpriteName);
-
-  handLeftSprites = new PImage[handLeftSpritesLength];
-  loadSprites(handLeftSprites, handLeftSpriteName);
-
-  blockSprites = new PImage[blockSpritesLength];
-  loadSprites(blockSprites, blockSpriteName);
-}
-
-void loadSprites(PImage[] array, String fileName)
-{
-  //array = new PImage[length];
-  for (int i = 0; i < array.length; i++)
-  {
-    array[i] = loadImage("images/" + fileName + "-" + (i) + ".png");
-    float targetWidth = array[i].width/scaleFactor;
-    float targetHeight = array[i].height/scaleFactor;
-    array[i].resize ((int)targetWidth, (int)targetHeight);
-  }
-}
-
 void canvasSetup()
 {
   previewCanvas = createGraphics(1920, 1080);
@@ -552,12 +426,6 @@ void canvasSetup()
     canvasFrames[i].background(255);
     canvasFrames[i].endDraw();
   }
-  //canvas1 = createGraphics(1920, 1080);
-  //canvas1 = createGraphics(1920, 1080);
-  //canvas1 = createGraphics(1920, 1080);
-  //canvas1.beginDraw();
-  //canvas1.background(255);
-  //canvas1.endDraw();
 }
 
 /********************************************************
@@ -576,5 +444,29 @@ class Block
     angle = inputAngle;
     frame = frameCount;
     //print ("Block " + redBlocks.size() + ": (" + x + ", " + y + ") \n");
+  }
+}
+
+class SpriteSet
+{
+  PImage[] sprites;
+  float width, height;
+  int length;
+  String fileName;
+  SpriteSet(String inputFilename, int inputLength)
+  {
+    length = inputLength;
+    fileName = inputFilename;
+    sprites = new PImage[length];
+    //loadSprites(armSprites, armSpriteName);
+    for (int i = 0; i < length; i++)
+    {
+      sprites[i] = loadImage("images/" + fileName + "-" + (i) + ".png");
+      float targetWidth = sprites[i].width/scaleFactor;
+      float targetHeight = sprites[i].height/scaleFactor;
+      sprites[i].resize ((int)targetWidth, (int)targetHeight);
+    }
+    width = sprites[0].width;
+    height = sprites[0].height;
   }
 }
