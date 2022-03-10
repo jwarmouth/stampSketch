@@ -49,6 +49,7 @@ TODO
 [ ] Undo for a specific arm if it sucks?
 [ ] Record animation as data & play it back procedurally
 [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
 
 DONE
 [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
@@ -273,7 +274,7 @@ void stampEnd()
   // stamp end (hand) with rotation to mouse
   lastAngle = angleToMouse();
   centerPoint = targetPoint;
-  stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.4, 1);
+  stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.5, 1);
   saveFrames(12);
 
   if (debugging)
@@ -394,6 +395,7 @@ int randomSignum() {
 
 boolean isOverlappingBlocks(ArrayList<Block> blocks, float safeZone)
 {
+  // safeZone is a multiplier to the block's width & height
   //print ("Checking for overlapping blocks... \n");
   //print ("Mouse: (" + mouseX + ", " + mouseY + ") \n");
   //https://processing.org/reference/ArrayList.html
