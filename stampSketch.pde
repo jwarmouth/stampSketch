@@ -3,7 +3,7 @@
 float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY;
 ArrayList<Block> centerBlocks;
 ArrayList<Block> armBlocks;
-PVector lastPoint, targetPoint;
+PVector lastPoint, targetPoint, centerPoint;
 float scaleFactor = 2.5;
 float lastAngle;
 float targetAngle;
@@ -32,41 +32,46 @@ boolean debugging;
 boolean animating;
 
 // Canvases
-PGraphics previewCanvas, uiCanvas;
+PGraphics previewCanvas, uiCanvas, debugCanvas;
 PGraphics[] canvasFrames;
 int currentCanvas;
 int saveCanvasNum;
 boolean uiHide;
 
 
-// TODO
-// [X] Prepare other options for blocks, arms, etc.
-// [ ] A way to select the type of block, line segment, end
-// [ ] Store Arms in separate ArrayLists within a larger array.
-// [ ] Undo for a specific arm if it sucks?
-// [ ] Record animation as data & play it back procedurally
-// [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+/*************************************************
+TODO
 
-// DONE
-// [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
-// [X] Store rotations in block data
-// [X] Store the time in frames in block data
-// [X] Random Selection of hands & blocks
-// [X] Random flip of hands (right/left)
-// [X] Draw circle at each mouse point for Debug
-// [X] Draw connecting lines for debug
-// [X] More careful rotation/placement of segments? Rotate from back end?
-// [X] Determine rotation in its own method before the stamp method
-// [X] Very slight random rotation for middle blocks
-// [X] Random sprite selection is now in Stamp
-// [X] Added 3 frameCanvases for animation
-// [X] Stamp to frameCanvas instead of directly to screen
-// [X] UI now displays above animated frames
-// [X] Updated UI to display active modes, and to hide itself
-// [X] Create & implement SpriteSet class
-// [X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
-// [X] Animation - more efficient way to stamp multiple frames
-// [X] Fix animation timing - 12 frames at beginning, end, and hand stamp
+[X] Prepare other options for blocks, arms, etc.
+[ ] A way to select the type of block, line segment, end
+[X] For arms, calculate a centerPoint for storage in array
+[ ] Store Arms in separate ArrayLists within a larger array.
+[ ] Undo for a specific arm if it sucks?
+[ ] Record animation as data & play it back procedurally
+[ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+
+DONE
+[X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
+[X] Store rotations in block data
+[X] Store the time in frames in block data
+[X] Random Selection of hands & blocks
+[X] Random flip of hands (right/left)
+[X] Draw circle at each mouse point for Debug
+[X] Draw connecting lines for debug
+[X] More careful rotation/placement of segments? Rotate from back end?
+[X] Determine rotation in its own method before the stamp method
+[X] Very slight random rotation for middle blocks
+[X] Random sprite selection is now in Stamp
+[X] Added 3 frameCanvases for animation
+[X] Stamp to frameCanvas instead of directly to screen
+[X] UI now displays above animated frames
+[X] Updated UI to display active modes, and to hide itself
+[X] Create & implement SpriteSet class
+[X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
+[X] Animation - more efficient way to stamp multiple frames
+[X] Fix animation timing - 12 frames at beginning, end, and hand stamp
+
+*************************************************/
 
 void setup()
 {
@@ -106,6 +111,11 @@ void draw()
   {
     drawUI();
     image(uiCanvas, 0, 1040);
+  }
+  
+  if (debugging)
+  {
+    image(debugCanvas, 0, 0);
   }
 }
 
@@ -187,6 +197,8 @@ void saveImage()
 
 void saveFrames(int howManyFrames)
 {
+  if (!recording) return;
+  
   for (int i=0; i < howManyFrames; i++)
   {
     canvasFrames[frameIndex%3].save(saveFolder + clipFolder + fileName + "_" + tempName + "_" + nf(frameIndex, 4) + saveFormat);
@@ -209,7 +221,7 @@ void stampCenterBlock()
   float angle = randomRotation();
   stamp (blockSpriteSet, angle, 0, 0, randomSignum());
   saveFrames(12);
-  centerBlocks.add(new Block(lastPoint.x, lastPoint.y, blockSpriteSet.width, blockSpriteSet.height, angle));
+  centerBlocks.add(new Block(centerPoint.x, centerPoint.y, blockSpriteSet.width, blockSpriteSet.height, angle));
 
   //if (recording)
   //{
@@ -232,7 +244,8 @@ void stampArmSegment()
   if (!findTargetPoint()) return;
 
   lastAngle = angleToMouse();
-  stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1);
+  //stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1);
+  stamp(armSpriteSet, lastAngle, 0, 0, 1);
   saveFrames(1);
   //stamp(sprite, angleToTarget(), 0, -sprite.height/2, 1);
 
@@ -248,7 +261,7 @@ void stampEnd()
   
   isArmStarted = false;
   if (isOverlappingBlocks(centerBlocks, 1)) return;
-  //if (isOverlappingBlocks(armBlocks, 0.1)) return;
+  if (isOverlappingBlocks(armBlocks, 1)) return;
   
   
   saveFrames(1);
@@ -259,6 +272,7 @@ void stampEnd()
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end (hand) with rotation to mouse
   lastAngle = angleToMouse();
+  centerPoint = targetPoint;
   stamp (handSpriteSet, lastAngle, 0, -handSpriteSet.height/2.4, 1);
   saveFrames(12);
 
@@ -281,7 +295,8 @@ void stamp(SpriteSet spriteSet, float rotation, float offsetX, float offsetY, in
     canvasFrames[i].blendMode(MULTIPLY); // change blend mode
     canvasFrames[i].imageMode(CENTER); // use image center instead of top left
     canvasFrames[i].pushMatrix(); // remember current drawing matrix
-    canvasFrames[i].translate(lastPoint.x, lastPoint.y);
+    //canvasFrames[i].translate(lastPoint.x, lastPoint.y);
+    canvasFrames[i].translate(centerPoint.x, centerPoint.y);
     canvasFrames[i].scale(flipX, 1);
     canvasFrames[i].rotate(rotation);
     canvasFrames[i].image(spriteSet.sprites[(index+i)%spriteSet.length], offsetX * flipX, offsetY);
@@ -321,6 +336,7 @@ void resetVectorPoints()
   // Reset Vector Points
   lastPoint = new PVector(mouseX, mouseY);
   targetPoint = new PVector (mouseX, mouseY);
+  centerPoint = new PVector (mouseX, mouseY);
 }
 
 // Find TargetPoint if mouse is far enough from LastPoint
@@ -333,11 +349,18 @@ boolean findTargetPoint()
   PVector toTarget = new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
   if (toTarget.magSq() > sq(armSegmentDistance))
   {
-    toTarget.setMag(armSegmentDistance);
-    targetPoint = lastPoint.add(toTarget);
+    toTarget.limit(armSegmentDistance/2);
+    centerPoint = PVector.add(lastPoint, toTarget);
+    targetPoint = PVector.add(centerPoint, toTarget);
+
+    //toTarget.setMag(armSegmentDistance);
+    //targetPoint = lastPoint.add(toTarget);
+    //toTarget.limit(armSegmentDistance/2);
+    //centerPoint = lastPoint.add(toTarget);
+    
     //targetAngle = (targetPoint.sub(lastPoint)).heading();
     //targetAngle = PVector.angleBetween(lastPoint, targetPoint);
-    targetAngle = atan2(mouseY - lastPoint.y, mouseX - lastPoint.x) + radians(90);
+    targetAngle = angleToMouse();
     return true;
   }
   return false;
@@ -404,16 +427,7 @@ boolean isOverlappingBlocks(ArrayList<Block> blocks, float safeZone)
  ***  DEBUG & UI  ***************************************
  *********************************************************/
 
-void drawDebug()
-{
-  fill(0, 0, 255);
-  //circle(mouseX, mouseY, 10);
-  circle(lastPoint.x, lastPoint.y, 10);
 
-  fill(255, 0, 0);
-  //circle(targetPoint.x, targetPoint.y, 5);
-  line(lastPoint.x, lastPoint.y, targetPoint.x, targetPoint.y);
-}
 
 void drawUI()
 {
@@ -451,6 +465,28 @@ void drawUI()
   uiCanvas.endDraw();
 }
 
+void drawDebug()
+{
+  debugCanvas.beginDraw();
+  debugCanvas.fill(255, 255, 0);
+  debugCanvas.line(lastPoint.x, lastPoint.y, targetPoint.x, targetPoint.y);
+  
+  //circle(mouseX, mouseY, 10);
+
+  debugCanvas.fill(255, 0, 0); // Red
+  debugCanvas.circle(lastPoint.x, lastPoint.y, 10);
+  //circle(targetPoint.x, targetPoint.y, 5);
+  
+  debugCanvas.fill(0, 255, 0); // Green
+  debugCanvas.circle(centerPoint.x, centerPoint.y, 10);
+  
+  debugCanvas.fill(0, 0, 255); // Blue
+  debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
+  
+  
+  debugCanvas.endDraw();
+}
+
 
 /********************************************************
  ***  LOAD IMAGES  ***************************************
@@ -458,6 +494,7 @@ void drawUI()
 void canvasSetup()
 {
   previewCanvas = createGraphics(1920, 1080);
+  debugCanvas = createGraphics(1920, 1080);
   uiCanvas = createGraphics(1920, 40);
 
   canvasFrames = new PGraphics[3];
