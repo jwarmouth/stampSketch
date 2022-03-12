@@ -15,7 +15,7 @@ float armSegmentDistance;
 boolean isArmStarted;
 //int armSpriteIndex;
 //float armBlockDistance;
-SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet, eyeSpriteSet;
+SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet, eyeSpriteSet, beginSpriteSet, segmentSpriteSet, endSpriteSet;
 SpriteSet[] handSpriteSets;
 
 // Save Info
@@ -40,42 +40,45 @@ boolean uiHide;
 
 
 /*************************************************
-TODO
-
-[X] Prepare other options for blocks, arms, etc.
-[ ] A way to select the type of block, line segment, end
-[ ] Store Arms in separate ArrayLists within a larger array.
-[ ] Undo for a specific arm if it sucks?
-[ ] Record animation as data & play it back procedurally
-[ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
-    https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
-    Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
-    b = block;
-    if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
-
-DONE
-[X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
-[X] Store rotations in block data
-[X] Store the time in frames in block data
-[X] Random Selection of hands & blocks
-[X] Random flip of hands (right/left)
-[X] Draw circle at each mouse point for Debug
-[X] Draw connecting lines for debug
-[X] More careful rotation/placement of segments? Rotate from back end?
-[X] Determine rotation in its own method before the stamp method
-[X] Very slight random rotation for middle blocks
-[X] Random sprite selection is now in Stamp
-[X] Added 3 frameCanvases for animation
-[X] Stamp to frameCanvas instead of directly to screen
-[X] UI now displays above animated frames
-[X] Updated UI to display active modes, and to hide itself
-[X] Create & implement SpriteSet class
-[X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
-[X] Animation - more efficient way to stamp multiple frames
-[X] Fix animation timing - 12 frames at beginning, end, and hand stamp
-[X] For arms, calculate a centerPoint for storage in array
-
-*************************************************/
+ TODO
+ 
+ [X] Prepare other options for blocks, arms, etc.
+ [ ] A way to select the type of block, line segment, end
+ [ ] Store Arms in separate ArrayLists within a larger array.
+ [ ] Undo for a specific arm if it sucks?
+ [ ] Record animation as data & play it back procedurally
+ [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+ https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
+ Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
+ b = block;
+ if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
+ 
+ DONE
+ [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
+ [X] Store rotations in block data
+ [X] Store the time in frames in block data
+ [X] Random Selection of hands & blocks
+ [X] Random flip of hands (right/left)
+ [X] Draw circle at each mouse point for Debug
+ [X] Draw connecting lines for debug
+ [X] More careful rotation/placement of segments? Rotate from back end?
+ [X] Determine rotation in its own method before the stamp method
+ [X] Very slight random rotation for middle blocks
+ [X] Random sprite selection is now in Stamp
+ [X] Added 3 frameCanvases for animation
+ [X] Stamp to frameCanvas instead of directly to screen
+ [X] UI now displays above animated frames
+ [X] Updated UI to display active modes, and to hide itself
+ [X] Create & implement SpriteSet class
+ [X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
+ [X] Animation - more efficient way to stamp multiple frames
+ [X] Fix animation timing - 12 frames at beginning, end, and hand stamp
+ [X] For arms, calculate a centerPoint for storage in array
+ [X] Added eyes as possible end -- and calculated angle & placement
+ [X] Added "name" attribute to spriteSet to help determine placement
+ [X] Optimized SpriteSet.loadSprites for later use
+ 
+ *************************************************/
 
 void setup()
 {
@@ -97,9 +100,8 @@ void loadSpriteSets()
   blockSpriteSet = new SpriteSet("red-block", 3);
   bigBlockSpriteSet = new SpriteSet("big-block", 1);
   eyeSpriteSet = new SpriteSet("eye", 8);
-  eyeSpriteSet.name = "eye";
   //eyeSpriteSet.offsetY = eyeSpriteSet.height/2;
-  
+
   // Hands
   handRightSpriteSet = new SpriteSet("hand-r", 5);
   handRightSpriteSet.offsetX = handRightSpriteSet.width/2;
@@ -110,6 +112,16 @@ void loadSpriteSets()
   handSpriteSets = new SpriteSet[2];
   handSpriteSets[0] = handRightSpriteSet;
   handSpriteSets[1] = handLeftSpriteSet;
+
+  // ACTIVE SPRITES
+  beginSpriteSet = blockSpriteSet;
+  beginSpriteSet.loadSprites();
+
+  segmentSpriteSet = armSpriteSet;
+  segmentSpriteSet.loadSprites();
+
+  endSpriteSet = eyeSpriteSet;
+  endSpriteSet.loadSprites();
 }
 
 void draw()
@@ -125,7 +137,7 @@ void draw()
     drawUI();
     image(uiCanvas, 0, 1040);
   }
-  
+
   if (debugging)
   {
     image(debugCanvas, 0, 0);
@@ -200,7 +212,6 @@ void stopRecording()
   saveFrames(36);
   recording = false;
   drawUI();
-  
 }
 
 void saveImage()
@@ -212,7 +223,7 @@ void saveImage()
 void saveFrames(int howManyFrames)
 {
   if (!recording) return;
-  
+
   for (int i=0; i < howManyFrames; i++)
   {
     canvasFrames[frameIndex%3].save(saveFolder + clipFolder + fileName + "_" + tempName + "_" + nf(frameIndex, 4) + saveFormat);
@@ -233,9 +244,9 @@ void stampCenterBlock()
   if (isOverlappingBlocks(armBlocks, 2)) return;
 
   float angle = randomRotation();
-  stamp (blockSpriteSet, angle, randomSignum());
+  stamp (beginSpriteSet, angle, randomSignum());
   saveFrames(12);
-  centerBlocks.add(new Block(centerPoint.x, centerPoint.y, blockSpriteSet.width, blockSpriteSet.height, angle));
+  centerBlocks.add(new Block(centerPoint.x, centerPoint.y, beginSpriteSet.width, beginSpriteSet.height, angle));
 
   //if (recording)
   //{
@@ -259,7 +270,7 @@ void stampArmSegment()
 
   lastAngle = angleToMouse();
   //stamp(armSpriteSet, lastAngle, 0, armSpriteSet.height/2, 1);
-  stamp(armSpriteSet, lastAngle, 1);
+  stamp(segmentSpriteSet, lastAngle, 1);
   saveFrames(1);
   //stamp(sprite, angleToTarget(), 0, -sprite.height/2, 1);
 
@@ -272,42 +283,41 @@ void stampArmSegment()
 
 void stampEnd()
 {
-  
+
   isArmStarted = false;
   if (isOverlappingBlocks(centerBlocks, 1)) return;
   if (isOverlappingBlocks(armBlocks, 1)) return;
-  
-  
+
+
   saveFrames(1);
-  
+
   // Left Hand or Right Hand?
   //SpriteSet spriteSet = handSpriteSets[(int)random(handSpriteSets.length)];
-  SpriteSet spriteSet = eyeSpriteSet;
+  //SpriteSet spriteSet = endSpriteSet;
 
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end with rotation to mouse
   float stampAngle = angleToMouse();
   float centerAngle = lastAngle;
-  
-  switch(spriteSet.name)
+
+  switch(endSpriteSet.name)
   {
-    case "eye":
-      centerPoint = lastPoint.add(PVector.mult(PVector.fromAngle(centerAngle), spriteSet.width/2)); // push centerPoint forward if using Eyeball
-      break;
-    
-    case "hand":
-      centerPoint = lastPoint.add(PVector.fromAngle(centerAngle, targetPoint));
+  case "eye":
+    centerPoint = lastPoint.add(PVector.mult(PVector.fromAngle(centerAngle), endSpriteSet.width/2)); // push centerPoint forward if using Eyeball
     break;
-    
+
+  case "hand":
+    centerPoint = lastPoint.add(PVector.fromAngle(centerAngle, targetPoint));
+    break;
   }
-  
+
   // IF EYEBALL
   //
-  
-  // IF HAND
-  
 
-  stamp (spriteSet, stampAngle, 1);
+  // IF HAND
+
+
+  stamp (endSpriteSet, stampAngle, 1);
   saveFrames(12);
 
   if (debugging)
@@ -330,7 +340,7 @@ void stamp(SpriteSet spriteSet, float rotation, int flipX)
     canvasFrames[i].imageMode(CENTER); // use image center instead of top left
     canvasFrames[i].pushMatrix(); // remember current drawing matrix
     //canvasFrames[i].translate(lastPoint.x, lastPoint.y);
-    
+
     canvasFrames[i].translate(centerPoint.x, centerPoint.y);
     canvasFrames[i].scale(flipX, 1);
     canvasFrames[i].rotate(rotation);
@@ -392,7 +402,7 @@ boolean findTargetPoint()
     //targetPoint = lastPoint.add(toTarget);
     //toTarget.limit(armSegmentDistance/2);
     //centerPoint = lastPoint.add(toTarget);
-    
+
     //targetAngle = (targetPoint.sub(lastPoint)).heading();
     //targetAngle = PVector.angleBetween(lastPoint, targetPoint);
     targetAngle = angleToTarget();
@@ -508,20 +518,20 @@ void drawDebug()
   debugCanvas.beginDraw();
   debugCanvas.fill(255, 255, 0);
   debugCanvas.line(lastPoint.x, lastPoint.y, targetPoint.x, targetPoint.y);
-  
+
   //circle(mouseX, mouseY, 10);
 
   debugCanvas.fill(255, 0, 0); // Red
   debugCanvas.circle(lastPoint.x, lastPoint.y, 10);
   //circle(targetPoint.x, targetPoint.y, 5);
-  
+
   debugCanvas.fill(0, 255, 0); // Green
   debugCanvas.circle(centerPoint.x, centerPoint.y, 10);
-  
+
   debugCanvas.fill(0, 0, 255); // Blue
   debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
-  
-  
+
+
   debugCanvas.endDraw();
 }
 
@@ -567,26 +577,42 @@ class Block
 class SpriteSet
 {
   PImage[] sprites;
-  float width, height, offsetX, offsetY;
-  int length;
-  String fileName, name;
-  SpriteSet(String inputFilename, int inputLength)
+  float offsetX, offsetY;
+  int length, width, height;
+  String name, fileName;
+  SpriteSet(String inputName, int inputLength)
   {
     length = inputLength;
-    fileName = inputFilename;
+    fileName = inputName;
     name = fileName;
     sprites = new PImage[length];
-    //loadSprites(armSprites, armSpriteName);
-    for (int i = 0; i < length; i++)
-    {
-      sprites[i] = loadImage("images/" + fileName + "-" + (i) + ".png");
-      float targetWidth = sprites[i].width/scaleFactor;
-      float targetHeight = sprites[i].height/scaleFactor;
-      sprites[i].resize ((int)targetWidth, (int)targetHeight);
-    }
-    width = sprites[0].width;
-    height = sprites[0].height;
+    loadSprite(0);
+    //loadSprites();
+    //width = sprites[0].width;
+    //height = sprites[0].height;
     offsetX = 0;
     offsetY = 0;
+  }
+
+  void loadSprites()
+  {
+    for (int i = 0; i < length; i++)
+    {
+      if (sprites[i] == null)
+      {
+        loadSprite(i);
+      }
+    }
+  }
+
+  void loadSprite(int index)
+  {
+    sprites[index] = loadImage("images/" + fileName + "-" + (index) + ".png");
+    if (width == 0)
+    {
+      width = (int)(sprites[index].width/scaleFactor);
+      height = (int)(sprites[index].height/scaleFactor);
+    }
+    sprites[index].resize (width, height);
   }
 }
