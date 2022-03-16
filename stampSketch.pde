@@ -1,47 +1,28 @@
 // Variables
-//PImage handImage, blockImage, redBlockImage;
-float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY;
-ArrayList<Block> rootBlocks;
-ArrayList<Block> segmentBlocks;
-ArrayList<Block> tipBlocks;
+float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, lastAngle, targetAngle, armSegmentDistance;
+ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint;
 float scaleFactor = 2.5;
-float lastAngle;
-float targetAngle;
 
-// Arm Segment Sprites
 PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
-
-float armSegmentDistance;
-//boolean isArmStarted;
-//int armSpriteIndex;
-//float armBlockDistance;
-SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet, eyeSpriteSet, rootSpriteSet, segmentSpriteSet, tipSpriteSet;
+SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet, rectSpriteSet, eyeSpriteSet, rootSpriteSet, segmentSpriteSet, tipSpriteSet;
 SpriteSet[] handSpriteSets;
 
 // Save Info
+String clipFolder, tempName;
 String saveFolder = "saved/";
-String clipFolder;
 String fileName = "stamp";
-String tempName;
 String saveFormat = ".png";
-int frameIndex;
+int frameIndex, currentCanvas, saveCanvasNum;
 
 // Screen Info
-boolean recording;
-boolean debugging;
-boolean animating;
+boolean recording, debugging, animating, showChoice, showPreview;
 boolean showUI = true;
-boolean showChoice;
-boolean showPreview;
 
 // Canvases
 PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas;
 PGraphics[] canvasFrames;
-int currentCanvas;
-int saveCanvasNum;
-//boolean uiHide;
 
 //UI
 String[] uiItems = new String[] {"[C]hoose", "[S]ave", "[R]ecord", "[D]ebug", "[P]review", "[X]Clear", "[U]I Toggle", "[A]nimating"};
@@ -55,53 +36,6 @@ enum State {
 State state = State.WAITING;
 
 
-/*************************************************
- TODO
- 
- [X] Prepare other options for blocks, arms, etc.
- [ ] A way to select the type of block, line segment, end
- [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
- [ ] Undo for a specific arm if it sucks?
- [ ] Record animation as data & play it back procedurally
- [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
- https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
- Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
- b = block;
- if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
- 
- DONE
- [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
- [X] Store rotations in block data
- [X] Store the time in frames in block data
- [X] Random Selection of hands & blocks
- [X] Random flip of hands (right/left)
- [X] Draw circle at each mouse point for Debug
- [X] Draw connecting lines for debug
- [X] More careful rotation/placement of segments? Rotate from back end?
- [X] Determine rotation in its own method before the stamp method
- [X] Very slight random rotation for middle blocks
- [X] Random sprite selection is now in Stamp
- [X] Added 3 frameCanvases for animation
- [X] Stamp to frameCanvas instead of directly to screen
- [X] UI now displays above animated frames
- [X] Updated UI to display active modes, and to hide itself
- [X] Create & implement SpriteSet class
- [X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
- [X] Animation - more efficient way to stamp multiple frames
- [X] Fix animation timing - 12 frames at beginning, end, and hand stamp
- [X] For arms, calculate a centerPoint for storage in array
- [X] Added eyes as possible end -- and calculated angle & placement
- [X] Added "name" attribute to spriteSet to help determine placement
- [X] Optimized SpriteSet.loadSprites for later use
- [X] Add beginSpriteSet, segmentSpriteSet, endSpriteSet as references - to prepare for selection menu
- [X] Add choiceCanvas - to contain choices for Begin, Middle, End
- [X] Added State enum to track what the mouse is actually doing
- [X] Detect overlapCanvas based on pixel color -- honestly not quite sure WHY it works to check if color < 0, but OK...
- [X] Renamed Root, Segment, Tip
- [X] Root only stamps when you let go of mouse -- unpredictable positioning otherwise.
- 
- *************************************************/
-
 void setup()
 {
   size (1920, 1080);
@@ -109,48 +43,10 @@ void setup()
 
   canvasSetup();
   loadSpriteSets();
+  resetArrayLists();
   armSegmentDistance = armSpriteSet.width * 0.8;
-
-  // Reset array lists
-  rootBlocks = new ArrayList<Block>();
-  segmentBlocks = new ArrayList<Block>();
-  tipBlocks = new ArrayList<Block>();
 }
 
-void loadSpriteSets()
-{
-  armSpriteSet = new SpriteSet("arm", 5);
-  blockSpriteSet = new SpriteSet("red-block", 3);
-  bigBlockSpriteSet = new SpriteSet("big-block", 1);
-  eyeSpriteSet = new SpriteSet("eye", 8);
-  //eyeSpriteSet.offsetY = eyeSpriteSet.height/2;
-
-  // Hands
-  handRightSpriteSet = new SpriteSet("hand-r", 5);
-  handRightSpriteSet.offsetX = handRightSpriteSet.width/2;
-  handRightSpriteSet.name = "hand";
-  handLeftSpriteSet = new SpriteSet("hand-l", 5);
-  handLeftSpriteSet.offsetX = handLeftSpriteSet.width/2;
-  handLeftSpriteSet.name = "hand";
-  handSpriteSets = new SpriteSet[2];
-  handSpriteSets[0] = handRightSpriteSet;
-  handSpriteSets[1] = handLeftSpriteSet;
-
-  // ACTIVE SPRITES
-  rootSpriteSet = bigBlockSpriteSet;
-  rootSpriteSet.loadSprites();
-
-  segmentSpriteSet = armSpriteSet;
-  segmentSpriteSet.loadSprites();
-
-  tipSpriteSet = eyeSpriteSet;
-  tipSpriteSet.loadSprites();
-
-  for (int i=0; i<handSpriteSets.length; i++)
-  {
-    handSpriteSets[i].loadSprites();
-  }
-}
 
 void draw()
 {
@@ -190,11 +86,22 @@ void mousePressed()
   case WAITING:
     resetVectorPoints();
 
-    // IF we click on an existing CENTER block, then move directly into WAITING_TO_SEGMENT
+    // IF we click on an existing CENTER block, then change state to WAITING_TO_SEGMENT
     if (overlaps(rootCanvas))
     {
       //lastRoot = findOverlappingBlock(rootBlocks, 1);
       lastRoot = findNearest(rootBlocks);
+      if (lastRoot != null)
+      {
+        lastPoint = new PVector (lastRoot.x, lastRoot.y);
+        state = State.WAITING_TO_SEGMENT;
+      }
+
+      return;
+    } else if (overlaps(tipCanvas))
+    {
+      //lastRoot = findOverlappingBlock(rootBlocks, 1);
+      lastRoot = findNearest(tipBlocks);
       if (lastRoot != null)
       {
         lastPoint = new PVector (lastRoot.x, lastRoot.y);
@@ -231,7 +138,6 @@ void mouseDragged()
 {
   switch(state)
   {
-
     // Getting unexpected location of targetPoint, so now we just wait until mouseReleased to stamp Root
     //case WAITING_TO_ROOT:
     //  // LOGIC -- if we're dragging the center piece, then maybe we should ?
@@ -251,51 +157,24 @@ void mouseDragged()
   case WAITING_TO_SEGMENT:
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
 
-    if (!overlaps(rootCanvas))
+    if (!overlaps(rootCanvas) && !overlaps(tipCanvas))
     {
       // You could have it start a TEENY bit back toward the center to be a bit cleaner, but this is pretty dang close!
       targetPoint = new PVector(mouseX, mouseY);
       PVector toCenter = PVector.sub(lastPoint, targetPoint);
       toCenter.limit(5);
-      lastPoint = PVector.add(targetPoint, toCenter); 
-      lastAngle = angleToMouse();
+      lastPoint = PVector.add(targetPoint, toCenter);
+      lastAngle = angleToMouse(lastPoint);
       state = State.SEGMENTING;
     }
-
-    //// for FIRST SEGMENT, lastPoint based on lastCenterBlock -- from center to mouse, calc lastPoint
-    ////lastPoint = new PVector (lastCenterBlock.x, lastCenterBlock.y);
-    ////lastAngle = angleToMouse();
-
-    //PVector toTarget = new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
-
-    //// if mouse is far enough from block //
-    ////float blockWidthSq = lastCenterBlock.width/2 * lastCenterBlock.width/2;
-    ////float armDistSq = armSegmentDistance * armSegmentDistance;
-    ////if (toTarget.magSq() > blockWidthSq + armDistSq)
-    //Block block = lastRoot;
-    //float minX = block.x - block.width/2;
-    //float maxX = block.x + block.width/2;
-    //float minY = block.y - block.height/2;
-    //float maxY = block.y + block.height/2;
-
-    //if (mouseX > minX && mouseX < maxX && mouseY > minY && mouseY < maxY)
-    //{
-    //  return;
-    //} else
-    //{
-    //  toTarget.limit(rootSpriteSet.width/2);
-    //  targetPoint = PVector.add(lastPoint, toTarget);
-    //  lastRoot.nextPoint = targetPoint;
-    //  lastPoint = lastRoot.nextPoint;
-    //  state = State.SEGMENTING;
-    //}
-
     break;
 
   case SEGMENTING:
-    //if (!isOverlappingBlocks(rootBlocks, 1))// && findOverlappingBlock(armBlocks, 2) == null)
-    if (!overlaps(rootCanvas))
-      lastAngle = angleToMouse();
+    if (overlaps(rootCanvas))
+    {
+      state = State.WAITING;
+      return;
+    }
     stampSegment();
     break;
 
@@ -321,8 +200,7 @@ void mouseReleased()
     break;
 
   case SEGMENTING:
-    //if (!isOverlappingBlocks(rootBlocks, 2) && !isOverlappingBlocks(segmentBlocks, 2))
-    if (!overlaps(rootCanvas) && !overlaps(segmentCanvas))
+    if (!overlaps(rootCanvas) && !overlaps(segmentCanvas) && !overlaps(tipCanvas))
     {
       stampTip();
     }
@@ -330,7 +208,6 @@ void mouseReleased()
     break;
 
   default:
-
     state = State.WAITING;
     break;
   }
@@ -346,12 +223,12 @@ void stampRoot()
 {
   //if (isOverlappingBlocks(centerBlocks, 2)) return;
   //if (isOverlappingBlocks(armBlocks, 2)) return;
-  float angle = angleToMouse();
+  float stampAngle = angleToMouse(lastPoint);
 
-  stamp (rootSpriteSet, angle, randomSignum());
+  stamp (rootSpriteSet, stampAngle, randomSignum());
   previewTo(rootCanvas);
 
-  lastRoot = new Block(lastPoint.x, lastPoint.y, rootSpriteSet.width, rootSpriteSet.height, angle + randomRotation(), targetPoint);
+  lastRoot = new Block(lastPoint.x, lastPoint.y, rootSpriteSet.width, rootSpriteSet.height, stampAngle + randomRotation(), targetPoint);
   rootBlocks.add(lastRoot);
 
   saveFrames(12);
@@ -360,8 +237,13 @@ void stampRoot()
 void stampSegment()
 {
   if (!findTargetPoint(armSegmentDistance)) return;
+  
+  
+    lastAngle = angleToMouse(lastPoint);
+
   stamp(segmentSpriteSet, lastAngle, 1);
   previewTo(segmentCanvas);
+
   lastSegment = new Block(centerPoint.x, centerPoint.y, armSegmentDistance, armSegmentDistance, lastAngle, targetPoint);
   segmentBlocks.add(lastSegment);
 
@@ -372,32 +254,36 @@ void stampSegment()
 
 void stampTip()
 {
-  // REPLACE WITH BETTER VERSION
-  if (isOverlappingBlocks(rootBlocks, 1)) return;
-  if (isOverlappingBlocks(segmentBlocks, 1)) return;
-
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
 
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end with rotation to mouse
-  float stampAngle = angleToMouse();
-  float centerAngle = lastAngle;
+  float stampAngle = angleToMouse(lastPoint);
 
+  print(tipSpriteSet.name);
   switch(tipSpriteSet.name)
   {
   case "eye":
-    centerPoint = lastPoint.add(PVector.mult(PVector.fromAngle(centerAngle), tipSpriteSet.width/2)); // push centerPoint forward if using Eyeball
+    // set centerPoint to lastPoint + vector in direction of lastAngle
+    // set rotation (around that point) to
+    //centerPoint = lastPoint.add(PVector.mult(PVector.fromAngle(centerAngle), tipSpriteSet.width/2)); // push centerPoint forward if using Eyeball
+
+    centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), tipSpriteSet.width/2));
+
     break;
 
   case "hand":
     // Left Hand or Right Hand?
     tipSpriteSet = handSpriteSets[(int)random(handSpriteSets.length)];
-    centerPoint = lastPoint.add(PVector.fromAngle(centerAngle, targetPoint));
+    centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
     break;
   }
 
   stamp (tipSpriteSet, stampAngle, 1);
   previewTo(tipCanvas);
+
+  lastTip = new Block(centerPoint.x, centerPoint.y, tipSpriteSet.width, tipSpriteSet.height, stampAngle + randomRotation(), targetPoint);
+  tipBlocks.add(lastTip);
   saveFrames(12);
 
   if (debugging)
@@ -429,8 +315,8 @@ void stamp(SpriteSet spriteSet, float rotation, int flipX)
   previewCanvas.imageMode(CENTER); // use image center instead of top left
   previewCanvas.pushMatrix(); // remember current drawing matrix
   previewCanvas.translate(centerPoint.x, centerPoint.y);
-  previewCanvas.scale(flipX, 1);
   previewCanvas.rotate(rotation);
+  previewCanvas.scale(flipX, 1);
   previewCanvas.image(spriteSet.sprites[(index)%spriteSet.length], spriteSet.offsetX * flipX, spriteSet.offsetY);
   previewCanvas.popMatrix();
   previewCanvas.endDraw();
@@ -442,8 +328,8 @@ void stamp(SpriteSet spriteSet, float rotation, int flipX)
     canvasFrames[i].imageMode(CENTER); // use image center instead of top left
     canvasFrames[i].pushMatrix(); // remember current drawing matrix
     canvasFrames[i].translate(centerPoint.x, centerPoint.y);
-    canvasFrames[i].scale(flipX, 1);
     canvasFrames[i].rotate(rotation);
+    canvasFrames[i].scale(flipX, 1);
     canvasFrames[i].image(spriteSet.sprites[(index+i)%spriteSet.length], spriteSet.offsetX * flipX, spriteSet.offsetY);
     //canvasFrames[i].image(previewCanvas, 0, 0);
     canvasFrames[i].popMatrix();
@@ -477,18 +363,13 @@ boolean overlaps(PGraphics canvas)
 
 Block findNearest(ArrayList<Block> blocks)
 {
-  //if (blocks.size() == 0)
-  //{
-  //  //print("No Blocks \n");
-  //  return null; // if no blocks exist, return null
-  //}
-
   Block returnBlock = null;
   float distSq = width * width;
 
-  for (int i = 0; i < blocks.size(); i++)
+  //for (int i = 0; i < blocks.size(); i++)
+  for (Block block : blocks)
   {
-    Block block = blocks.get(i);
+    //Block block = blocks.get(i);
     // Calculate DistSq X2 + Y2
     float xDist = abs(mouseX - block.x);
     float yDist = abs(mouseY - block.y);
@@ -505,9 +386,6 @@ Block findNearest(ArrayList<Block> blocks)
 Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
 {
   // safeZone is a multiplier to the block's width & height
-  //print ("Checking for overlapping blocks... \n");
-  //print ("Mouse: (" + mouseX + ", " + mouseY + ") \n");
-  //https://processing.org/reference/ArrayList.html
 
   if (blocks.size() == 0)
   {
@@ -515,9 +393,8 @@ Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
     return null; // if no blocks exist, return null
   }
 
-  for (int i = 0; i < blocks.size(); i++)
+  for (Block block : blocks)
   {
-    Block block = blocks.get(i);
     float minX = block.x - block.width/scaleFactor * safeZone;
     float maxX = block.x + block.width/scaleFactor * safeZone;
     float minY = block.y - block.height/scaleFactor * safeZone;
@@ -537,7 +414,6 @@ Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
 
 boolean isOverlappingBlocks(ArrayList<Block> blocks, float safeZone)
 {
-
   Block block = findOverlappingBlock(blocks, safeZone);
   if (block == null)
     return false;
@@ -588,6 +464,54 @@ void saveFrames(int howManyFrames)
   }
 }
 
+/********************************************************
+ ***  SETUP  *****************************************
+ *********************************************************/
+
+void loadSpriteSets()
+{
+  armSpriteSet = new SpriteSet("arm", 5);
+  blockSpriteSet = new SpriteSet("red-block", 3);
+  bigBlockSpriteSet = new SpriteSet("big-block", 1);
+  rectSpriteSet = new SpriteSet("red-rect", 4);
+  eyeSpriteSet = new SpriteSet("eye", 8);
+  //eyeSpriteSet.offsetX = eyeSpriteSet.width/2;
+
+  // Hands
+  handRightSpriteSet = new SpriteSet("hand-r", 5);
+  handRightSpriteSet.offsetX = handRightSpriteSet.width/2;
+  handRightSpriteSet.name = "hand";
+  handLeftSpriteSet = new SpriteSet("hand-l", 5);
+  handLeftSpriteSet.offsetX = handLeftSpriteSet.width/2;
+  handLeftSpriteSet.name = "hand";
+  handSpriteSets = new SpriteSet[2];
+  handSpriteSets[0] = handRightSpriteSet;
+  handSpriteSets[1] = handLeftSpriteSet;
+
+  // ACTIVE SPRITES
+  rootSpriteSet = rectSpriteSet;
+  rootSpriteSet.loadSprites();
+
+  segmentSpriteSet = armSpriteSet;
+  segmentSpriteSet.loadSprites();
+
+  tipSpriteSet = handLeftSpriteSet;
+  tipSpriteSet.loadSprites();
+
+  for (int i=0; i<handSpriteSets.length; i++)
+  {
+    handSpriteSets[i].loadSprites();
+  }
+}
+
+void resetArrayLists()
+{
+  // Reset array lists
+  rootBlocks = new ArrayList<Block>();
+  segmentBlocks = new ArrayList<Block>();
+  tipBlocks = new ArrayList<Block>();
+}
+
 
 
 /********************************************************
@@ -623,20 +547,20 @@ boolean findTargetPoint(float distance)
 
     //targetAngle = (targetPoint.sub(lastPoint)).heading();
     //targetAngle = PVector.angleBetween(lastPoint, targetPoint);
-    targetAngle = angleToTarget();
+    targetAngle = angleLastToTarget();
     return true;
   }
   return false;
   // targetXY is stampLength distance along that vector
 }
 
-float angleToMouse()
+float angleToMouse(PVector vector)
 {
   //return atan2(mouseY - lastPoint.y, mouseX - lastPoint.x) + radians(90);
-  return atan2(mouseY - lastPoint.y, mouseX - lastPoint.x);
+  return atan2(mouseY - vector.y, mouseX - vector.x);
 }
 
-float angleToTarget()
+float angleLastToTarget()
 {
   //return (targetPoint.sub(lastPoint)).heading();
   //return atan2(targetPoint.y - lastPoint.y, targetPoint.x - lastPoint.x) + radians(90);
@@ -918,3 +842,53 @@ class SpriteSet
     sprites[index].resize (width, height);
   }
 }
+
+
+
+/*************************************************
+ TODO
+ 
+ [X] Prepare other options for blocks, arms, etc.
+ [ ] A bunch of methods are modifying lastPoint, centerPoint, targetPoint. Gotta fix that!
+ [ ] A way to select the type of block, line segment, end
+ [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
+ [ ] Undo for a specific arm if it sucks?
+ [ ] Record animation as data & play it back procedurally
+ [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+ https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
+ Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
+ b = block;
+ if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
+ 
+ DONE
+ [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
+ [X] Store rotations in block data
+ [X] Store the time in frames in block data
+ [X] Random Selection of hands & blocks
+ [X] Random flip of hands (right/left)
+ [X] Draw circle at each mouse point for Debug
+ [X] Draw connecting lines for debug
+ [X] More careful rotation/placement of segments? Rotate from back end?
+ [X] Determine rotation in its own method before the stamp method
+ [X] Very slight random rotation for middle blocks
+ [X] Random sprite selection is now in Stamp
+ [X] Added 3 frameCanvases for animation
+ [X] Stamp to frameCanvas instead of directly to screen
+ [X] UI now displays above animated frames
+ [X] Updated UI to display active modes, and to hide itself
+ [X] Create & implement SpriteSet class
+ [X] When Animating -- Print 3 frames for Center & Hand but only 1 for Arm Segment
+ [X] Animation - more efficient way to stamp multiple frames
+ [X] Fix animation timing - 12 frames at beginning, end, and hand stamp
+ [X] For arms, calculate a centerPoint for storage in array
+ [X] Added eyes as possible end -- and calculated angle & placement
+ [X] Added "name" attribute to spriteSet to help determine placement
+ [X] Optimized SpriteSet.loadSprites for later use
+ [X] Add beginSpriteSet, segmentSpriteSet, endSpriteSet as references - to prepare for selection menu
+ [X] Add choiceCanvas - to contain choices for Begin, Middle, End
+ [X] Added State enum to track what the mouse is actually doing
+ [X] Detect overlapCanvas based on pixel color -- honestly not quite sure WHY it works to check if color < 0, but OK...
+ [X] Renamed Root, Segment, Tip
+ [X] Root only stamps when you let go of mouse -- unpredictable positioning otherwise.
+ 
+ *************************************************/
