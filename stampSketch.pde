@@ -5,9 +5,10 @@ Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint;
 float scaleFactor = 2.5;
 
-PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
-SpriteSet armSpriteSet, handLeftSpriteSet, handRightSpriteSet, blockSpriteSet, bigBlockSpriteSet, rectSpriteSet, eyeSpriteSet, rootSpriteSet, segmentSpriteSet, tipSpriteSet;
-SpriteSet[] handSpriteSets;
+//PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
+SpriteSet armSet, armbSet, handLeftSet, handRightSet, blockSet, bigBlockSet, tipBlockSet, rectSet, eyeSet, rootSet, segmentSet, tipSet;
+SpriteSet[] handSets, rootSets, segmentSets, tipSets;
+int currentRoot, currentSegment, currentTip;
 
 // Save Info
 String clipFolder, tempName;
@@ -17,8 +18,9 @@ String saveFormat = ".png";
 int frameIndex, currentCanvas, saveCanvasNum;
 
 // Screen Info
-boolean recording, debugging, animating, showChoice, showPreview;
+boolean recording, debugging, animating, showPreview;
 boolean showUI = true;
+boolean showMenu = true;
 
 // Canvases
 PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas;
@@ -29,6 +31,7 @@ String[] uiItems = new String[] {"[C]hoose", "[S]ave", "[R]ecord", "[D]ebug", "[
 //ChoiceSprite[] choiceBeginSprites = new ChoiceSprite[2];
 //ChoiceSprite[] choiceSegmentSprites = new ChoiceSprite[2];
 //ChoiceSprite[] choiceEndSprites = new ChoiceSprite[2];
+Button[] rootButtons, segmentButtons, tipButtons;
 
 enum State {
   CHOOSING, WAITING, WAITING_TO_ROOT, WAITING_TO_SEGMENT, SEGMENTING, ENDING
@@ -44,7 +47,9 @@ void setup()
   canvasSetup();
   loadSpriteSets();
   resetArrayLists();
-  armSegmentDistance = armSpriteSet.width * 0.8;
+  menuSetup();
+  armSegmentDistance = armSet.width * 0.8;
+  if (showMenu) state = State.CHOOSING;
 }
 
 
@@ -56,7 +61,7 @@ void draw()
   if (showUI) drawUI();
   if (debugging) image(debugCanvas, 0, 0);
   if (showPreview) image(previewCanvas, 0, 0);
-  if (showChoice) drawChoice();
+  if (showMenu) drawChoice();
 
   //image(rootCanvas, 0, 0);
   //image(segmentCanvas, 0, 0);
@@ -89,7 +94,6 @@ void mousePressed()
     // IF we click on an existing CENTER block, then change state to WAITING_TO_SEGMENT
     if (overlaps(rootCanvas))
     {
-      //lastRoot = findOverlappingBlock(rootBlocks, 1);
       lastRoot = findNearest(rootBlocks);
       if (lastRoot != null)
       {
@@ -100,11 +104,10 @@ void mousePressed()
       return;
     } else if (overlaps(tipCanvas))
     {
-      //lastRoot = findOverlappingBlock(rootBlocks, 1);
-      lastRoot = findNearest(tipBlocks);
-      if (lastRoot != null)
+      lastTip = findNearest(tipBlocks);
+      if (lastTip != null)
       {
-        lastPoint = new PVector (lastRoot.x, lastRoot.y);
+        lastPoint = new PVector (lastTip.x, lastTip.y);
         state = State.WAITING_TO_SEGMENT;
       }
 
@@ -116,20 +119,27 @@ void mousePressed()
       if (lastSegment != null)
       {
         // Better if it could figure out the angle, and base position on first or last point?????
-        lastPoint = lastSegment.nextPoint; // set LAST POINT to the center of that block?
-        state = State.SEGMENTING;
+        //if (findDistSq(lastSegment.beginPoint) < findDistSq(lastSegment.endPoint)){
+        //  lastPoint = lastSegment.beginPoint;
+        //} else {
+        //  lastPoint = lastSegment.endPoint;
+        //}
+
+        lastPoint = new PVector(lastSegment.x, lastSegment.y);
+        state = State.WAITING_TO_SEGMENT;
         return;
       }
+    } else if (rootSets[currentRoot] == null)
+    {
+      resetVectorPoints();
+      state = State.WAITING_TO_SEGMENT;
     } else
     {
       resetVectorPoints();
       state = State.WAITING_TO_ROOT;
     }
-
     break;
-
   default:
-
     break;
   }
 }
@@ -138,31 +148,13 @@ void mouseDragged()
 {
   switch(state)
   {
-    // Getting unexpected location of targetPoint, so now we just wait until mouseReleased to stamp Root
-    //case WAITING_TO_ROOT:
-    //  // LOGIC -- if we're dragging the center piece, then maybe we should ?
-
-    //  if (findTargetPoint(rootSpriteSet.width/2))
-    //  {
-    //    // BETTER METHOD FOR THIS -- use pixel check on canvases :)
-    //    //if (!isOverlappingBlocks(rootBlocks, 1) && !isOverlappingBlocks(segmentBlocks, 1))
-    //    if (!overlaps(rootCanvas))
-    //    {
-    //      stampRoot();
-    //      state = State.WAITING_TO_SEGMENT;
-    //    }
-    //  }
-    //  break;
-
   case WAITING_TO_SEGMENT:
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
-
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas))
     {
-      // You could have it start a TEENY bit back toward the center to be a bit cleaner, but this is pretty dang close!
       targetPoint = new PVector(mouseX, mouseY);
       PVector toCenter = PVector.sub(lastPoint, targetPoint);
-      toCenter.limit(5);
+      toCenter.limit(10);    // Start a TEENY bit back toward the center of lastRoot
       lastPoint = PVector.add(targetPoint, toCenter);
       lastAngle = angleToMouse(lastPoint);
       state = State.SEGMENTING;
@@ -170,16 +162,18 @@ void mouseDragged()
     break;
 
   case SEGMENTING:
-    if (overlaps(rootCanvas))
+    // Calculate Center Point first -- then check to see if it overlaps
+    if (findTargetCenterPoints(armSegmentDistance))
     {
-      state = State.WAITING;
-      return;
+      if (overlaps(rootCanvas, centerPoint))
+      {
+        state = State.WAITING;
+        return;
+      }
+      stampSegment();
     }
-    stampSegment();
     break;
-
   default:
-
     break;
   }
 }
@@ -187,7 +181,6 @@ void mouseDragged()
 void mouseReleased()
 {
   lastRoot = null;
-
   switch(state)
   {
   case CHOOSING:
@@ -221,14 +214,15 @@ void mouseReleased()
 
 void stampRoot()
 {
-  //if (isOverlappingBlocks(centerBlocks, 2)) return;
-  //if (isOverlappingBlocks(armBlocks, 2)) return;
+  SpriteSet set = rootSets[currentRoot];
+  if (set == null) return; // quick fix???
+
   float stampAngle = angleToMouse(lastPoint);
 
-  stamp (rootSpriteSet, stampAngle, randomSignum());
+  stamp (set, stampAngle, randomSignum());
   previewTo(rootCanvas);
 
-  lastRoot = new Block(lastPoint.x, lastPoint.y, rootSpriteSet.width, rootSpriteSet.height, stampAngle + randomRotation(), targetPoint);
+  lastRoot = new Block(lastPoint.x, lastPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
   rootBlocks.add(lastRoot);
 
   saveFrames(12);
@@ -236,15 +230,15 @@ void stampRoot()
 
 void stampSegment()
 {
-  if (!findTargetPoint(armSegmentDistance)) return;
-  
-  
-    lastAngle = angleToMouse(lastPoint);
+  SpriteSet set = segmentSets[currentSegment];
+  if (set == null) return; // quick fix???
 
-  stamp(segmentSpriteSet, lastAngle, 1);
+  lastAngle = angleToMouse(lastPoint);
+
+  stamp(set, lastAngle, 1);
   previewTo(segmentCanvas);
 
-  lastSegment = new Block(centerPoint.x, centerPoint.y, armSegmentDistance, armSegmentDistance, lastAngle, targetPoint);
+  lastSegment = new Block(centerPoint.x, centerPoint.y, armSegmentDistance, armSegmentDistance, lastAngle, lastPoint, targetPoint);
   segmentBlocks.add(lastSegment);
 
   lastPoint = targetPoint;
@@ -254,35 +248,33 @@ void stampSegment()
 
 void stampTip()
 {
+  SpriteSet set = tipSets[currentTip];
+  if (set == null) return; // quick fix???
+
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
 
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end with rotation to mouse
   float stampAngle = angleToMouse(lastPoint);
 
-  print(tipSpriteSet.name);
-  switch(tipSpriteSet.name)
+  //print(set.name);
+  switch(set.name)
   {
-  case "eye":
-    // set centerPoint to lastPoint + vector in direction of lastAngle
-    // set rotation (around that point) to
-    //centerPoint = lastPoint.add(PVector.mult(PVector.fromAngle(centerAngle), tipSpriteSet.width/2)); // push centerPoint forward if using Eyeball
-
-    centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), tipSpriteSet.width/2));
-
-    break;
-
   case "hand":
     // Left Hand or Right Hand?
-    tipSpriteSet = handSpriteSets[(int)random(handSpriteSets.length)];
+    set = handSets[(int)random(handSets.length)];
     centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
+    break;
+
+  default:
+    centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width/2));
     break;
   }
 
-  stamp (tipSpriteSet, stampAngle, 1);
+  stamp (set, stampAngle, 1);
   previewTo(tipCanvas);
 
-  lastTip = new Block(centerPoint.x, centerPoint.y, tipSpriteSet.width, tipSpriteSet.height, stampAngle + randomRotation(), targetPoint);
+  lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
   tipBlocks.add(lastTip);
   saveFrames(12);
 
@@ -305,6 +297,7 @@ void previewTo(PGraphics canvas)
 
 void stamp(SpriteSet spriteSet, float rotation, int flipX)
 {
+  if (spriteSet == null) return; // quick fix???
   int index = (int)random(spriteSet.length);
   //int howManySaved = 0;
 
@@ -347,18 +340,42 @@ void stamp(SpriteSet spriteSet, float rotation, int flipX)
  ***  OVERLAP / COLLISION  ******************************
  *********************************************************/
 
+boolean overlaps(PGraphics canvas, int x, int y)
+{
+  color mouseColor = canvas.get(x, y);
+  return (mouseColor < 0);
+}
+
 boolean overlaps(PGraphics canvas)
 {
-  //canvas.loadPixels();
-  //color mouseColor = canvas.pixels[mouseY*width+mouseX]; //
-  //PImage img = createImage(width, height, ARGB);
-  //PImage img = canvas;
-  color mouseColor = canvas.get(mouseX, mouseY);
-  //print ("color: " + mouseColor + "\n");
-  boolean overlapping = mouseColor < 0;
-  //print (overlapping + "\n");
-  return overlapping;
-  //return mouseColor > 128;
+  return overlaps(canvas, mouseX, mouseY);
+}
+
+boolean overlaps(PGraphics canvas, PVector v)
+{
+  return overlaps(canvas, (int)v.x, (int)v.y);
+}
+
+float findDistSq(float x1, float y1, float x2, float y2)
+{
+  float xDist = abs(x1-x2);
+  float yDist = abs(y1-y2);
+  return (xDist * xDist + yDist * yDist);
+}
+
+float findDistSq(PVector v1, PVector v2)
+{
+  return findDistSq(v1.x, v1.y, v2.y, v2.y);
+}
+
+float findDistSq(PVector v)
+{
+  return findDistSq(mouseX, mouseY, v.x, v.y);
+}
+
+float findDistSq(float x, float y)
+{
+  return findDistSq(mouseX, mouseY, x, y);
 }
 
 Block findNearest(ArrayList<Block> blocks)
@@ -366,14 +383,9 @@ Block findNearest(ArrayList<Block> blocks)
   Block returnBlock = null;
   float distSq = width * width;
 
-  //for (int i = 0; i < blocks.size(); i++)
   for (Block block : blocks)
   {
-    //Block block = blocks.get(i);
-    // Calculate DistSq X2 + Y2
-    float xDist = abs(mouseX - block.x);
-    float yDist = abs(mouseY - block.y);
-    float newDistSq =  xDist * xDist + yDist * yDist;
+    float newDistSq = findDistSq(mouseX, mouseY, block.y, block.y);
     if (newDistSq < distSq)
     {
       distSq = newDistSq;
@@ -386,13 +398,6 @@ Block findNearest(ArrayList<Block> blocks)
 Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
 {
   // safeZone is a multiplier to the block's width & height
-
-  if (blocks.size() == 0)
-  {
-    //print("No Blocks \n");
-    return null; // if no blocks exist, return null
-  }
-
   for (Block block : blocks)
   {
     float minX = block.x - block.width/scaleFactor * safeZone;
@@ -470,38 +475,58 @@ void saveFrames(int howManyFrames)
 
 void loadSpriteSets()
 {
-  armSpriteSet = new SpriteSet("arm", 5);
-  blockSpriteSet = new SpriteSet("red-block", 3);
-  bigBlockSpriteSet = new SpriteSet("big-block", 1);
-  rectSpriteSet = new SpriteSet("red-rect", 4);
-  eyeSpriteSet = new SpriteSet("eye", 8);
+  armSet = new SpriteSet("arm segment", "arm", 5);
+  armbSet = new SpriteSet("armb", "armb", 5);
+  blockSet = new SpriteSet("block", "red-block", 3);
+  tipBlockSet = new SpriteSet("block", "red-block", 3);
+  bigBlockSet = new SpriteSet("big block", "big-block", 1);
+  rectSet = new SpriteSet("rect", "red-rect", 4);
+  eyeSet = new SpriteSet("eye", "eye", 8);
   //eyeSpriteSet.offsetX = eyeSpriteSet.width/2;
 
   // Hands
-  handRightSpriteSet = new SpriteSet("hand-r", 5);
-  handRightSpriteSet.offsetX = handRightSpriteSet.width/2;
-  handRightSpriteSet.name = "hand";
-  handLeftSpriteSet = new SpriteSet("hand-l", 5);
-  handLeftSpriteSet.offsetX = handLeftSpriteSet.width/2;
-  handLeftSpriteSet.name = "hand";
-  handSpriteSets = new SpriteSet[2];
-  handSpriteSets[0] = handRightSpriteSet;
-  handSpriteSets[1] = handLeftSpriteSet;
+  handRightSet = new SpriteSet("hand", "hand-r", 5);
+  handRightSet.offsetX = handRightSet.width/2;
+  handLeftSet = new SpriteSet("hand", "hand-l", 5);
+  handLeftSet.offsetX = handLeftSet.width/2;
+  handSets = new SpriteSet[2];
+  handSets[0] = handRightSet;
+  handSets[1] = handLeftSet;
+
+  rootSets = new SpriteSet[] {null, blockSet, bigBlockSet, rectSet};
+  segmentSets = new SpriteSet[] {null, armSet, armbSet};
+  tipSets = new SpriteSet[] {null, handRightSet, eyeSet, tipBlockSet};
+  currentRoot = 1;
+  currentSegment = 1;
+  currentTip = 1;
 
   // ACTIVE SPRITES
-  rootSpriteSet = rectSpriteSet;
-  rootSpriteSet.loadSprites();
+  setSpriteSet(rootSet, rootSets, currentRoot);
+  setSpriteSet(segmentSet, segmentSets, currentSegment);
+  setSpriteSet(tipSet, tipSets, currentTip);
 
-  segmentSpriteSet = armSpriteSet;
-  segmentSpriteSet.loadSprites();
-
-  tipSpriteSet = handLeftSpriteSet;
-  tipSpriteSet.loadSprites();
-
-  for (int i=0; i<handSpriteSets.length; i++)
+  for (int i=0; i<handSets.length; i++)
   {
-    handSpriteSets[i].loadSprites();
+    handSets[i].loadSprites();
   }
+}
+
+void setSpriteSet(SpriteSet set, SpriteSet[] sets, int index)
+{
+  set = sets[index];
+  set.loadSprites();
+  for (int i=1; i<sets.length; i++)
+  {
+    if (i!=index)
+    {
+      sets[i].unloadSprites();
+    } else
+    {
+      sets[i].loadSprites();
+    }
+  }
+
+  print (set.name + " loaded. \n");
 }
 
 void resetArrayLists()
@@ -527,7 +552,7 @@ void resetVectorPoints()
 }
 
 // Find TargetPoint if mouse is far enough from LastPoint
-boolean findTargetPoint(float distance)
+boolean findTargetCenterPoints(float distance)
 {
   // Check to see if current x,y is beyond threshold distance away from lastX, lastY
   //if (abs(lastX - mouseX) + abs(lastY - mouseY) < armSegmentDistance) return;
@@ -539,14 +564,6 @@ boolean findTargetPoint(float distance)
     toTarget.limit(distance/2);
     centerPoint = PVector.add(lastPoint, toTarget);
     targetPoint = PVector.add(centerPoint, toTarget);
-
-    //toTarget.setMag(armSegmentDistance);
-    //targetPoint = lastPoint.add(toTarget);
-    //toTarget.limit(armSegmentDistance/2);
-    //centerPoint = lastPoint.add(toTarget);
-
-    //targetAngle = (targetPoint.sub(lastPoint)).heading();
-    //targetAngle = PVector.angleBetween(lastPoint, targetPoint);
     targetAngle = angleLastToTarget();
     return true;
   }
@@ -556,18 +573,15 @@ boolean findTargetPoint(float distance)
 
 float angleToMouse(PVector vector)
 {
-  //return atan2(mouseY - lastPoint.y, mouseX - lastPoint.x) + radians(90);
   return atan2(mouseY - vector.y, mouseX - vector.x);
 }
 
 float angleLastToTarget()
 {
-  //return (targetPoint.sub(lastPoint)).heading();
-  //return atan2(targetPoint.y - lastPoint.y, targetPoint.x - lastPoint.x) + radians(90);
   return atan2(targetPoint.y - lastPoint.y, targetPoint.x - lastPoint.x);
 }
 
-float randomRotation()
+float randomRotationNSEW()
 {
   // Calculate random NSEW rotation
   float randomRotation = floor(random(4)) * 90; // + random(10) - 5;
@@ -580,15 +594,11 @@ int randomSignum() {
   return (int) random(2) * 2 - 1;
 }
 
-
-
-
 void toggleChoosing()
 {
-  showChoice = !showChoice;
-  if (showChoice)
+  showMenu = !showMenu;
+  if (showMenu)
   {
-    //prevState = state;
     state = State.CHOOSING;
     print(state);
   } else
@@ -649,6 +659,7 @@ void makeTransparent(PGraphics canvas)
 
 void drawUI()
 {
+  float buttonWidth = 100;
   uiCanvas.beginDraw();
   uiCanvas.background(200);
   uiCanvas.rectMode(CORNER);
@@ -657,75 +668,134 @@ void drawUI()
 
   if (recording)
   {
-    uiCanvas.rect(100, 0, 100, 40);
-    uiCanvas.text("RECORDING", 900, 25);
+    uiCanvas.rect(200, 0, 100, 40);
+    uiCanvas.text("RECORDING", 1500, 25);
   }
 
   //uiCanvas.fill(128);
-  if (showChoice) uiCanvas.rect(0, 0, 120, 40);
-  if (debugging) uiCanvas.rect(3*100, 0, 120, 40);
-  if (animating) uiCanvas.rect(7*100, 0, 120, 40);
-  uiCanvas.rect(uiItems.length*120+currentCanvas*60, 0, 40, 40);
+  if (showMenu) uiCanvas.rect(0, 0, buttonWidth, 40);
+  if (debugging) uiCanvas.rect(300, 0, buttonWidth, 40);
+  if (showPreview) uiCanvas.rect(400, 0, buttonWidth, 40);
+  if (animating) uiCanvas.rect(700, 0, buttonWidth, 40);
+  uiCanvas.rect(uiItems.length*100+currentCanvas*60, 0, 40, 40);
   //if (currentCanvas == 1) uiCanvas.rect(uiItems.length*120+60, 0, 40, 40);
   //if (currentCanvas == 2) uiCanvas.rect(uiItems.length*120+120, 0, 40, 40);
 
   // Draw Menu Items
   uiCanvas.fill(64); // GRAY
-  uiCanvas.textSize(18);
+  uiCanvas.textSize(16);
   for (int i=0; i<uiItems.length; i++)
   {
-    uiCanvas.text(uiItems[i], i*110+10, 25);
+    uiCanvas.text(uiItems[i], i*buttonWidth + 10, 25);
   }
 
   // Draw "Animating" frames
   for (int i=0; i<3; i++)
   {
-    uiCanvas.text(i+1, uiItems.length*120+i*85+10, 25);
+    uiCanvas.text(i+1, uiItems.length*buttonWidth + i*60 +10, 25);
   }
 
-  uiCanvas.text("State." + state, 1200, 25);
+  uiCanvas.text("State." + state, buttonWidth*12, 25);
   uiCanvas.endDraw();
   image(uiCanvas, 0, 1040);
 }
 
-//void choiceSetup()
-//{
-//  //choiceBeginSprites = new ChoiceSprite[3];
-//  choiceBeginSprites[0] = new ChoiceSprite(blockSpriteSet, beginSpriteSet);
-//  choiceBeginSprites[1] = new ChoiceSprite(bigBlockSpriteSet, beginSpriteSet);
-//}
+
+void menuSetup()
+{
+  rootButtons = createButtons(rootSets, width/6);
+  segmentButtons = createButtons(segmentSets, width/2);
+  tipButtons = createButtons(tipSets, width*5/6);
+}
+
+
+Button[] createButtons(SpriteSet[] sets, int x)
+{
+  int buttonWidth = 200;
+  int buttonHeight = 120;
+  int buttonVertSpacing = 20;
+  x -= buttonWidth/2;
+
+  Button[] buttons = new Button[sets.length];
+
+  for (int i=0; i<buttons.length; i++)
+  {
+    int y = 200+i*(buttonHeight+buttonVertSpacing);
+    PImage image = null;
+    String text = "NONE";
+    if (sets[i] != null)
+    {
+      image = sets[i].sprites[0];
+      text = sets[i].name;
+    }
+    buttons[i] = new Button(sets, i, x, y, buttonWidth, buttonHeight, text, image);
+    //drawButton(width/6, 200+i*(buttonHeight+buttonVertSpacing), rootSets[i]);
+  }
+
+  return buttons;
+}
 
 void drawChoice()
 {
+  int menuTopY = 75;
+  int categoryTopY = 150;
+
   choiceCanvas.beginDraw();
   choiceCanvas.background(255);
   choiceCanvas.fill(255, 0, 0);
   choiceCanvas.textSize(48);
   choiceCanvas.textAlign(CENTER);
-  choiceCanvas.text("Choose Stamps", width/2, 50);
+  choiceCanvas.text("Choose Stamps", width/2, menuTopY);
 
   // LEFT -- CENTER PIECES
   choiceCanvas.textSize(36);
-  choiceCanvas.text("Center", 300, 100);
-  choiceCanvas.fill(0); // RED
-  choiceCanvas.rect(100, 150, 400, 100);
-  choiceCanvas.fill(255);
-  choiceCanvas.text("NONE", 300, 200);
-  //PImage[] centerSprites = blockSpriteSet.sprites[0];
-  //choiceCanvas.image(sprite, 300 - sprite.width/2, 300, sprite.width, sprite.height);
-  //sprite = blockSpriteSet.sprites[0];
+  choiceCanvas.text("ROOT", width/6, categoryTopY);
+  choiceCanvas.text("SEGMENT", width/2, categoryTopY);
+  choiceCanvas.text("TIP", width*5/6, categoryTopY);
 
-  //choiceCanvas.image(sprite, 300 - sprite.width/2, 300, sprite.width, sprite.height);
+  choiceCanvas.noStroke();
 
-  // ARM SEGMENT
-  choiceCanvas.text("Arm Segment", width/2, 200);
 
-  // END PIECES
-  choiceCanvas.text("End", width*5/6, 200);
+  for (Button button : rootButtons)
+    button.draw();
+
+  for (Button button : segmentButtons)
+    button.draw();
+
+  for (Button button : tipButtons)
+    button.draw();
 
   choiceCanvas.endDraw();
   image(choiceCanvas, 0, 0);
+
+  if (keyPressed)
+  {
+  }
 }
+
+// Make draw method of Button class -- much better
+//void drawButton(float buttonX, float buttonY, SpriteSet spriteSet)
+//{
+//  float buttonWidth = 200;
+//  float buttonHeight = 80;
+//  float buttonTextSize = 24;
+//  //float buttonVertSpacing = 100;
+//  color buttonColor = color(160);
+//  color buttonSelectedColor = color(255, 0, 0);
+//  color buttonTextColor = color(0);
+
+
+//  if (spriteSet != null)
+//  {
+//    PImage sprite = spriteSet.sprites[0];
+//    choiceCanvas.image(sprite, buttonX - buttonWidth/2, buttonY, buttonWidth, buttonHeight);
+//  } else {
+//    choiceCanvas.fill(buttonColor); // RED
+//    choiceCanvas.rect(buttonX-buttonWidth/2, buttonY, buttonWidth, buttonHeight);
+//  }
+//  choiceCanvas.fill(buttonTextColor);
+//  choiceCanvas.text("NONE", buttonX, buttonY+48);
+//}
 
 void drawDebug()
 {
@@ -758,17 +828,106 @@ class Block
 {
   float x, y, width, height, angle;
   int frame;
-  PVector nextPoint;
-  Block(float inputX, float inputY, float inputW, float inputH, float inputAngle, PVector lastPoint)
+  PVector beginPoint, endPoint;
+  Block(float _x, float _y, float _w, float _h, float _angle, PVector _beginPoint, PVector _endPoint)
   {
-    x = inputX;
-    y = inputY;
-    width = inputW;
-    height = inputH;
-    angle = inputAngle;
+    x = _x;
+    y = _y;
+    width = _w;
+    height = _h;
+    angle = _angle;
     frame = frameCount;
-    nextPoint = lastPoint;
+    beginPoint = _beginPoint;
+    endPoint = _endPoint;
     //print ("Block " + redBlocks.size() + ": (" + x + ", " + y + ") \n");
+  }
+}
+
+class Button
+{
+  PImage image;
+  SpriteSet[] sets;
+  int index, x, y, w, h;
+  String text;
+  color bgColor, selectedColor, textColor, overColor;
+  boolean selected;
+
+  Button(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
+  {
+    sets = iSets;
+    index = _index;
+    x = _x;
+    y = _y;
+    w = _w;
+    h = _h;
+    text = _text;
+    image = _image;
+    bgColor = color(200);
+    textColor = color(0);
+    selectedColor = color(0);
+    overColor = color(255, 0, 0);
+    //print ("\n creating button: " + text);
+  }
+
+  void draw()
+  {
+    int margin = 10;
+    if (isSelected())
+    {
+      choiceCanvas.fill(selectedColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+    }
+    if (isOver())
+    {
+      choiceCanvas.fill(overColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+      if (mousePressed)
+      {
+        select();
+      }
+    }
+    if (image != null)
+    {
+      choiceCanvas.image(image, x, y, w, h);
+    } else
+    {
+      choiceCanvas.fill(bgColor); // bg color
+      choiceCanvas.rect(x, y, w, h);
+    }
+    choiceCanvas.fill(bgColor);
+    choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+    choiceCanvas.fill(textColor);
+    choiceCanvas.text(text, x+w/2, y+h);
+  }
+
+  boolean isSelected()
+  {
+    int checkIndex = -1;
+    if (sets == rootSets)
+      checkIndex = currentRoot;
+    if (sets == segmentSets)
+      checkIndex = currentSegment;
+    if (sets == tipSets)
+      checkIndex = currentTip;
+
+    return (index == checkIndex);
+  }
+
+  boolean isOver()
+  {
+    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+  }
+
+  void select()
+  {
+    if (sets == rootSets)
+      currentRoot = index;
+    if (sets == segmentSets)
+      currentSegment = index;
+    if (sets == tipSets)
+      currentTip = index;
+    if (sets[index] != null)
+      sets[index].loadSprites();
   }
 }
 
@@ -800,11 +959,11 @@ class SpriteSet
   float offsetX, offsetY;
   int length, width, height;
   String name, fileName;
-  SpriteSet(String inputName, int inputLength)
+  SpriteSet(String _name, String _file, int _length)
   {
-    length = inputLength;
-    fileName = inputName;
-    name = fileName;
+    length = _length;
+    fileName = _file;
+    name = _name;
     sprites = new PImage[length];
     loadSprite(0);
     //loadSprites();
@@ -847,18 +1006,9 @@ class SpriteSet
 
 /*************************************************
  TODO
- 
- [X] Prepare other options for blocks, arms, etc.
- [ ] A bunch of methods are modifying lastPoint, centerPoint, targetPoint. Gotta fix that!
- [ ] A way to select the type of block, line segment, end
  [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
  [ ] Undo for a specific arm if it sucks?
  [ ] Record animation as data & play it back procedurally
- [ ] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
- https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
- Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
- b = block;
- if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
  
  DONE
  [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
@@ -887,8 +1037,17 @@ class SpriteSet
  [X] Add beginSpriteSet, segmentSpriteSet, endSpriteSet as references - to prepare for selection menu
  [X] Add choiceCanvas - to contain choices for Begin, Middle, End
  [X] Added State enum to track what the mouse is actually doing
- [X] Detect overlapCanvas based on pixel color -- honestly not quite sure WHY it works to check if color < 0, but OK...
  [X] Renamed Root, Segment, Tip
  [X] Root only stamps when you let go of mouse -- unpredictable positioning otherwise.
+ [-] When extending segment, figure out if it's closer to beginning or end -- nope
+ [X] Prepare other options for blocks, arms, etc.
+ [X] A bunch of methods are modifying lastPoint, centerPoint, targetPoint. Gotta fix that!
+ [X] A way to select the type of block, line segment, end
+ [X] Detect overlapCanvas based on pixel color -- honestly not quite sure WHY it works to check if color < 0, but OK...
+ [X] in IsOverlapping method -- rotate the collision detection in its own matrix? Or just keep a sloppy box collider?
+ https://joshuawoehlke.com/detecting-clicks-rotated-rectangles/
+ Maybe... if simple xy check shows that it's within w+h of center, then do a more specific check
+ b = block;
+ if (mouseX > b.x-b.w-b.h && mouseX < b.x+b.w+b.h && etc.) {complexCollisionCheck;}
  
  *************************************************/
