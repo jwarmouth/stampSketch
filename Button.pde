@@ -41,18 +41,24 @@ class Button
         select();
       }
     }
+    
+    choiceCanvas.fill(bgColor);
+    float textHeight;
+    
     if (image != null)
     {
       choiceCanvas.image(image, x, y, w, h);
-    } else
+      choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+      textHeight = y+h;
+    } 
+    else
     {
-      choiceCanvas.fill(bgColor); // bg color
       choiceCanvas.rect(x, y, w, h);
+      textHeight = y+h/1.75;
     }
-    choiceCanvas.fill(bgColor);
-    choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+    
     choiceCanvas.fill(textColor);
-    choiceCanvas.text(text, x+w/2, y+h);
+    choiceCanvas.text(text, x+w/2, textHeight);
   }
 
   boolean isSelected()
@@ -76,13 +82,78 @@ class Button
   void select()
   {
     if (sets == rootSets)
+    {
       currentRoot = index;
+    }
     if (sets == segmentSets)
+    {
       currentSegment = index;
+    }
     if (sets == tipSets)
+    {
       currentTip = index;
+    }
     if (sets[index] != null)
+    {
       sets[index].loadSprites();
+    }
+  }
+}
+
+
+
+// Should be optimized better, but this is OK for now...
+class EnterButton
+{
+  PImage image;
+  int index, x, y, w, h;
+  String text;
+  color bgColor, selectedColor, textColor, overColor;
+  boolean selected;
+
+  EnterButton(int _x, int _y, int _w, int _h, String _text)
+  {
+    x = _x;
+    y = _y;
+    w = _w;
+    h = _h;
+    text = _text;
+    bgColor = color(200);
+    textColor = color(0);
+    selectedColor = color(0);
+    overColor = color(255, 0, 0);
+    //print ("\n creating button: " + text);
+  }
+
+  void draw()
+  {
+    int margin = 10;
+    if (isOver())
+    {
+      choiceCanvas.fill(overColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+      if (mousePressed)
+      {
+        select();
+      }
+    }
+    choiceCanvas.fill(bgColor); // bg color
+    choiceCanvas.rect(x, y, w, h);
+    choiceCanvas.fill(bgColor);
+    choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+    choiceCanvas.fill(textColor);
+    choiceCanvas.text(text, x+w/2, y+h/1.5);
+  }
+
+
+  boolean isOver()
+  {
+    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+  }
+
+  void select()
+  {
+    hideMenu();
   }
 }
 

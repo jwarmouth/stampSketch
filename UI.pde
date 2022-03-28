@@ -11,9 +11,14 @@ void toggleMenu()
     print(state);
   } else
   {
-    state = State.WAITING;
-    print(state);
+    hideMenu();
   }
+}
+
+void hideMenu()
+{
+  showMenu = false;
+  state = State.WAITING;
 }
 
 
@@ -22,7 +27,7 @@ void menuSetup()
   rootButtons = createButtonsInRows(rootSets, 400);
   segmentButtons = createButtonsInRows(segmentSets, 600);
   tipButtons = createButtonsInRows(tipSets, 800);
-  //okButton = new Button();
+  enterButton = new EnterButton(1740, 840, 150, 80, "Enter");
 }
 
 // To replace createButtonsInColumns???
@@ -112,6 +117,9 @@ void drawMenu()
   
   choiceCanvas.textAlign(CENTER);
   choiceCanvas.noStroke();
+  
+  
+  choiceCanvas.textSize(24);
 
   for (Button button : rootButtons)
     button.draw();
@@ -122,6 +130,8 @@ void drawMenu()
   for (Button button : tipButtons)
     button.draw();
 
+  enterButton.draw();
+  
   choiceCanvas.endDraw();
   image(choiceCanvas, 0, 0);
 }

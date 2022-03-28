@@ -2,6 +2,10 @@
  ***  STAMPING   *****************************************
  *********************************************************/
 
+
+/********************************************************
+ ***  STAMP ROOT   ***************************************
+ *********************************************************/
 void stampRoot()
 {
   SpriteSet set = rootSets[currentRoot];
@@ -18,6 +22,10 @@ void stampRoot()
   saveFrames(12);
 }
 
+
+/********************************************************
+ ***  STAMP SEGMENT   ***********************************
+ *********************************************************/
 void stampSegment()
 {
   SpriteSet set = segmentSets[currentSegment];
@@ -28,7 +36,7 @@ void stampSegment()
   stamp(set, lastAngle, 1);
   previewTo(segmentCanvas);
 
-  lastSegment = new Block(centerPoint.x, centerPoint.y, armSegmentDistance, armSegmentDistance, lastAngle, lastPoint, targetPoint);
+  lastSegment = new Block(centerPoint.x, centerPoint.y, segmentSets[currentSegment].armSegmentDistance, segmentSets[currentSegment].armSegmentDistance, lastAngle, lastPoint, targetPoint);
   segmentBlocks.add(lastSegment);
 
   lastPoint = targetPoint;
@@ -36,6 +44,10 @@ void stampSegment()
   saveFrames(1);
 }
 
+
+/********************************************************
+ ***  STAMP TIP   ***************************************
+ *********************************************************/
 void stampTip()
 {
   SpriteSet set = tipSets[currentTip];
@@ -83,6 +95,10 @@ void stampTip()
   }
 }
 
+
+/********************************************************
+ ***  STAMP  ********************************************
+ *********************************************************/
 void stamp(SpriteSet spriteSet, float rotation, int flipX)
 {
   if (spriteSet == null) return; // quick fix???

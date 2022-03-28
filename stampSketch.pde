@@ -29,7 +29,7 @@ PGraphics[] canvasFrames;
 //UI
 String[] uiItems = new String[] {"[C]hoose", "[S]ave", "[R]ecord", "[D]ebug", "[P]review", "[X]Clear", "[U]I Toggle", "[A]nimating"};
 Button[] rootButtons, segmentButtons, tipButtons;
-Button okButton;
+EnterButton enterButton;
 
 enum State {
   CHOOSING, WAITING, WAITING_TO_ROOT, WAITING_TO_SEGMENT, SEGMENTING, ENDING
@@ -47,7 +47,8 @@ void setup()
   resetArrayLists();
   menuSetup();
   armSegmentDistance = armSet.width * .8;
-  if (showMenu) state = State.CHOOSING;
+  showMenu = true;
+  state = State.CHOOSING;
 }
 
 void draw()
@@ -70,6 +71,11 @@ void keyReleased()
     case 'C':
     case 'c':
       toggleMenu();
+      break;
+      
+    case ENTER:
+    case RETURN:
+      hideMenu();
       break;
       
     case 'S':
@@ -206,7 +212,7 @@ void mouseDragged()
 
   case SEGMENTING:
     // Calculate Center Point first -- then check to see if it overlaps
-    if (findTargetCenterPoints(armSegmentDistance))
+    if (findTargetCenterPoints(segmentSets[currentSegment].armSegmentDistance))
     {
       if (overlaps(rootCanvas, centerPoint))
       {

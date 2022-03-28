@@ -5,6 +5,9 @@
  [ ] Record animation as data & play it back procedurally
  
  DONE
+ [X] Menu Buttons are now in horizontal rows
+ [X] implemented red segment, black block, black hands
+ [X] Organized into tabs for less scrolling insanity
  [X] AAAAARGH! *** Hand often draws at crazy angle! -- FIXED - it was in the random scale x
  [X] Store rotations in block data
  [X] Store the time in frames in block data

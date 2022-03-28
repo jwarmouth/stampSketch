@@ -1,14 +1,14 @@
 class SpriteSet
 {
   PImage[] sprites;
-  float offsetX, offsetY;
+  float offsetX, offsetY, armSegmentDistance;
   int length, width, height;
   String name, fileName;
-  SpriteSet(String _name, String _file, int _length)
+  SpriteSet(String _name, String _fileName, int _length, float _armSegmentMultiplier)
   {
-    length = _length;
-    fileName = _file;
     name = _name;
+    fileName = _fileName;
+    length = _length;
     sprites = new PImage[length];
     loadSprite(0);
     if (name.contains("hand"))
@@ -16,6 +16,7 @@ class SpriteSet
       offsetX = width/2;
       loadSprites();
     }
+    armSegmentDistance = width * _armSegmentMultiplier;
     //loadSprites();
     //width = sprites[0].width;
     //height = sprites[0].height;
