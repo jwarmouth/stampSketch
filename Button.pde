@@ -6,6 +6,7 @@ class Button
   String text;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
+  boolean doubled = false;
 
   Button(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
   {
@@ -21,12 +22,17 @@ class Button
     textColor = color(0);
     selectedColor = color(0);
     overColor = color(255, 0, 0);
+    //if (w < 100)
+    //{
+    // w *= 2;
+    // doubled = true;
+    //}
     //print ("\n creating button: " + text);
   }
 
   void draw()
   {
-    int margin = 10;
+    int margin = 5;
     if (isSelected())
     {
       choiceCanvas.fill(selectedColor);
@@ -43,22 +49,29 @@ class Button
     }
     
     choiceCanvas.fill(bgColor);
-    float textHeight;
+    float textHeight = 20;
+    float textY;
     
     if (image != null)
     {
-      choiceCanvas.image(image, x, y, w, h);
-      choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
-      textHeight = y+h;
+      choiceCanvas.image(image, x, y, image.width, image.height);
+      //if (doubled)
+      //{
+      // choiceCanvas.image(image, x+image.width, y, image.width, image.height);
+      //}
+      //choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+    
+      choiceCanvas.rect(x, y+h-20, w, textHeight);
+      textY = y+h;
     } 
     else
     {
       choiceCanvas.rect(x, y, w, h);
-      textHeight = y+h/1.75;
+      textY = y+h/1.75;
     }
     
     choiceCanvas.fill(textColor);
-    choiceCanvas.text(text, x+w/2, textHeight);
+    choiceCanvas.text(text, x+w/2, textY);
   }
 
   boolean isSelected()
@@ -154,6 +167,26 @@ class EnterButton
   void select()
   {
     hideMenu();
+  }
+}
+
+
+class Heading
+{
+  String text;
+  int x;
+  int y;
+  
+  Heading(String _text, int _x, int _y)
+  {
+    text = _text;
+    x = _x;
+    y = _y;
+  }
+  
+  void draw()
+  {
+     choiceCanvas.text(text, x, y); 
   }
 }
 

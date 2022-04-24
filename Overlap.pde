@@ -19,6 +19,29 @@ boolean overlaps(PGraphics canvas, PVector v)
   return overlaps(canvas, (int)v.x, (int)v.y);
 }
 
+boolean overlaps()
+{
+  return (overlaps(rootCanvas) || overlaps(segmentCanvas) || overlaps(tipCanvas));
+}
+
+Block findOverlappingBlock()
+{
+    if (overlaps(rootCanvas))
+    {
+      return nearestBlock(rootBlocks);
+    } 
+    else if (overlaps(tipCanvas))
+    {
+      return nearestBlock(tipBlocks);
+    } 
+    else if (overlaps(segmentCanvas))
+    {
+      return nearestBlock(segmentBlocks);
+    }
+    
+    return null;
+}
+
 
 // Find Nearest Block
 Block nearestBlock(ArrayList<Block> blocks)

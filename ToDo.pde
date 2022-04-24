@@ -5,6 +5,19 @@
  [ ] Record animation as data & play it back procedurally
  
  DONE
+ [X] Preview the root/segment/tip combo in Choice menu
+ [X] Also store a hi-res canvas that you print to a file at the end
+ [X] Added AOTM mode, with different size, scaleFactor, and guides
+ [X] Choice Menu redesign so that buttons flow to new line if width = too small
+ [X] Erase keeps your choices instead of simply resetting the entire project
+ [X] Two-mouse-button mode, where left-click/drag creates segments, and right-click/drag creates tips
+ [X] Put random NSEW back into Root Rotation
+ [X] Find a way to distinguish between segment & full arm -- maybe segment multiplier = 0. Nope, a "stretchy" boolean
+ [X] Preview when Waiting To Segment / Segmenting
+ [X] With long arms, scale based on length of mouse drag
+ [X] Added red line & long arm blocks
+ [X] Added 2 new arm segments
+ [X] Root Preview implemented
  [X] Menu Buttons are now in horizontal rows
  [X] implemented red segment, black block, black hands
  [X] Organized into tabs for less scrolling insanity
