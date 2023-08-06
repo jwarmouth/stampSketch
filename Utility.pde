@@ -9,7 +9,7 @@ boolean findTargetCenterPoints(float distance)
   // Check to see if current x,y is beyond threshold distance away from lastX, lastY
   // find vector from lastXY to mouseXY
   PVector toTarget = new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
-  
+
   if (toTarget.magSq() > sq(distance))
   {
     toTarget.limit(distance/2);
@@ -17,8 +17,7 @@ boolean findTargetCenterPoints(float distance)
     targetPoint = PVector.add(centerPoint, toTarget);
     targetAngle = angleLastToTarget();
     return true;
-  }
-  else 
+  } else
   {
     toTarget.limit(distance/2);
     centerPoint = PVector.add(lastPoint, toTarget);
@@ -31,11 +30,11 @@ boolean findTargetCenterPoints(float distance)
 
 void findPointsOutsideBlock()
 {
-    targetPoint = new PVector(mouseX, mouseY);
-    PVector toCenter = PVector.sub(lastPoint, targetPoint);
-    toCenter.limit(20);    // Start a TEENY bit back toward the center of lastRoot
-    lastPoint = PVector.add(targetPoint, toCenter);
-    lastAngle = angleToMouse(lastPoint);
+  targetPoint = new PVector(mouseX, mouseY);
+  PVector toCenter = PVector.sub(lastPoint, targetPoint);
+  toCenter.limit(20);    // Start a TEENY bit back toward the center of lastRoot
+  lastPoint = PVector.add(targetPoint, toCenter);
+  lastAngle = angleToMouse(lastPoint);
 }
 
 boolean isSegmentFarEnough(float distance)
@@ -57,12 +56,15 @@ float distanceLastPointToMouse()
 void calculateCenterAndTarget(float distance)
 {
   PVector lastPointToMouse = lastPointToMouse();
-  
+
   if (segmentSets[currentSegment].stretchy)
   {
-    distance = lastPointToMouse.mag();
+    float mag = lastPointToMouse.mag();
+    if (distance > mag) {
+      distance = mag;
+    }
   }
-  
+
   lastPointToMouse.limit(distance/2);
 
   centerPoint = PVector.add(lastPoint, lastPointToMouse);
@@ -75,16 +77,16 @@ void calculateCenterAndTarget(float distance)
 float segmentScale(SpriteSet set)
 {
   float scaleX = 1;
-  
+
   if (set.stretchy)
   {
     float distanceFromLastPointToMouse = distanceLastPointToMouse();
-    if (distanceFromLastPointToMouse < set.armSegmentDistance)
+    if (distanceFromLastPointToMouse < set.width)
     {
       scaleX = distanceFromLastPointToMouse / set.width;
     }
   }
-  
+
   return scaleX;
 }
 
@@ -143,10 +145,10 @@ void centerPointMatchesTip(SpriteSet set)
   case "hand-black":
     centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
     break;
-    
-  //case "swab":
-  //  centerPoint = PVector.add(lastPoint,  PVector.fromAngle(lastAngle, targetPoint));
-  //  break;
+
+    //case "swab":
+    //  centerPoint = PVector.add(lastPoint,  PVector.fromAngle(lastAngle, targetPoint));
+    //  break;
 
   default:
     centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width/2));
@@ -158,13 +160,16 @@ void centerPointMatchesTip(SpriteSet set)
 // Left Hand or Right Hand?
 SpriteSet rightOrLeftHand(SpriteSet set)
 {
-  if (set.name == "hand-red") {
-    return handRedSets[tipFlip];
-    //return handRedSets[(int)random(handRedSets.length)];
+  int whichSet = tipFlip;
+  if (whichSet == -1) {
+    whichSet = 0;
   }
-    
-  else if (set.name == "hand-black") {
-    return handBlackSets[tipFlip];
+  print (set.name + " " + whichSet);
+  if (set.name == "hand-red") {
+    return handRedSets[whichSet];
+    //return handRedSets[(int)random(handRedSets.length)];
+  } else if (set.name == "hand-black") {
+    return handBlackSets[whichSet];
     //return handBlackSets[(int)random(handBlackSets.length)];
   }
   return set;

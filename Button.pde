@@ -110,6 +110,7 @@ class Button
     {
       sets[index].loadSprites();
     }
+    savePrefs();
   }
 }
 

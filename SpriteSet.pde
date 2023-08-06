@@ -13,7 +13,10 @@ class SpriteSet
     length = _length;
     stretchy = _stretchy;
     sprites = new PImage[length];
-    hiResSprites = new PImage[length];
+    if (hiResEnabled)
+    {
+      hiResSprites = new PImage[length];
+    }
     loadSprite(0);
     if (name.contains("hand"))
     {
@@ -23,14 +26,14 @@ class SpriteSet
     armSegmentDistance = width * _armSegmentMultiplier;
     print("SpriteSet " + name + ": w" + width + ", h " + height + "\n");
   }
-  
+
   SpriteSet(String _name, String _fileName, int _length, float _armSegmentMultiplier)
   {
     this (_name, _fileName, _length, _armSegmentMultiplier, false);
     // https://discourse.processing.org/t/multiple-constructors-in-a-class/3356
     // you can have just one main constructor and call it from the others using this
   }
-  
+
   SpriteSet(String _name, String _fileName, int _length)
   {
     this (_name, _fileName, _length, 1, false);
@@ -51,14 +54,20 @@ class SpriteSet
     for (int i = 1; i < length; i++)
     {
       sprites[i] = null;
-      hiResSprites[i] = null;
+      if (hiResEnabled)
+      {
+        hiResSprites[i] = null;
+      }
     }
   }
 
   void loadSprite(int index)
   {
     sprites[index] = loadImage("images/" + fileName + "-" + (index) + ".png");
-    hiResSprites[index] = loadImage("images/" + fileName + "-" + (index) + ".png");
+    if (hiResEnabled)
+    {
+      hiResSprites[index] = loadImage("images/" + fileName + "-" + (index) + ".png");
+    }
     if (width == 0)
     {
       width = (int)(sprites[index].width/scaleFactor);

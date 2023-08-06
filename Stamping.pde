@@ -20,6 +20,7 @@ void stampRoot()
   lastRoot = new Block(lastPoint.x, lastPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
   rootBlocks.add(lastRoot);
 
+  // saveFrames only happens if recording
   saveFrames(12);
 }
 
@@ -31,7 +32,7 @@ void stampRoot()
 void stampSegment(int frames)
 {
   SpriteSet set = segmentSets[currentSegment];
-  
+
   if (set == null) return; // quick fix???
 
   lastAngle = angleToMouse(lastPoint);
@@ -90,6 +91,11 @@ void stampTip(float stampAngle)
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
 
+  if (set.name == "eye block" && overlaps(tipCanvas)) {
+    set = eyeballSet;
+    set.loadSprites();
+  }
+
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
 
   targetPoint = new PVector (mouseX, mouseY);
@@ -101,21 +107,26 @@ void stampTip(float stampAngle)
 
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
+  if (set.name == "eye block") {
+    stampAngle += radians(90);
+  } else if (set.name.indexOf("hand") > 0) {
+    // Make sure it's the right hand set
+  }
 
-  stamp (set, stampAngle, 1);
+  stamp (set, stampAngle, tipFlip);
   previewTo(tipCanvas);
 
-  lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
+  lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
   saveFrames(12);
 
-  if (debugging)
-  {
-    debugCanvas.beginDraw();
-    debugCanvas.fill(0, 255, 0);
-    debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
-    debugCanvas.endDraw();
-  }
+  //if (debugging)
+  //{
+  //  debugCanvas.beginDraw();
+  //  debugCanvas.fill(0, 255, 0);
+  //  debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
+  //  debugCanvas.endDraw();
+  //}
 }
 
 
@@ -127,18 +138,22 @@ void stamp(SpriteSet spriteSet, float rotation, float flipX)
   if (spriteSet == null) return; // quick fix???
   stampPreview(spriteSet, rotation, flipX);
   int index = (int)random(spriteSet.length);
- 
-  for (int i=0; i<3; i++)
+
+  for (int i=0; i<canvasFramesCount; i++)
   {
     stampToCanvas(canvasFrames[i], centerPoint, spriteSet, (index+i)%spriteSet.length, rotation, flipX);
   }
-  
-  stampToHiRes(spriteSet, index, rotation, flipX);
 
-  if (debugging) 
+  if (hiResEnabled)
   {
-    drawDebug();
+    stampToHiRes(centerPoint, spriteSet, index, rotation, flipX);
   }
+
+  // NOT SURE WHY THIS IS DISABLED?????
+  //if (debugging)
+  //{
+  //  stampToDebug();
+  //}
 
   // https://discourse.processing.org/t/how-do-you-rotate-an-image-without-the-image-being-moved/6579/4
   // https://discourse.processing.org/t/solved-question-about-flipping-images/7391/2
@@ -154,22 +169,22 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int 
   canvas.pushMatrix(); // remember current drawing matrix
   canvas.translate(location.x, location.y);
   canvas.rotate(rotation);
-  canvas.scale(flipX, 1);
-  canvas.image(spriteSet.sprites[index], spriteSet.offsetX * flipX, spriteSet.offsetY);
+  canvas.scale(1, flipX);
+  canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipX);
   canvas.popMatrix();
   canvas.endDraw();
 }
 
-void stampToHiRes(SpriteSet spriteSet, int index, float rotation, float flipX)
+void stampToHiRes(PVector location, SpriteSet spriteSet, int index, float rotation, float flipX)
 {
   hiResCanvas.beginDraw();
   hiResCanvas.blendMode(MULTIPLY);
   hiResCanvas.imageMode(CENTER); // use image center instead of top left
   hiResCanvas.pushMatrix(); // remember current drawing matrix
-  hiResCanvas.translate(centerPoint.x * scaleFactor, centerPoint.y * scaleFactor);
+  hiResCanvas.translate(location.x * scaleFactor, location.y * scaleFactor);
   hiResCanvas.rotate(rotation);
-  hiResCanvas.scale(flipX, 1);
-  hiResCanvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * flipX * scaleFactor, spriteSet.offsetY * scaleFactor);
+  hiResCanvas.scale(1, flipX);
+  hiResCanvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * scaleFactor, spriteSet.offsetY * flipX * scaleFactor);
   hiResCanvas.popMatrix();
   hiResCanvas.endDraw();
 }

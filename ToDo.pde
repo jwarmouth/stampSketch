@@ -1,10 +1,23 @@
 /*************************************************
- TODO
+ TODO]
+ [ ] Optimize for other users on touch screen
+ [ ] Mouse Auto is broken? -- it only works once one has been started
+ [ ] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
+ [ ] OK to draw on top of existing block!
+ [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
+ [ ] Store last move in a temp PGraphics so it can be undone?
  [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
  [ ] Undo for a specific arm if it sucks?
  [ ] Record animation as data & play it back procedurally
+ [ ] If you record animation, you can have it draw to Hi-Res in separate process
+ [ ] Choose ScaleFactor -- make slider or other selector
+ [ ] Buttons at bottom should be clickable (as well as selected by key)
  
  DONE
+ [X] Previous Settings can be stored in a User Settings text file?
+ [X] Added Eye Block & Eyeball segments
+ [X] If user right-clicks on Eye Block & it's active, preview/place Black Eyeball instead
+ [X] Stretchy segments should anchor to lastPoint instead of centerPoint
  [X] Preview the root/segment/tip combo in Choice menu
  [X] Also store a hi-res canvas that you print to a file at the end
  [X] Added AOTM mode, with different size, scaleFactor, and guides

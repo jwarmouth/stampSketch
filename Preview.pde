@@ -1,3 +1,7 @@
+/********************************************************
+ ***  PREVIEW     ****************************************
+ *********************************************************/
+ 
 void drawPreview()
 {
   if (showPreview)
@@ -9,7 +13,7 @@ void drawPreview()
     image(previewCanvas, 0, 0);
     blendMode(BLEND);
     tint(255, 255);
-  } 
+  }
 }
 
 void clearPreview()
@@ -23,6 +27,9 @@ void stampPreview(SpriteSet spriteSet, float rotation, float flipX)
 {
   makeTransparent(previewCanvas);
   stampToCanvas(previewCanvas, centerPoint, spriteSet, 0, rotation, flipX);
+  if (debugging) {
+    stampToDebug();
+  }
 }
 
 void stampPreview(SpriteSet spriteSet, float rotation)
@@ -79,14 +86,23 @@ void previewTip(float stampAngle)
 {
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
+  
+  if (set.name == "eye block" && overlaps(tipCanvas)) {
+    set = eyeballSet;
+    set.loadSprites();
+  }
 
   targetPoint = new PVector (mouseX, mouseY);
   // stamp end with rotation to mouse
   if (stampAngle == 0) {
     stampAngle = angleToMouse(lastPoint);
   }
+  
+  if (set.name == "eye block") {
+   stampAngle += radians(90); 
+  }
 
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
-  stampPreview (set, stampAngle, 1);
+  stampPreview (set, stampAngle, tipFlip);
 }

@@ -9,14 +9,14 @@ boolean overlaps(PGraphics canvas, int x, int y)
   return (mouseColor < 0);
 }
 
-boolean overlaps(PGraphics canvas)
-{
-  return overlaps(canvas, mouseX, mouseY);
-}
-
 boolean overlaps(PGraphics canvas, PVector v)
 {
   return overlaps(canvas, (int)v.x, (int)v.y);
+}
+
+boolean overlaps(PGraphics canvas)
+{
+  return overlaps(canvas, mouseX, mouseY);
 }
 
 boolean overlaps()
@@ -26,16 +26,13 @@ boolean overlaps()
 
 Block findOverlappingBlock()
 {
-    if (overlaps(rootCanvas))
-    {
+    if (overlaps(rootCanvas)) {
       return nearestBlock(rootBlocks);
     } 
-    else if (overlaps(tipCanvas))
-    {
+    else if (overlaps(tipCanvas)) {
       return nearestBlock(tipBlocks);
     } 
-    else if (overlaps(segmentCanvas))
-    {
+    else if (overlaps(segmentCanvas)) {
       return nearestBlock(segmentBlocks);
     }
     
@@ -49,11 +46,9 @@ Block nearestBlock(ArrayList<Block> blocks)
   Block returnBlock = null;
   float distSq = width * width;
 
-  for (Block block : blocks)
-  {
+  for (Block block : blocks) {
     float newDistSq = findDistSq(mouseX, mouseY, block.y, block.y);
-    if (newDistSq < distSq)
-    {
+    if (newDistSq < distSq) {
       distSq = newDistSq;
       returnBlock = block;
     }
@@ -65,16 +60,14 @@ Block nearestBlock(ArrayList<Block> blocks)
 Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
 {
   // safeZone is a multiplier to the block's width & height
-  for (Block block : blocks)
-  {
+  for (Block block : blocks) {
     float minX = block.x - block.width/scaleFactor * safeZone;
     float maxX = block.x + block.width/scaleFactor * safeZone;
     float minY = block.y - block.height/scaleFactor * safeZone;
     float maxY = block.y + block.height/scaleFactor * safeZone;
     //print ("Block " + i + " x(" + minX + ", " + maxX + "), y(" + minY + ", " + maxY + ") \n");
 
-    if (mouseX > minX && mouseX < maxX && mouseY > minY && mouseY < maxY)
-    {
+    if (mouseX > minX && mouseX < maxX && mouseY > minY && mouseY < maxY) {
       //print ("Trying to draw within a block \n");
       return block;
     }
@@ -87,8 +80,9 @@ Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
 boolean isOverlappingBlocks(ArrayList<Block> blocks, float safeZone)
 {
   Block block = findOverlappingBlock(blocks, safeZone);
-  if (block == null)
-    return false;
-  else
+  if (block != null) {
     return true;
+  }
+  
+  return false;
 }

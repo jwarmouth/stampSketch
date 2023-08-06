@@ -21,6 +21,12 @@ void hideMenu()
   state = State.WAITING;
 }
 
+int scaleUI (int input)
+{
+  float output = input / refScale;
+  return (int)output;
+}
+
 
 void menuSetup()
 {
@@ -84,7 +90,8 @@ Button[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 
       buttonImage = loadImage("images/" + set.fileName + "-0.png");
       buttonText = sets[i].name;
-    } else
+    } 
+    else
     {
       buttonImage = null;
       buttonText = "none";
@@ -200,7 +207,7 @@ void drawMenu()
 
   enterButton.draw();
   choiceCanvas.endDraw();
-  image(choiceCanvas, 0, 0);
+  image(choiceCanvas, 0, 0, scaleUI(choiceCanvas.width), scaleUI(choiceCanvas.height));
 
 
   // Draw preview of root/segment/tip
@@ -314,45 +321,16 @@ void drawUI()
   }
 
   // Draw "Animating" frames
-  for (int i=0; i<3; i++)
+  for (int i=0; i<canvasFramesCount; i++)
   {
     uiCanvas.text(i+1, uiItems.length*buttonWidth + i*60 +10, 25);
   }
 
   uiCanvas.text("State." + state, buttonWidth*12, 25);
   uiCanvas.endDraw();
-  image(uiCanvas, 0, h-40);
+  image(uiCanvas, 0, h-scaleUI(40), scaleUI(uiCanvas.width), scaleUI(uiCanvas.height));
 }
 
-void stampToDebug()
-{
-  debugCanvas.beginDraw();
-  debugCanvas.fill(255, 255, 0);
-  debugCanvas.line(lastPoint.x, lastPoint.y, targetPoint.x, targetPoint.y);
-
-  //circle(mouseX, mouseY, 10);
-
-  debugCanvas.fill(255, 0, 0); // Red
-  debugCanvas.circle(lastPoint.x, lastPoint.y, 10);
-  //circle(targetPoint.x, targetPoint.y, 5);
-
-  debugCanvas.fill(0, 255, 0); // Green
-  debugCanvas.circle(centerPoint.x, centerPoint.y, 10);
-
-  debugCanvas.fill(0, 0, 255); // Blue
-  debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
-
-  debugCanvas.endDraw();
-}
-
-
-void drawDebug()
-{
-  if (debugging)
-  {
-    image(debugCanvas, 0, 0);
-  }
-}
 
 void drawFrame()
 {
