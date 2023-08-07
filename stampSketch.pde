@@ -32,7 +32,7 @@ String saveFolder = "saved/";
 String fileName = "stamp";
 String saveFormat = ".png";
 String saveHiResFormat = ".png"; //.tif
-boolean hiResEnabled = true;
+boolean hiResEnabled = false;
 int frameIndex, currentCanvas, saveCanvasNum;
 
 // Screen Info
@@ -99,7 +99,7 @@ void settings()
 void setup()
 {
   background(255);
-  frameRate(60);
+  frameRate(120);
 
   loadPrefs();
   loadSpriteSets();

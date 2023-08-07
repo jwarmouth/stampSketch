@@ -1,7 +1,7 @@
 /*************************************************
- TODO]
+ TODO
+ [ ] When you drag off central block, start segmenting
  [ ] Optimize for other users on touch screen
- [ ] Mouse Auto is broken? -- it only works once one has been started
  [ ] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
  [ ] OK to draw on top of existing block!
  [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
@@ -14,6 +14,7 @@
  [ ] Buttons at bottom should be clickable (as well as selected by key)
  
  DONE
+ [X] Mouse Auto is broken? -- it only works once one has been started
  [X] Previous Settings can be stored in a User Settings text file?
  [X] Added Eye Block & Eyeball segments
  [X] If user right-clicks on Eye Block & it's active, preview/place Black Eyeball instead

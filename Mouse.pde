@@ -34,6 +34,7 @@
 void ifMouseDragged()
 {
   if (!mousePressed) return;
+  
   SpriteSet currentSegmentSet = segmentSets[currentSegment];
   float maxDistance;
 
@@ -50,12 +51,24 @@ void ifMouseDragged()
   switch(state) {
   case PREVIEWING_ROOT:
     previewRoot();
+    //thread("previewRoot");
+    if (!overlaps(previewCanvas)) {
+      thread("stampRoot");
+      thread("findPointsOutsideBlock");
+      if (currentSegmentSet == null) {
+        state = State.PREVIEWING_TIP;
+      } else if (currentSegmentSet.stretchy) {
+        state = State.PREVIEWING_STRETCHY_SEGMENT;
+      } else {
+        state = State.SEGMENTING;
+      }
+    }
     break;
 
   case OVERLAPPING_ROOT:
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
-      findPointsOutsideBlock();
+      thread("findPointsOutsideBlock");
       if (currentSegmentSet == null) {
         state = State.PREVIEWING_TIP;
       } else if (currentSegmentSet.stretchy) {
@@ -68,11 +81,12 @@ void ifMouseDragged()
 
   case SEGMENTING:
     maxDistance = currentSegmentSet.armSegmentDistance;
-    calculateCenterAndTarget(maxDistance);
+    //calculateCenterAndTarget(maxDistance);
+    thread("calculateCenterAndTarget");
     if (isSegmentFarEnough(maxDistance)) {
-      stampSegment();
+      thread("stampSegment");
     } else {
-      previewSegment();
+      thread("previewSegment");
     }
 
     break;
@@ -81,11 +95,11 @@ void ifMouseDragged()
     //maxDistance = currentSegmentSet.armSegmentDistance;
     maxDistance = currentSegmentSet.width;
     calculateCenterAndTarget(maxDistance);
-    previewSegment();
+    thread("previewSegment");
     break;
 
   case PREVIEWING_TIP:
-    previewTip();
+    thread("previewTip");
     break;
 
   default:
@@ -96,6 +110,7 @@ void ifMouseDragged()
 void mouseReleased()
 {
   lastRoot = null;
+  thread("clearPreview");
 
   switch(state) {
   case CHOOSING:
@@ -103,7 +118,7 @@ void mouseReleased()
     break;
 
   case PREVIEWING_ROOT:
-    stampRoot(); // rotateToMouse() then stamp center block
+    thread("stampRoot"); // rotateToMouse() then stamp center block
     state = State.WAITING;
     break;
 
@@ -111,7 +126,8 @@ void mouseReleased()
     if (mouseAutoTip) { // && !overlaps()) {
       //previewTip(targetAngle); that doesn't fix the issue
       tipFlip = randomSignum();
-      stampTip(targetAngle);
+      //stampTip(targetAngle);
+      thread("stampTip");
     }
     state = State.WAITING;
     break;
@@ -128,7 +144,7 @@ void mouseReleased()
     break;
 
   case PREVIEWING_TIP:
-    stampTip();
+    thread("stampTip");
     state = State.WAITING;
     break;
 
@@ -137,5 +153,5 @@ void mouseReleased()
     break;
   }
 
-  clearPreview();
+  thread("clearPreview");
 }

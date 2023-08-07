@@ -53,6 +53,11 @@ float distanceLastPointToMouse()
   return lastPointToMouse().mag();
 }
 
+void calculateCenterAndTarget()
+{
+  calculateCenterAndTarget(segmentSets[currentSegment].armSegmentDistance);
+}
+
 void calculateCenterAndTarget(float distance)
 {
   PVector lastPointToMouse = lastPointToMouse();

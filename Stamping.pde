@@ -83,7 +83,7 @@ void stampSegment()
  *********************************************************/
 void stampTip()
 {
-  stampTip(0);
+  stampTip(targetAngle);
 }
 
 void stampTip(float stampAngle)

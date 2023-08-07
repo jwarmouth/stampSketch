@@ -262,6 +262,7 @@ void drawMenu()
   //    location.y -= sets[i].width/2;
   //  }
   //}
+ 
 
   previewCanvas.endDraw();
 
@@ -325,8 +326,13 @@ void drawUI()
   {
     uiCanvas.text(i+1, uiItems.length*buttonWidth + i*60 +10, 25);
   }
-
+  
+  // Draw STATE
   uiCanvas.text("State." + state, buttonWidth*12, 25);
+  
+  // Draw Frame Rate
+  uiCanvas.text(frameRate + " FPS", buttonWidth*14, 25);
+  
   uiCanvas.endDraw();
   image(uiCanvas, 0, h-scaleUI(40), scaleUI(uiCanvas.width), scaleUI(uiCanvas.height));
 }
