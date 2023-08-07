@@ -1,8 +1,8 @@
 /********************************************************
  ***  INPUT / MOUSE     *********************************
  *********************************************************/
- 
- void mousePressed()
+
+void mousePressed()
 {
   switch(state) {
   case WAITING:
@@ -34,7 +34,7 @@
 void ifMouseDragged()
 {
   if (!mousePressed) return;
-  
+
   SpriteSet currentSegmentSet = segmentSets[currentSegment];
   float maxDistance;
 
@@ -123,11 +123,15 @@ void mouseReleased()
     break;
 
   case SEGMENTING:
-    if (mouseAutoTip) { // && !overlaps()) {
-      //previewTip(targetAngle); that doesn't fix the issue
-      tipFlip = randomSignum();
-      //stampTip(targetAngle);
-      thread("stampTip");
+    if (mouseAutoTip) {
+      if (!overlaps())
+      {
+        //previewTip(targetAngle); that doesn't fix the issue
+        tipFlip = randomSignum();
+        //stampTip(targetAngle);
+        thread("previewTip");
+        thread("stampTip");
+      }
     }
     state = State.WAITING;
     break;

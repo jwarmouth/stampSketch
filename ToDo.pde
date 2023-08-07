@@ -1,6 +1,6 @@
 /*************************************************
  TODO
- [ ] When you drag off central block, start segmenting
+ [ ] 
  [ ] Optimize for other users on touch screen
  [ ] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
  [ ] OK to draw on top of existing block!
@@ -14,6 +14,7 @@
  [ ] Buttons at bottom should be clickable (as well as selected by key)
  
  DONE
+ [X] When you drag off central block, start segmenting
  [X] Mouse Auto is broken? -- it only works once one has been started
  [X] Previous Settings can be stored in a User Settings text file?
  [X] Added Eye Block & Eyeball segments

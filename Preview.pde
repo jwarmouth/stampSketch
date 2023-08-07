@@ -79,7 +79,7 @@ void previewSegment()
  *********************************************************/
 void previewTip()
 {
-  previewTip(0);
+  previewTip(targetAngle);
 }
 
 void previewTip(float stampAngle)
