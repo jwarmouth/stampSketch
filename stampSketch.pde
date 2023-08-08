@@ -36,15 +36,19 @@ boolean hiResEnabled = false;
 int frameIndex, currentCanvas, saveCanvasNum;
 
 // Screen Info
-boolean recording, debugging, animating;
+boolean recording;
+boolean debugging;
+boolean animating = true;
 boolean showPreview = true;
 boolean showUI = true;
-boolean showMenu = true;
+boolean showMenu = false;
 
 // Canvases
 PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas;
 PGraphics[] canvasFrames;
 int canvasFramesCount = 3; // how many looping canvases? Default = 3
+int animationRate = 12;
+int animFrameCount;
 
 //UI
 String[] uiItems = new String[] {"[C]hoose", "[S]ave", "[R]ecord", "[D]ebug", "[P]review", "[M]ouse Auto", "[Z]Cancel", "[X]Erase", "[U]I Toggle", "[A]nimating"};
@@ -61,7 +65,7 @@ int w = 1920;
 int h = 1080;
 int refW = 1920;
 int refH = 1080;
-float refScale;
+float refScale = 1;
 
 // Art on the Marquee
 int aotm_w1 = 346;
@@ -79,6 +83,7 @@ enum State {
 };
 State state = State.WAITING;
 
+/*
 void settings()
 {
   refScale = refW / w;
@@ -94,18 +99,22 @@ void settings()
 
   size (w, h);
 }
-
+*/
 
 void setup()
 {
+  fullScreen();
   background(255);
-  frameRate(120);
+  frameRate(240);
+  
+  refScale = refH / displayHeight;
+  //scaleFactor *= refScale;
 
   loadPrefs();
   loadSpriteSets();
   resetArrayLists();
   menuSetup();
-  armSegmentDistance = armSet.width * .8;
+  armSegmentDistance = armSet.width * .9; //.8;
   createCanvases();
   showMenu = true;
   state = State.CHOOSING;
@@ -114,7 +123,7 @@ void setup()
 
 void draw()
 {
-  ifMouseDragged();
+  thread("ifMouseDragged");
   drawCanvasFrame();
   drawFrame();
   drawAOTM();
@@ -125,23 +134,7 @@ void draw()
 }
 
 
-void drawCanvasFrame()
-{
-  if (animating)
-  {
-    currentCanvas = frameCount/canvasFramesCount%canvasFramesCount;
-  }
-  image(canvasFrames[currentCanvas], 0, 0);
-}
 
-void selectCanvasFrame(int which)
-{
-  animating = false;
-  if (canvasFramesCount >= which)
-  {
-    currentCanvas = which;
-  }
-}
 
 void moveSpriteWithSpace()
 {

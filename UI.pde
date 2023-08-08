@@ -333,6 +333,9 @@ void drawUI()
   // Draw Frame Rate
   uiCanvas.text(frameRate + " FPS", buttonWidth*14, 25);
   
+  // Draw animFrameCount
+  uiCanvas.text("Anim " + animFrameCount%animationRate, buttonWidth*16, 25);
+  
   uiCanvas.endDraw();
   image(uiCanvas, 0, h-scaleUI(40), scaleUI(uiCanvas.width), scaleUI(uiCanvas.height));
 }

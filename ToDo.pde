@@ -1,6 +1,6 @@
 /*************************************************
  TODO
- [ ] 
+ [ ] Animate at correct animationRate
  [ ] Optimize for other users on touch screen
  [ ] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
  [ ] OK to draw on top of existing block!

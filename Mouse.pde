@@ -86,7 +86,7 @@ void ifMouseDragged()
     if (isSegmentFarEnough(maxDistance)) {
       thread("stampSegment");
     } else {
-      thread("previewSegment");
+      previewSegment();
     }
 
     break;
@@ -110,7 +110,7 @@ void ifMouseDragged()
 void mouseReleased()
 {
   lastRoot = null;
-  thread("clearPreview");
+  clearPreview();
 
   switch(state) {
   case CHOOSING:
@@ -129,8 +129,9 @@ void mouseReleased()
         //previewTip(targetAngle); that doesn't fix the issue
         tipFlip = randomSignum();
         //stampTip(targetAngle);
-        thread("previewTip");
+        //thread("previewTip");
         thread("stampTip");
+        thread("clearPreview");
       }
     }
     state = State.WAITING;
