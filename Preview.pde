@@ -4,6 +4,8 @@
  
 void drawPreview()
 {
+  if (state == State.WAITING) return;
+  
   if (showPreview)
   {
     blendMode(MULTIPLY);

@@ -124,15 +124,7 @@ void mouseReleased()
 
   case SEGMENTING:
     if (mouseAutoTip) {
-      if (!overlaps())
-      {
-        //previewTip(targetAngle); that doesn't fix the issue
-        tipFlip = randomSignum();
-        //stampTip(targetAngle);
-        //thread("previewTip");
-        thread("stampTip");
-        thread("clearPreview");
-      }
+      thread("stampTipAuto");
     }
     state = State.WAITING;
     break;

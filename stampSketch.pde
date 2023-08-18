@@ -42,6 +42,7 @@ boolean animating = true;
 boolean showPreview = true;
 boolean showUI = true;
 boolean showMenu = false;
+boolean allowOverlap = true;
 
 // Canvases
 PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas;
@@ -58,6 +59,7 @@ EnterButton enterButton;
 
 // Mouse Auto
 boolean mouseAutoTip = true;
+boolean autoEyeball = true;
 
 // Screen Size
 boolean aotm = false;
@@ -103,11 +105,12 @@ void settings()
 
 void setup()
 {
-  fullScreen();
+  //fullScreen();
+  size(1920, 1080);
   background(255);
   frameRate(240);
   
-  refScale = refH / displayHeight;
+  //refScale = refH / displayHeight;
   //scaleFactor *= refScale;
 
   loadPrefs();

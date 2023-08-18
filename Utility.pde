@@ -165,11 +165,12 @@ void centerPointMatchesTip(SpriteSet set)
 // Left Hand or Right Hand?
 SpriteSet rightOrLeftHand(SpriteSet set)
 {
-  int whichSet = tipFlip;
+  int whichSet = floor(random(2));
+  /*int whichSet = tipFlip;
   if (whichSet == -1) {
     whichSet = 0;
-  }
-  print (set.name + " " + whichSet);
+  } */
+  print ("\nTip Set: " + set.name + " " + whichSet);
   if (set.name == "hand-red") {
     return handRedSets[whichSet];
     //return handRedSets[(int)random(handRedSets.length)];

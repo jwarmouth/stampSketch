@@ -8,12 +8,14 @@
  *********************************************************/
 void stampRoot()
 {
+  if (overlaps(rootCanvas)) return;
+
   SpriteSet set = rootSets[currentRoot];
   if (set == null) return; // quick fix???
 
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
-  stamp (set, stampAngle, rootFlip);
+  stamp (set, centerPoint, stampAngle, rootFlip);
   previewTo(rootCanvas);
   makeTransparent(previewCanvas);
 
@@ -37,7 +39,7 @@ void stampSegment(int frames)
 
   lastAngle = angleToMouse(lastPoint);
 
-  stamp(set, lastAngle, segmentScale(set));
+  stamp(set, centerPoint, lastAngle, segmentScale(set));
   previewTo(segmentCanvas);
 
   lastSegment = new Block(centerPoint.x, centerPoint.y, set.armSegmentDistance, set.armSegmentDistance, lastAngle, lastPoint, targetPoint);
@@ -81,6 +83,22 @@ void stampSegment()
 /********************************************************
  ***  STAMP TIP   ***************************************
  *********************************************************/
+void stampTipAuto()
+{
+  if (allowOverlap || !overlaps())
+  {
+    //previewTip(targetAngle); that doesn't fix the issue
+    tipFlip = randomSignum();
+    float angleAdjust = radians(random(6) + random(6) + random(6) - 9);
+    //targetAngle += angleAdjust;
+    //stampTip(targetAngle);
+    //thread("previewTip");
+    stampTip(targetAngle + angleAdjust);
+    print ("\nangleAdjust: " + angleAdjust);
+    clearPreview();
+  }
+}
+
 void stampTip()
 {
   stampTip(targetAngle);
@@ -91,9 +109,13 @@ void stampTip(float stampAngle)
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
 
-  if (set.name == "eye block" && overlaps(tipCanvas)) {
-    set = eyeballSet;
-    set.loadSprites();
+  if (set.name == "eye block")
+  {
+    if (overlaps(tipCanvas))
+    {
+      set = eyeballSet;
+      set.loadSprites();
+    }
   }
 
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
@@ -109,11 +131,27 @@ void stampTip(float stampAngle)
   set = rightOrLeftHand(set);
   if (set.name == "eye block") {
     stampAngle += radians(90);
-  } else if (set.name.indexOf("hand") > 0) {
+  }
+  
+  if (set.name == "eye")
+  {
+    stampAngle += radians (random(200) - 100);
+  }
+
+  if (set.name.indexOf("hand") > 0) {
     // Make sure it's the right hand set
   }
 
-  stamp (set, stampAngle, tipFlip);
+  stamp (set, centerPoint, stampAngle, tipFlip);
+  if (set.name == "eye block" && autoEyeball)
+  {
+    // AUTO-STAMP EYEBALL!
+    eyeballSet.loadSprites();
+    PVector eyeballPoint = centerPoint;
+    eyeballPoint.x += random(40)-20;
+    eyeballPoint.y += random(20)-10;
+    stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+  }
   previewTo(tipCanvas);
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
@@ -133,7 +171,7 @@ void stampTip(float stampAngle)
 /********************************************************
  ***  STAMP  ********************************************
  *********************************************************/
-void stamp(SpriteSet spriteSet, float rotation, float flipX)
+void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX)
 {
   if (spriteSet == null) return; // quick fix???
   stampPreview(spriteSet, rotation, flipX);

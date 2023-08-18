@@ -61,6 +61,9 @@ void menuSetup()
   // create Enter button
   menuY += 120;
   enterButton = new EnterButton(leftMargin, menuY, 120, 80, "Enter");
+  
+  // create bottom buttons
+  
 }
 
 // To replace createButtonsInColumns???

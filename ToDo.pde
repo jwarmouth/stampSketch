@@ -1,9 +1,14 @@
 /*************************************************
  TODO
- [ ] Animate at correct animationRate
- [ ] Optimize for other users on touch screen
- [ ] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
- [ ] OK to draw on top of existing block!
+ [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down?
+ [ ] Buttons at bottom should be clickable (as well as selected by key)
+ [ ] Menu must be mouse driven (click on UI buttons)
+ [ ] START SCREEN - instructions?
+ [ ] UI that shows current tool & lets user select CHOICE
+ [ ] can eyeball move around???
+ [ ] better algorithm for eyeball placement re: eye block
+ [ ] Lines are not drawing correctly
+ [ ] Optimize for multiple users on touch screen
  [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
  [ ] Store last move in a temp PGraphics so it can be undone?
  [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
@@ -11,9 +16,14 @@
  [ ] Record animation as data & play it back procedurally
  [ ] If you record animation, you can have it draw to Hi-Res in separate process
  [ ] Choose ScaleFactor -- make slider or other selector
- [ ] Buttons at bottom should be clickable (as well as selected by key)
  
  DONE
+ [X] Eyeball should have an auto-place function
+ [X] Eye tip should randomly rotate 100 degrees R or L before stamping
+ [X] Eye tip (all tips?) should have a randomizer for rotation - weighted toward center
+ [X] Animate at correct animationRate
+ [X] Tip random rotate/flip is messed up -- it's doing random rotate instead of flip
+ [X] OK to draw on top of existing block!
  [X] When you drag off central block, start segmenting
  [X] Mouse Auto is broken? -- it only works once one has been started
  [X] Previous Settings can be stored in a User Settings text file?

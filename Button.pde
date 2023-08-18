@@ -7,6 +7,7 @@ class Button
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
   boolean doubled = false;
+  String methodToCall;
 
   Button(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
   {
@@ -94,6 +95,10 @@ class Button
 
   void select()
   {
+    if (methodToCall != null)
+    {
+      method(methodToCall);
+    }
     if (sets == rootSets)
     {
       currentRoot = index;
