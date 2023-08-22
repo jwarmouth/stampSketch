@@ -1,6 +1,10 @@
 /*************************************************
+ 404 TODO
+ [ ] Export animated gif to web for QR code to retrieve?
+ [ ] 
+ 
  TODO
- [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down?
+ [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
  [ ] Buttons at bottom should be clickable (as well as selected by key)
  [ ] Menu must be mouse driven (click on UI buttons)
  [ ] START SCREEN - instructions?

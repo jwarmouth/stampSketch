@@ -4,7 +4,7 @@
  
 void drawPreview()
 {
-  if (state == State.WAITING) return;
+  //if (state == State.WAITING) return;
   
   if (showPreview)
   {
