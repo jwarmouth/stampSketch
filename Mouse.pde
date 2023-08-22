@@ -84,7 +84,7 @@ void ifMouseDragged()
     //calculateCenterAndTarget(maxDistance);
     thread("calculateCenterAndTarget");
     if (isSegmentFarEnough(maxDistance)) {
-      stampSegment(); //thread("stampSegment");
+      thread("stampSegment");
     } else {
       previewSegment();
     }
