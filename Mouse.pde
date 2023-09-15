@@ -4,6 +4,8 @@
 
 void mousePressed()
 {
+  attractTimerReset();
+  
   switch(state) {
   case ATTRACTING:
     randomizeAllStamps();
@@ -11,6 +13,10 @@ void mousePressed()
     
   case WAITING:
     resetVectorPoints();
+    if (mouseX < 100 && mouseY < 40)
+    {
+      toggleMenu();
+    }
     Block overlapBlock = findOverlappingBlock();
     //tipFlip = (int)random(2);
 
@@ -114,6 +120,8 @@ void ifMouseDragged()
 
 void mouseReleased()
 {
+  attractTimerReset();
+  
   lastRoot = null;
   clearPreview();
 

@@ -34,8 +34,7 @@ void attractTimerTick()
 {
   if (millis() > attractTimerStart + attractModeDelay * 1000)
   {
-    clearHiResCanvas();
-    clearAllCanvases();
+    eraseScreen();
     state = State.ATTRACTING;
   }
 }

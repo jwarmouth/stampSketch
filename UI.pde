@@ -210,7 +210,7 @@ void drawMenu()
 
   enterButton.draw();
   choiceCanvas.endDraw();
-  image(choiceCanvas, 0, 0, scaleUI(choiceCanvas.width), scaleUI(choiceCanvas.height));
+  image(choiceCanvas, 0, 40, scaleUI(choiceCanvas.width), scaleUI(choiceCanvas.height));
 
 
   // Draw preview of root/segment/tip
@@ -340,7 +340,7 @@ void drawUI()
   uiCanvas.text("Anim " + animFrameCount%animationRate, buttonWidth*16, 25);
   
   uiCanvas.endDraw();
-  image(uiCanvas, 0, h-scaleUI(40), scaleUI(uiCanvas.width), scaleUI(uiCanvas.height));
+  image(uiCanvas, 0, 0, scaleUI(uiCanvas.width), scaleUI(uiCanvas.height)); //h-scaleUI(40)
 }
 
 
