@@ -1,7 +1,11 @@
 /*************************************************
  404 TODO
+ [ ] Attract Mode - finger that drags on screen to entice participants
+     [ ] Quick test - Attract state, with canvas that says "Attract Mode"
+     [ ] Pressing mouse will select random blocks
+ [ ] Touch/Mouse mode - fix the UI
+ [ ] Choose menu - needs to "feel" better
  [ ] Export animated gif to web for QR code to retrieve?
- [ ] 
  
  TODO
  [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work

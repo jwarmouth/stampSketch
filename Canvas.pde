@@ -5,6 +5,7 @@ void createCanvases()
   segmentCanvas = createGraphics(width, height);
   tipCanvas = createGraphics(width, height);
   debugCanvas = createGraphics(width, height);
+  attractCanvas = createGraphics(width, height);
   choiceCanvas = createGraphics(width, height-40);
   uiCanvas = createGraphics(1920, 40);
 

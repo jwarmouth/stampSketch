@@ -45,7 +45,7 @@ boolean showMenu = false;
 boolean allowOverlap = true;
 
 // Canvases
-PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas;
+PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
 PGraphics[] canvasFrames;
 int canvasFramesCount = 3; // how many looping canvases? Default = 3
 int animationRate = 12;
@@ -60,6 +60,10 @@ EnterButton enterButton;
 // Mouse Auto
 boolean mouseAutoTip = true;
 boolean autoEyeball = true;
+
+// Attract Mode
+float attractModeDelay = 5; // seconds until Attract Mode starts
+float attractTimerStart;
 
 // Screen Size
 boolean aotm = false;
@@ -81,9 +85,9 @@ float aotm_ScaleFactor =   5;
 //int aotm_guide2;
 
 enum State {
-  CHOOSING, WAITING, PREVIEWING_ROOT, OVERLAPPING_ROOT, PREVIEWING_TIP, SEGMENTING, PREVIEWING_STRETCHY_SEGMENT, ENDING
+  CHOOSING, WAITING, PREVIEWING_ROOT, OVERLAPPING_ROOT, PREVIEWING_TIP, SEGMENTING, PREVIEWING_STRETCHY_SEGMENT, ENDING, ATTRACTING
 };
-State state = State.WAITING;
+State state = State.ATTRACTING;
 
 /*
 void settings()
@@ -114,19 +118,22 @@ void setup()
   //scaleFactor *= refScale;
 
   loadPrefs();
+  resetChoices();
   loadSpriteSets();
   resetArrayLists();
   menuSetup();
   armSegmentDistance = armSet.width * .9; //.8;
   createCanvases();
-  showMenu = true;
-  state = State.CHOOSING;
+  //showMenu = true;
+  //state = State.ATTRACTING;
   //savePrefs();
 }
 
 void draw()
 {
   thread("ifMouseDragged");
+  attractTimerTick();
+  
   drawCanvasFrame();
   drawFrame();
   drawAOTM();
@@ -134,6 +141,7 @@ void draw()
   drawUI();
   drawPreview();
   drawDebug();
+  drawAttract();
 }
 
 

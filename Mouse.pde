@@ -5,6 +5,10 @@
 void mousePressed()
 {
   switch(state) {
+  case ATTRACTING:
+    randomizeAllStamps();
+    state = State.WAITING;
+    
   case WAITING:
     resetVectorPoints();
     Block overlapBlock = findOverlappingBlock();
@@ -35,6 +39,7 @@ void ifMouseDragged()
 {
   if (!mousePressed) return;
 
+  attractTimerReset();
   SpriteSet currentSegmentSet = segmentSets[currentSegment];
   float maxDistance;
 
@@ -113,6 +118,7 @@ void mouseReleased()
   clearPreview();
 
   switch(state) {
+  
   case CHOOSING:
     // let player choose stamps
     break;

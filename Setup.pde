@@ -22,10 +22,12 @@ void loadSpriteSets()
   blocksmSet = new SpriteSet("block", "blocksm", 5, .8);
 
   // SEGMENTS -- STICKY
+  /*
   longRedSet = new SpriteSet("long r", "long-r", 5, .85, true);
   longBlackSet = new SpriteSet("long b", "long-b", 5, .85, true);
   redLineSet = new SpriteSet("red line", "red-line", 6, .85, true);
   blackLineSet = new SpriteSet("black line", "black-line", 6, .85, true);
+  */
 
   // TIPS
   tipBlockRedSet = new SpriteSet("block r", "red-block", 3);
@@ -47,7 +49,7 @@ void loadSpriteSets()
 
   // Full Sets
   rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, blockBlack2Set, bigRedSet, bigBlackSet, rectSet, eyeBlockSet};
-  segmentSets = new SpriteSet[] {null, armSet, armRedSet, armbSet, armcSet, blocksmSet, longRedSet, longBlackSet, redLineSet, blackLineSet};
+  segmentSets = new SpriteSet[] {null, armSet, armRedSet, armbSet, armcSet, blocksmSet}; //, longRedSet, longBlackSet, redLineSet, blackLineSet};
   tipSets = new SpriteSet[] {null, handRedRSet, handBlackRSet, eyeSet, tipBlockRedSet, tipBlockBlackSet, swabBlackSet, swabRedSet, tipEyeBlockSet, eyeballSet};
   //currentRoot = 1;
   //currentSegment = 1;
@@ -77,6 +79,13 @@ void setSpriteSet(SpriteSet set, SpriteSet[] sets, int index)
   }
 
   print (set.name + " loaded. \n");
+}
+
+void resetChoices()
+{
+  currentRoot = 1;
+  currentSegment = 1;
+  currentTip = 1;
 }
 
 
