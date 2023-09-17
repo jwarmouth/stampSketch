@@ -1,6 +1,7 @@
-/********************************************************
+/*********************************************************
  ***  RECORDING  *****************************************
  *********************************************************/
+
 void toggleRecording()
 {
   if (!recording)
@@ -25,7 +26,7 @@ void stopRecording()
   saveFrames(36);
   saveHiResImage();
   recording = false;
-  drawUI();
+  drawMenuBar();
 }
 
 void saveHiResImage()

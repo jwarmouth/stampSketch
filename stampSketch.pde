@@ -1,3 +1,7 @@
+/*********************************************************
+ ***  STAMP SKETCH   *************************************
+ *********************************************************/
+
 // Variables
 float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, lastAngle, targetAngle, armSegmentDistance;
 ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
@@ -40,20 +44,45 @@ boolean recording;
 boolean debugging;
 boolean animating = true;
 boolean showPreview = true;
-boolean showUI = true;
-boolean showMenu = false;
+boolean showMenuBar = true;
+boolean showChoiceMenu = false;
 boolean allowOverlap = true;
+boolean showRootCanvas, showSegmentCanvas, showTipCanvas;
 
 // Canvases
-PGraphics previewCanvas, uiCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
+PGraphics previewCanvas, menuBarCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
 PGraphics[] canvasFrames;
 int canvasFramesCount = 3; // how many looping canvases? Default = 3
 int animationRate = 12;
 int animFrameCount;
 
-//UI
-String[] uiItems = new String[] {"[C]hoose", "[S]ave", "[R]ecord", "[D]ebug", "[P]review", "[M]ouse Auto", "[Z]Cancel", "[X]Erase", "[U]I Toggle", "[A]nimating"};
-Button[] rootButtons, segmentButtons, tipButtons;
+//Menu Bar
+String[] menuBarItems = new String[] {
+  "[C]hoose", "[S]ave", "[R]ecording", "[D]ebug", "[P]review", "[M]ouse Auto", 
+  "[Z]Cancel", "[X]Erase", "[U]I Toggle", "r[O]ot", "s[E]gment", "[T]ip",
+  "[A]nimating", "[1]", "[2]", "[3]"
+  };
+String[] menuBarMethods = new String[] {
+  "toggleChoiceMenu", "saveHiResImage", "toggleRecording", "toggleDebug", "togglePreview", "toggleMouseAuto", 
+  "cancel", "eraseScreen", "menuBarToggle", "toggleRootCanvas", "toggleSegmentCanvas", "toggleTipCanvas",
+  "toggleAnimating", "showOne", "showTwo", "showThree"
+  };
+String[] menuBarVars = new String[] {
+  "showChoiceMenu", "null", "recording", "debugging", "showPreview", "mouseAutoTip",
+  "null", "null", "null", "showRootCanvas", "showSegmentCanvas", "showTipCanvas",
+  "animating", "isOneActive", "isTwoActive", "isThreeActive"
+  };
+  
+/*
+String[] uiActiveMethods = new String[] {
+  "isChooseActive", "isNullActive", "isRecordingActive", "isDebugActive", "isPreviewActive", "isMouseAutoActive",
+  "isNullActive", "isNullActive", "isNullActive", "isRootActive", "isSegmentActive", "isTipActive",
+  "isAnimatingActive", "isOneActive", "isTwoActive", "isThreeActive"
+  };
+*/
+MenuBarButton[] menuBarButtons;
+
+StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
 EnterButton enterButton;
 
@@ -62,8 +91,14 @@ boolean mouseAutoTip = true;
 boolean autoEyeball = true;
 
 // Attract Mode
-float attractModeDelay = 5; // seconds until Attract Mode starts
+float attractModeDelay = 10; // seconds until Attract Mode starts
 float attractTimerStart;
+
+// Sound
+import processing.sound.*;
+SoundFile[] rootSounds;
+SoundFile[] segmentSounds;
+SoundFile[] tipSounds;
 
 // Screen Size
 boolean aotm = false;
@@ -121,9 +156,11 @@ void setup()
   resetChoices();
   loadSpriteSets();
   resetArrayLists();
-  menuSetup();
+  choiceMenuSetup();
   armSegmentDistance = armSet.width * .9; //.8;
   createCanvases();
+  soundSetup();
+  menuBarSetup();
   //showMenu = true;
   //state = State.ATTRACTING;
   //savePrefs();
@@ -138,13 +175,14 @@ void draw()
   drawFrame();
   drawAOTM();
   drawMenu();
-  drawUI();
+  drawMenuBar();
   drawPreview();
   drawDebug();
+  drawRootCanvas();
+  drawSegmentCanvas();
+  drawTipCanvas();
   drawAttract();
 }
-
-
 
 
 void moveSpriteWithSpace()

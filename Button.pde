@@ -1,4 +1,8 @@
-class Button
+/*********************************************************
+ ***  BUTTONS   ******************************************
+ *********************************************************/
+
+class StampButton
 {
   PImage image;
   SpriteSet[] sets;
@@ -9,7 +13,7 @@ class Button
   boolean doubled = false;
   String methodToCall;
 
-  Button(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
+  StampButton(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
   {
     sets = iSets;
     index = _index;
@@ -172,7 +176,7 @@ class EnterButton
 
   void select()
   {
-    hideMenu();
+    hideChoiceMenu();
   }
 }
 

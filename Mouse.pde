@@ -1,5 +1,5 @@
-/********************************************************
- ***  INPUT / MOUSE     *********************************
+/*********************************************************
+ ***  INPUT / MOUSE     **********************************
  *********************************************************/
 
 void mousePressed()
@@ -13,10 +13,13 @@ void mousePressed()
     
   case WAITING:
     resetVectorPoints();
+    if (mouseY < 40) return;
+    /*
     if (mouseX < 100 && mouseY < 40)
     {
-      toggleMenu();
+      toggleChoiceMenu();
     }
+    */
     Block overlapBlock = findOverlappingBlock();
     //tipFlip = (int)random(2);
 
@@ -123,7 +126,7 @@ void mouseReleased()
   attractTimerReset();
   
   lastRoot = null;
-  clearPreview();
+  //clearPreview();
 
   switch(state) {
   
@@ -165,4 +168,10 @@ void mouseReleased()
   }
 
   thread("clearPreview");
+}
+
+void toggleMouseAuto()
+{
+  mouseAutoTip = !mouseAutoTip;
+  savePrefs();
 }

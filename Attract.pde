@@ -1,3 +1,7 @@
+/*********************************************************
+ ***  ATTRACT MODE   *************************************
+ *********************************************************/
+ 
 void drawAttract()
 {
   if (state != State.ATTRACTING) return;
@@ -5,9 +9,11 @@ void drawAttract()
   attractCanvas.beginDraw();
   attractCanvas.background(255);
   attractCanvas.fill(255, 0, 0);
-  attractCanvas.textSize(48);
   attractCanvas.textAlign(CENTER);
-  attractCanvas.text("ATTRACT MODE", width/2, height/3);
+  attractCanvas.textSize(96);
+  attractCanvas.text("StampSketch", width/2, height/3);
+  attractCanvas.textSize(48);
+  attractCanvas.text("(attract mode)", width/2, height/2);
   attractCanvas.textSize(24);
   attractCanvas.text("Press Screen with finger to draw", width/2, height*2/3);
   attractCanvas.endDraw();

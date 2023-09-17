@@ -3,9 +3,10 @@
  *********************************************************/
 
 
-/********************************************************
+/*********************************************************
  ***  STAMP ROOT   ***************************************
  *********************************************************/
+
 void stampRoot()
 {
   if (overlaps(rootCanvas)) return;
@@ -24,6 +25,8 @@ void stampRoot()
 
   // saveFrames only happens if recording
   saveFrames(12);
+  
+  playSound(rootSounds[0], mouseX, mouseY);
 }
 
 
@@ -46,6 +49,8 @@ void stampSegment(int frames)
   segmentBlocks.add(lastSegment);
 
   lastPoint = targetPoint;
+  
+  playSound(segmentSounds[0], mouseX, mouseY);
 
   saveFrames(frames);
 }
@@ -156,6 +161,9 @@ void stampTip(float stampAngle)
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
+  
+  
+  playSound(tipSounds[0], mouseX, mouseY);
   saveFrames(12);
 
   //if (debugging)

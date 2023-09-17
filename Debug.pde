@@ -1,3 +1,7 @@
+/*********************************************************
+ ***  DEBUG   ********************************************
+ *********************************************************/
+
 void stampToDebug()
 {
   debugCanvas.beginDraw();
@@ -18,6 +22,11 @@ void stampToDebug()
   debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
 
   debugCanvas.endDraw();
+}
+
+void toggleDebug()
+{
+  debugging = !debugging;
 }
 
 

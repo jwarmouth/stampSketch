@@ -1,17 +1,18 @@
-/********************************************************
+/*********************************************************
  ***  INPUT / KEYS     ***********************************
  *********************************************************/
+
 void keyReleased()
 {
   switch(key) {
   case 'C':
   case 'c':
-    toggleMenu();
+    toggleChoiceMenu();
     break;
 
   case ENTER:
   case RETURN:
-    hideMenu();
+    hideChoiceMenu();
     break;
 
   case 'S':
@@ -26,24 +27,22 @@ void keyReleased()
 
   case 'D':
   case 'd':
-    debugging = !debugging;
+    toggleDebug();
     break;
 
   case 'P':
   case 'p':
-    showPreview = !showPreview;
+    togglePreview();
     break;
 
   case 'M':
   case 'm':
-    mouseAutoTip = !mouseAutoTip;
-    savePrefs();
+    toggleMouseAuto();
     break;
 
   case 'Z':
   case 'z':
-    clearPreview();
-    state = State.WAITING;
+    cancel();
     break;
 
   case 'X':
@@ -53,12 +52,12 @@ void keyReleased()
 
   case 'U':
   case 'u':
-    showUI = !showUI;
+    menuBarToggle();
     break;
 
   case 'A':
   case 'a':
-    animating = !animating;
+    toggleAnimating();
     break;
 
   case '1':
@@ -81,4 +80,15 @@ void keyReleased()
   //if (key == 'U' || key == 'u') showUI = !showUI;
   //if (key == 'A' || key == 'a') animating = !animating;
   //if (key == '1' || key == '2' || key == '3') displayCanvasFrame((int)key - 1);
+}
+
+void cancel()
+{
+ clearPreview();
+ state = State.WAITING; 
+}
+
+void toggleAnimating()
+{
+  animating = !animating;
 }

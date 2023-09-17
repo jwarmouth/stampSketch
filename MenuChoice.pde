@@ -1,23 +1,23 @@
-/********************************************************
- ***  MENU, UI & DEBUG  **********************************
+/*********************************************************
+ ***  CHOICE MENU  ***************************************
  *********************************************************/
 
-void toggleMenu()
+void toggleChoiceMenu()
 {
-  showMenu = !showMenu;
-  if (showMenu)
+  showChoiceMenu = !showChoiceMenu;
+  if (showChoiceMenu)
   {
     state = State.CHOOSING;
     print(state);
   } else
   {
-    hideMenu();
+    hideChoiceMenu();
   }
 }
 
-void hideMenu()
+void hideChoiceMenu()
 {
-  showMenu = false;
+  showChoiceMenu = false;
   state = State.WAITING;
 }
 
@@ -28,7 +28,7 @@ int scaleUI (int input)
 }
 
 
-void menuSetup()
+void choiceMenuSetup()
 {
   int menuY = 50;
   int leftMargin = 20;
@@ -67,7 +67,7 @@ void menuSetup()
 }
 
 // To replace createButtonsInColumns???
-Button[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
+StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 {
   //PImage buttonImage;
   String buttonText;
@@ -80,7 +80,7 @@ Button[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
   int y = startY - buttonWidth/2;
 
 
-  Button[] buttons = new Button[sets.length];
+  StampButton[] buttons = new StampButton[sets.length];
 
   for (int i=0; i<buttons.length; i++)
   {
@@ -117,7 +117,7 @@ Button[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 
 
 
-    buttons[i] = new Button(sets, i, x, y-buttonHeight, buttonWidth, buttonHeight, buttonText, buttonImage);
+    buttons[i] = new StampButton(sets, i, x, y-buttonHeight, buttonWidth, buttonHeight, buttonText, buttonImage);
 
     x += buttonWidth + buttonHorizSpacing;
     if (x + maxWidth > w)
@@ -160,7 +160,7 @@ Button[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 
 void drawMenu()
 {
-  if (!showMenu)
+  if (!showChoiceMenu)
   {
     return;
   }
@@ -199,13 +199,13 @@ void drawMenu()
 
   choiceCanvas.textSize(20);
 
-  for (Button button : rootButtons)
+  for (StampButton button : rootButtons)
     button.draw();
 
-  for (Button button : segmentButtons)
+  for (StampButton button : segmentButtons)
     button.draw();
 
-  for (Button button : tipButtons)
+  for (StampButton button : tipButtons)
     button.draw();
 
   enterButton.draw();
@@ -283,100 +283,4 @@ void drawCurrentTools(SpriteSet set, PVector location)
   canvas.rotate(radians(180));
   canvas.image(set.sprites[0], set.offsetX, set.offsetY);
   canvas.popMatrix();
-}
-
-
-void drawUI()
-{
-  if (!showUI)
-  {
-    return;
-  }
-
-  float buttonWidth = 100;
-  uiCanvas.beginDraw();
-  uiCanvas.background(200, 200, 200, 200);
-  uiCanvas.rectMode(CORNER);
-  uiCanvas.noStroke();
-  uiCanvas.fill (255, 0, 0); // RED
-
-  if (recording)
-  {
-    uiCanvas.rect(200, 0, 100, 40);
-    uiCanvas.text("RECORDING", 1500, 25);
-  }
-
-  //uiCanvas.fill(128);
-  if (showMenu) uiCanvas.rect(0, 0, buttonWidth, 40);
-  if (debugging) uiCanvas.rect(300, 0, buttonWidth, 40);
-  if (showPreview) uiCanvas.rect(400, 0, buttonWidth, 40);
-  if (mouseAutoTip) uiCanvas.rect(500, 0, buttonWidth, 40);
-  if (animating) uiCanvas.rect(900, 0, buttonWidth, 40);
-  uiCanvas.rect(uiItems.length*100+currentCanvas*60, 0, 40, 40);
-  //if (currentCanvas == 1) uiCanvas.rect(uiItems.length*120+60, 0, 40, 40);
-  //if (currentCanvas == 2) uiCanvas.rect(uiItems.length*120+120, 0, 40, 40);
-
-  // Draw Menu Items
-  uiCanvas.fill(64); // GRAY
-  uiCanvas.textSize(16);
-  for (int i=0; i<uiItems.length; i++)
-  {
-    uiCanvas.text(uiItems[i], i*buttonWidth + 10, 25);
-  }
-
-  // Draw "Animating" frames
-  for (int i=0; i<canvasFramesCount; i++)
-  {
-    uiCanvas.text(i+1, uiItems.length*buttonWidth + i*60 +10, 25);
-  }
-  
-  // Draw STATE
-  uiCanvas.text("State." + state, buttonWidth*12, 25);
-  
-  // Draw Frame Rate
-  uiCanvas.text(frameRate + " FPS", buttonWidth*14, 25);
-  
-  // Draw animFrameCount
-  uiCanvas.text("Anim " + animFrameCount%animationRate, buttonWidth*16, 25);
-  
-  uiCanvas.endDraw();
-  image(uiCanvas, 0, 0, scaleUI(uiCanvas.width), scaleUI(uiCanvas.height)); //h-scaleUI(40)
-}
-
-
-void drawFrame()
-{
-  if (aotm || state == State.CHOOSING) return;
-
-  noStroke();
-  if (recording)
-  {
-    fill (0, 0, 0, 200);
-  } else
-  {
-    fill (200, 200, 200, 200);
-  }
-  rect(0, 0, width, 40);
-  rect(0, 40, 40, height-80);
-  rect(width-40, 40, 40, height-80);
-}
-
-void drawAOTM()
-{
-  if (state == State.CHOOSING) return;
-  if (aotm)
-  {
-    // draw spine
-    noStroke();
-    fill (200, 200, 200, 200);
-    rect (aotm_w1, 0, aotm_w2, h); // spine
-    rect (0, aotm_guide_y, aotm_guide1_w, h - aotm_guide_y); // left overlap
-    rect (aotm_guide2_x, aotm_guide_y, w - aotm_guide2_x, h - aotm_guide_y); // right overlap
-    //strokeWeight(1);
-    //stroke(200, 200, 200, 200);
-    //line(aotm_w1, 0, aotm_w1, h);
-    //line(aotm_w1 + aotm_w2, 0, aotm_w1 + aotm_w2, h);
-    //noStroke();
-    //stroke(255);
-  }
 }

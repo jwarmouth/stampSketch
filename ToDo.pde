@@ -1,21 +1,27 @@
-/*************************************************
+/*********************************************************
+ ***  TO DO   ********************************************
+ *********************************************************
+ 
  404 TODO
  [ ] Attract Mode - finger that drags on screen to entice participants
-     [ ] Quick test - Attract state, with canvas that says "Attract Mode"
-     [ ] Pressing mouse will select random blocks
+     [X] Quick test - Attract state, with canvas that says "Attract Mode"
+     [X] Attract mode Pressing mouse will select random blocks
  [ ] Touch/Mouse mode - fix the UI
- [ ] Choose menu - needs to "feel" better
+ [ ] Choose menu - needs to "feel" better - on the right side of screen?
  [ ] Export animated gif to web for QR code to retrieve?
+ [X] Reworked Menu Bar with MenuBarButton class
+ [ ] FEATURE - add Sound to all stamps!
  
  TODO
+ [ ] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
  [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
- [ ] Buttons at bottom should be clickable (as well as selected by key)
- [ ] Menu must be mouse driven (click on UI buttons)
+ [-] Buttons at bottom should be clickable (as well as selected by key)
+ [-] Menu must be mouse driven (click on UI buttons)
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
  [ ] can eyeball move around???
  [ ] better algorithm for eyeball placement re: eye block
- [ ] Lines are not drawing correctly
+ [ ] Stretchy Arms are not drawing correctly
  [ ] Optimize for multiple users on touch screen
  [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
  [ ] Store last move in a temp PGraphics so it can be undone?

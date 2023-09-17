@@ -1,3 +1,7 @@
+/*********************************************************
+ ***  CANVAS   *******************************************
+ *********************************************************/
+
 void createCanvases()
 {
   previewCanvas = createGraphics(width, height);
@@ -7,7 +11,7 @@ void createCanvases()
   debugCanvas = createGraphics(width, height);
   attractCanvas = createGraphics(width, height);
   choiceCanvas = createGraphics(width, height-40);
-  uiCanvas = createGraphics(1920, 40);
+  menuBarCanvas = createGraphics(1920, 40);
 
   canvasFrames = new PGraphics[canvasFramesCount]; // default = 3
   for (int i=0; i<canvasFrames.length; i++)
@@ -45,8 +49,57 @@ void selectCanvasFrame(int which)
   }
 }
 
+void showOne()
+{
+  selectCanvasFrame(0);
+}
+
+void showTwo()
+{
+  selectCanvasFrame(1);
+}
+
+void showThree()
+{
+  selectCanvasFrame(2);
+}
+
+void toggleRootCanvas()
+{
+  showRootCanvas = !showRootCanvas;
+}
+
+void drawRootCanvas()
+{
+  if (!showRootCanvas) return;
+  image(rootCanvas, 0, 0);
+}
+
+void toggleSegmentCanvas()
+{
+  showSegmentCanvas = !showSegmentCanvas;
+}
+
+void drawSegmentCanvas()
+{
+ if (!showSegmentCanvas) return;
+ image(segmentCanvas, 0, 0);
+}
+
+void toggleTipCanvas()
+{
+  showTipCanvas = !showTipCanvas;
+}
+
+void drawTipCanvas()
+{
+  if (!showTipCanvas) return;
+  image(tipCanvas, 0, 0);
+}
+
 void eraseScreen()
 {
+  //createCanvases();
   clearAllCanvases();
   //showMenu = true;
   //state = State.CHOOSING;
@@ -90,4 +143,44 @@ void makeWhite(PGraphics canvas)
   canvas.beginDraw();
   canvas.background(255);
   canvas.endDraw();
+}
+
+
+
+void drawFrame()
+{
+  if (aotm || state == State.CHOOSING) return;
+
+  noStroke();
+  if (recording)
+  {
+    fill (0, 0, 0, 200);
+  } else
+  {
+    fill (200, 200, 200, 200);
+  }
+  //rect(0, 0, width, 40); // TOP
+  rect(0, 40, 40, height-80); // LEFT
+  rect(width-40, 40, 40, height-80); // RIGHT
+  rect (0, height-40, width, 40); // BOTTOM
+}
+
+void drawAOTM()
+{
+  if (state == State.CHOOSING) return;
+  if (aotm)
+  {
+    // draw spine
+    noStroke();
+    fill (200, 200, 200, 200);
+    rect (aotm_w1, 0, aotm_w2, h); // spine
+    rect (0, aotm_guide_y, aotm_guide1_w, h - aotm_guide_y); // left overlap
+    rect (aotm_guide2_x, aotm_guide_y, w - aotm_guide2_x, h - aotm_guide_y); // right overlap
+    //strokeWeight(1);
+    //stroke(200, 200, 200, 200);
+    //line(aotm_w1, 0, aotm_w1, h);
+    //line(aotm_w1 + aotm_w2, 0, aotm_w1 + aotm_w2, h);
+    //noStroke();
+    //stroke(255);
+  }
 }
