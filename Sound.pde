@@ -16,7 +16,11 @@ void soundSetup()
 
 void playSound(SoundFile soundFile, float x, float y)
 {
-  float rate = 1 + (-y/height + 0.5)/2;//(y-height/2)/height/2;
-  soundFile.play(rate, 1.0);
-  print ("\nlaying sound at " + rate);
+  //float rate = 1 + (-y/height + 0.5)/2;//(y-height/2)/height/2;
+  //float pan = 1 - (-x/width + 0.5)/2;
+  float rate = map(y, height, 0, 0.75, 1.25);
+  float pan = map(x, 0, width, -1.0, 1.0);
+  soundFile.play(rate, pan, 1.0);
+  //soundFile.pan(pan);
+  print ("\nPlaying sound. Rate: " + rate + " Pan: " + pan);
 }
