@@ -10,6 +10,7 @@ class StampButton
   String text;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
+  boolean active;
   boolean doubled = false;
   String methodToCall;
 
@@ -49,17 +50,17 @@ class StampButton
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       if (mouseIsPressed)
       {
-        selected = true;
+        active = true;
       }
-      if (selected & !mouseIsPressed)
+      if (active & !mouseIsPressed)
       {
-        selected = false;
+        active = false;
         select();
       }
     }
     else 
     {
-     selected = false; 
+     active = false; 
     }
     
     choiceCanvas.fill(bgColor);
@@ -166,17 +167,17 @@ class EnterButton
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       if (mouseIsPressed)
       {
-        selected = true;
+        active = true;
       }
-      if (selected & !mouseIsPressed)
+      if (active & !mouseIsPressed)
       {
-        selected = false;
+        active = false;
         select();
       }
     }
     else 
     {
-     selected = false; 
+     active = false; 
     }
     
     choiceCanvas.fill(bgColor); // bg color
