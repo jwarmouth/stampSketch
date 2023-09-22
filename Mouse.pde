@@ -8,6 +8,12 @@ void mousePressed()
   print ("\nMOUSE IS PRESSED");
   attractTimerReset();
   
+    // Check Buttons
+  for (int i=0; i<menuBarButtons.length; i++)
+  {
+    menuBarButtons[i].hover();
+  }
+  
   switch(state) {
   case ATTRACTING:
     randomizeAllStamps();
@@ -132,7 +138,7 @@ void mouseReleased()
   // Check Buttons
   for (int i=0; i<menuBarButtons.length; i++)
   {
-    menuBarButtons[i].activateIfOver();
+    menuBarButtons[i].select();
   }
   
   lastRoot = null;

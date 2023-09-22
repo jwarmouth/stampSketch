@@ -57,7 +57,7 @@ class MenuBarButton
   String text;
   color activeColor, bgColor, textColor, overColor;
   boolean active;
-  boolean over;
+  boolean hover;
   boolean pressed;
   String method;
   String activeVar;
@@ -82,54 +82,45 @@ class MenuBarButton
 
   void draw()
   {
-    if (isOver())
+    if (!touchMode)
     {
-      print ("\n" + text + " is over");
+      hover = isOver();
+    }
+    
+    if (hover)
+    {
       menuBarCanvas.fill(overColor);
       menuBarCanvas.rect(x, y, w, h);
-      
-      
-      if (!pressed && mouseIsPressed)
-      {
-        pressed = true;
-        print ("\n" + text + " is pressed");
-      }
-      if (pressed && !mouseIsPressed)
-      {
-        pressed = false;
-        print ("\n" + text + " is released");
-        select();
-      }
     }
-    //else
-    //{
-    //  pressed = false;
-    //}
     
     if (isActive())
     {
       menuBarCanvas.fill(activeColor); // bg color
       menuBarCanvas.rect(x, y, w, h);
     }
+    
     menuBarCanvas.fill(textColor);
     menuBarCanvas.text(text, x+margin, y+h/1.5);
   }
-
-  void activateIfOver()
+  
+  void hover()
   {
-    if (isOver()) select();
-  }
-
-  boolean isOver()
-  {
-    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+    hover = isOver();
   }
 
   void select()
   {
-    method(method);
-    print ("\nselecting" + text);
-    //hideChoiceMenu();
+    if (isOver())
+    {
+      method(method);
+      hover = false;
+      print ("\nselecting" + text);
+    }
+  }
+  
+  boolean isOver()
+  {
+    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
   }
   
   boolean isActive()

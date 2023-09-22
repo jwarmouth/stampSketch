@@ -90,6 +90,7 @@ EnterButton enterButton;
 boolean mouseAutoTip = true;
 boolean autoEyeball = true;
 boolean mouseIsPressed;
+boolean touchMode = true;
 
 // Attract Mode
 float attractModeDelay = 10; // seconds until Attract Mode starts
