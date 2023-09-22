@@ -8,7 +8,7 @@ void toggleChoiceMenu()
   if (showChoiceMenu)
   {
     state = State.CHOOSING;
-    print(state);
+    print("\n"  + state);
   } else
   {
     hideChoiceMenu();

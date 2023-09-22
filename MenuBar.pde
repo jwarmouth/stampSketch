@@ -35,7 +35,6 @@ void drawMenuBar()
 
 void menuBarSetup()
 {
-  
   menuBarButtons = new MenuBarButton[menuBarItems.length];
   int buttonX = 0;
   
@@ -54,6 +53,7 @@ void menuBarToggle()
 class MenuBarButton
 {
   int index, x, y, w, h;
+  int margin = 10;
   String text;
   color activeColor, bgColor, textColor, overColor;
   boolean active;
@@ -82,14 +82,13 @@ class MenuBarButton
 
   void draw()
   {
-    int margin = 10;
-    
     if (isOver())
     {
-      //print ("\n" + text + " is over");
+      print ("\n" + text + " is over");
       menuBarCanvas.fill(overColor);
-      //menuBarCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       menuBarCanvas.rect(x, y, w, h);
+      
+      
       if (!pressed && mouseIsPressed)
       {
         pressed = true;
@@ -113,7 +112,6 @@ class MenuBarButton
       menuBarCanvas.rect(x, y, w, h);
     }
     menuBarCanvas.fill(textColor);
-    //menuBarCanvas.text(text, x+w/2, y+h/1.5);
     menuBarCanvas.text(text, x+margin, y+h/1.5);
   }
 
