@@ -49,8 +49,17 @@ class StampButton
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       if (mousePressed)
       {
+        selected = true;
+      }
+      if (selected & !mousePressed)
+      {
+        selected = false;
         select();
       }
+    }
+    else 
+    {
+     selected = false; 
     }
     
     choiceCanvas.fill(bgColor);
@@ -157,9 +166,19 @@ class EnterButton
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       if (mousePressed)
       {
+        selected = true;
+      }
+      if (selected & !mousePressed)
+      {
+        selected = false;
         select();
       }
     }
+    else 
+    {
+     selected = false; 
+    }
+    
     choiceCanvas.fill(bgColor); // bg color
     choiceCanvas.rect(x, y, w, h);
     choiceCanvas.fill(bgColor);

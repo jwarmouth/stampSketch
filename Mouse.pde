@@ -4,6 +4,7 @@
 
 void mousePressed()
 {
+  mouseIsPressed = true;
   attractTimerReset();
   
   switch(state) {
@@ -123,6 +124,7 @@ void ifMouseDragged()
 
 void mouseReleased()
 {
+  mouseIsPressed = false;
   attractTimerReset();
   
   lastRoot = null;

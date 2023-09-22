@@ -89,8 +89,17 @@ class MenuBarButton
       menuBarCanvas.rect(x, y, w, h);
       if (mousePressed)
       {
+        active = true;
+      }
+      if (active & !mousePressed)
+      {
+        active = false;
         select();
       }
+    }
+    else
+    {
+      active = false;
     }
     
     if (isActive())

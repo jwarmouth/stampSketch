@@ -3,6 +3,7 @@
  *********************************************************
  
  404 TODO
+ [ ] Must double-click to push a button.
  [ ] Attract Mode - finger that drags on screen to entice participants
      [X] Quick test - Attract state, with canvas that says "Attract Mode"
      [X] Attract mode Pressing mouse will select random blocks
