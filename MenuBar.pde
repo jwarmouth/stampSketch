@@ -57,6 +57,8 @@ class MenuBarButton
   String text;
   color activeColor, bgColor, textColor, overColor;
   boolean active;
+  boolean over;
+  boolean pressed;
   String method;
   String activeVar;
 
@@ -74,7 +76,7 @@ class MenuBarButton
     bgColor = color(200);
     textColor = color(0);
     activeColor = color(255, 0, 0);
-    overColor = color(255, 0, 0);
+    overColor = color(255, 125, 125);
     //print ("\n creating button: " + text);
   }
 
@@ -89,17 +91,17 @@ class MenuBarButton
       menuBarCanvas.rect(x, y, w, h);
       if (mouseIsPressed)
       {
-        active = true;
+        pressed = true;
       }
-      if (active & !mouseIsPressed)
+      else if (pressed)
       {
-        active = false;
+        pressed = false;
         select();
       }
     }
     else
     {
-      active = false;
+      pressed = false;
     }
     
     if (isActive())
