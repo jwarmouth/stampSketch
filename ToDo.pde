@@ -3,21 +3,20 @@
  *********************************************************
  
  404 TODO
- [ ] Must double-click to push a button.
  [ ] Attract Mode - finger that drags on screen to entice participants
-     [X] Quick test - Attract state, with canvas that says "Attract Mode"
-     [X] Attract mode Pressing mouse will select random blocks
- [ ] Touch/Mouse mode - fix the UI
- [ ] Choose menu - needs to "feel" better - on the right side of screen?
- [ ] Export animated gif to web for QR code to retrieve?
+ [ ] Choose menu - needs to "feel" better - on the left side of screen?
+   [ ] Maybe the options go there too?
+   [ ] Touch/Mouse mode - fix the UI
  [X] Reworked Menu Bar with MenuBarButton class
  [ ] FEATURE - add Sound to all stamps!
+   [ ] Record new sounds for stamps
+ [ ] Make some new red versions of stamps, there aren't enough
+ [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
+ [ ] Root canvas -- make it go immediately instead of threaded?
  [ ] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
  [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
- [-] Buttons at bottom should be clickable (as well as selected by key)
- [-] Menu must be mouse driven (click on UI buttons)
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
  [ ] can eyeball move around???
@@ -33,6 +32,11 @@
  [ ] Choose ScaleFactor -- make slider or other selector
  
  DONE
+ [X] Quick test - Attract state, with canvas that says "Attract Mode"
+ [X] Attract mode Pressing mouse will select random blocks
+ [X] Must double-click to push a button, fix this!
+ [X] Menu Bar Buttons should be clickable (as well as selected by key)
+ [X] Menu must be mouse driven (click on UI buttons)
  [X] Eyeball should have an auto-place function
  [X] Eye tip should randomly rotate 100 degrees R or L before stamping
  [X] Eye tip (all tips?) should have a randomizer for rotation - weighted toward center

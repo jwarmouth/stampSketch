@@ -82,7 +82,7 @@ void ifMouseDragged()
     previewRoot();
     //thread("previewRoot");
     if (!overlaps(previewCanvas)) {
-      thread("stampRoot");
+      stampRoot();
       thread("findPointsOutsideBlock");
       if (currentSegmentSet == null) {
         state = State.PREVIEWING_TIP;
@@ -164,7 +164,7 @@ void mouseReleased()
     break;
 
   case PREVIEWING_ROOT:
-    thread("stampRoot"); // rotateToMouse() then stamp center block
+    stampRoot(); // rotateToMouse() then stamp center block
     state = State.WAITING;
     break;
 
