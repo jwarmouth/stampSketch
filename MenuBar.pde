@@ -87,11 +87,11 @@ class MenuBarButton
       menuBarCanvas.fill(overColor);
       //menuBarCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       menuBarCanvas.rect(x, y, w, h);
-      if (mousePressed)
+      if (mouseIsPressed)
       {
         active = true;
       }
-      if (active & !mousePressed)
+      if (active & !mouseIsPressed)
       {
         active = false;
         select();

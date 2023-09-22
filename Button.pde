@@ -47,11 +47,11 @@ class StampButton
     {
       choiceCanvas.fill(overColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
-      if (mousePressed)
+      if (mouseIsPressed)
       {
         selected = true;
       }
-      if (selected & !mousePressed)
+      if (selected & !mouseIsPressed)
       {
         selected = false;
         select();
@@ -164,11 +164,11 @@ class EnterButton
     {
       choiceCanvas.fill(overColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
-      if (mousePressed)
+      if (mouseIsPressed)
       {
         selected = true;
       }
-      if (selected & !mousePressed)
+      if (selected & !mouseIsPressed)
       {
         selected = false;
         select();
