@@ -99,10 +99,10 @@ class MenuBarButton
         select();
       }
     }
-    else
-    {
-      pressed = false;
-    }
+    //else
+    //{
+    //  pressed = false;
+    //}
     
     if (isActive())
     {
