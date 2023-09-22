@@ -14,10 +14,8 @@ void drawMenuBar()
   menuBarCanvas.fill (255, 0, 0); // RED
   menuBarCanvas.textSize(16);
   
-  for (int i=0; i<menuBarButtons.length; i++)
-  {
-    menuBarButtons[i].draw();
-  }
+  // DRAW MENU BAR BUTTONS
+  for (MenuBarButton button : menuBarButtons) button.draw();
 
   /*
   // Draw STATE
@@ -71,8 +69,6 @@ class MenuBarButton
     y = _y;
     w = text.length() * 10;
     h = 40;
-    //w = _w;
-    //h = _h;
     bgColor = color(200);
     textColor = color(0);
     activeColor = color(255, 0, 0);
@@ -110,12 +106,11 @@ class MenuBarButton
 
   void select()
   {
-    if (isOver())
-    {
-      method(method);
-      hover = false;
-      print ("\nselecting" + text);
-    }
+    if (!isOver()) return;
+    
+    method(method);
+    hover = false;
+    print ("\nselecting" + text);
   }
   
   boolean isOver()
@@ -128,7 +123,6 @@ class MenuBarButton
    return isButtonActive(activeVar);
    //return method(activeMethod);
   }
-
 }
 
 boolean isButtonActive(String varToCheck)
@@ -150,17 +144,17 @@ boolean isButtonActive(String varToCheck)
 
 boolean isOneActive()
 {
-  return (currentCanvas == 1);
+  return (currentCanvas == 0);
 }
 
 boolean isTwoActive()
 {
-  return (currentCanvas == 2);
+  return (currentCanvas == 1);
 }
 
 boolean isThreeActive()
 {
-  return (currentCanvas == 3);
+  return (currentCanvas == 2);
 }
 
 /*

@@ -8,11 +8,18 @@ void mousePressed()
   print ("\nMOUSE IS PRESSED");
   attractTimerReset();
   
-    // Check Buttons
-  for (int i=0; i<menuBarButtons.length; i++)
-  {
-    menuBarButtons[i].hover();
-  }
+    
+  //for (int i=0; i<menuBarButtons.length; i++)
+  //{
+  //  menuBarButtons[i].hover();
+  //}
+  
+  // Check Buttons
+  for (MenuBarButton button : menuBarButtons) button.hover();
+  for (StampButton button : rootButtons) button.hover();
+  for (StampButton button : segmentButtons) button.hover();
+  for (StampButton button : tipButtons) button.hover();
+  enterButton.hover();
   
   switch(state) {
   case ATTRACTING:
@@ -136,10 +143,16 @@ void mouseReleased()
   attractTimerReset();
   
   // Check Buttons
-  for (int i=0; i<menuBarButtons.length; i++)
-  {
-    menuBarButtons[i].select();
-  }
+  for (MenuBarButton button : menuBarButtons) button.select();
+  for (StampButton button : rootButtons) button.select();
+  for (StampButton button : segmentButtons) button.select();
+  for (StampButton button : tipButtons) button.select();
+  enterButton.select();
+  
+  //for (int i=0; i<menuBarButtons.length; i++)
+  //{
+  //  menuBarButtons[i].select();
+  //}
   
   lastRoot = null;
   //clearPreview();

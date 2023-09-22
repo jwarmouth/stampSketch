@@ -11,6 +11,7 @@ class StampButton
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
   boolean active;
+  boolean hover;
   boolean doubled = false;
   String methodToCall;
 
@@ -39,28 +40,22 @@ class StampButton
   void draw()
   {
     int margin = 5;
+    
+    if (!touchMode)
+    {
+      hover = isOver();
+    }
+    
     if (isSelected())
     {
       choiceCanvas.fill(selectedColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
     }
-    if (isOver())
+    
+    if (hover)
     {
       choiceCanvas.fill(overColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
-      if (mouseIsPressed)
-      {
-        active = true;
-      }
-      if (active & !mouseIsPressed)
-      {
-        active = false;
-        select();
-      }
-    }
-    else 
-    {
-     active = false; 
     }
     
     choiceCanvas.fill(bgColor);
@@ -89,26 +84,16 @@ class StampButton
     choiceCanvas.text(text, x+w/2, textY);
   }
 
-  boolean isSelected()
+  void hover()
   {
-    int checkIndex = -1;
-    if (sets == rootSets)
-      checkIndex = currentRoot;
-    if (sets == segmentSets)
-      checkIndex = currentSegment;
-    if (sets == tipSets)
-      checkIndex = currentTip;
-
-    return (index == checkIndex);
-  }
-
-  boolean isOver()
-  {
-    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+    hover = isOver();
   }
 
   void select()
   {
+    if (!isOver()) return;
+    
+    
     if (methodToCall != null)
     {
       method(methodToCall);
@@ -131,6 +116,24 @@ class StampButton
     }
     savePrefs();
   }
+  
+  boolean isSelected()
+  {
+    int checkIndex = -1;
+    if (sets == rootSets)
+      checkIndex = currentRoot;
+    if (sets == segmentSets)
+      checkIndex = currentSegment;
+    if (sets == tipSets)
+      checkIndex = currentTip;
+
+    return (index == checkIndex);
+  }
+
+  boolean isOver()
+  {
+    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+  }
 }
 
 
@@ -140,10 +143,12 @@ class EnterButton
 {
   PImage image;
   int index, x, y, w, h;
+  int margin = 10;
   String text;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
   boolean active;
+  boolean hover;
 
   EnterButton(int _x, int _y, int _w, int _h, String _text)
   {
@@ -161,43 +166,40 @@ class EnterButton
 
   void draw()
   {
-    int margin = 10;
-    if (isOver())
+    
+    if (!touchMode)
+    {
+      hover = isOver();
+    }
+    
+    if (hover)
     {
       choiceCanvas.fill(overColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
-      if (mouseIsPressed)
-      {
-        active = true;
-      }
-      if (active & !mouseIsPressed)
-      {
-        active = false;
-        select();
-      }
-    }
-    else 
-    {
-     active = false; 
     }
     
     choiceCanvas.fill(bgColor); // bg color
     choiceCanvas.rect(x, y, w, h);
-    choiceCanvas.fill(bgColor);
-    choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
+    //choiceCanvas.fill(bgColor);
+    //choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
     choiceCanvas.fill(textColor);
     choiceCanvas.text(text, x+w/2, y+h/1.5);
   }
-
-
-  boolean isOver()
+  
+  void hover()
   {
-    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+    hover = isOver();
   }
 
   void select()
   {
+    if (!isOver()) return;
     hideChoiceMenu();
+  }
+  
+  boolean isOver()
+  {
+    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
   }
 }
 

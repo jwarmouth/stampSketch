@@ -79,7 +79,6 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
   int x = startX;
   int y = startY - buttonWidth/2;
 
-
   StampButton[] buttons = new StampButton[sets.length];
 
   for (int i=0; i<buttons.length; i++)
@@ -114,7 +113,6 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
       buttonWidth = buttonImage.width;
       buttonHeight = maxHeight;
     }
-
 
 
     buttons[i] = new StampButton(sets, i, x, y-buttonHeight, buttonWidth, buttonHeight, buttonText, buttonImage);
@@ -160,10 +158,7 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 
 void drawMenu()
 {
-  if (!showChoiceMenu)
-  {
-    return;
-  }
+  if (!showChoiceMenu) return;
 
   //int menuTopY = 100;
   //int categoryTopY = 150;
@@ -192,23 +187,16 @@ void drawMenu()
   //choiceCanvas.text("SEGMENT", width/2, categoryTopY);
   //choiceCanvas.text("TIP", width*5/6, categoryTopY);
 
-
   choiceCanvas.textAlign(CENTER);
   choiceCanvas.noStroke();
-
-
   choiceCanvas.textSize(20);
 
-  for (StampButton button : rootButtons)
-    button.draw();
-
-  for (StampButton button : segmentButtons)
-    button.draw();
-
-  for (StampButton button : tipButtons)
-    button.draw();
-
+  // DRAW BUTTONS
+  for (StampButton button : rootButtons) button.draw();
+  for (StampButton button : segmentButtons) button.draw();
+  for (StampButton button : tipButtons) button.draw();
   enterButton.draw();
+  
   choiceCanvas.endDraw();
   image(choiceCanvas, 0, 40, scaleUI(choiceCanvas.width), scaleUI(choiceCanvas.height));
 
