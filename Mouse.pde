@@ -5,6 +5,7 @@
 void mousePressed()
 {
   mouseIsPressed = true;
+  print ("\nMOUSE IS PRESSED");
   attractTimerReset();
   
   switch(state) {
@@ -125,6 +126,7 @@ void ifMouseDragged()
 void mouseReleased()
 {
   mouseIsPressed = false;
+  print ("\nMOUSE IS RELEASED");
   attractTimerReset();
   
   lastRoot = null;

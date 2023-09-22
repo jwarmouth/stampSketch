@@ -8,6 +8,6 @@ application.windows32
 application.windows64
 application.macosx
 prefs
-prefs.txt
+/prefs
 out
 /saved

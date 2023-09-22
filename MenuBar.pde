@@ -86,16 +86,19 @@ class MenuBarButton
     
     if (isOver())
     {
+      //print ("\n" + text + " is over");
       menuBarCanvas.fill(overColor);
       //menuBarCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
       menuBarCanvas.rect(x, y, w, h);
-      if (mouseIsPressed)
+      if (!pressed && mouseIsPressed)
       {
         pressed = true;
+        print ("\n" + text + " is pressed");
       }
-      else if (pressed)
+      if (pressed && !mouseIsPressed)
       {
         pressed = false;
+        print ("\n" + text + " is released");
         select();
       }
     }
@@ -123,6 +126,7 @@ class MenuBarButton
   void select()
   {
     method(method);
+    print ("\nselecting" + text);
     //hideChoiceMenu();
   }
   
