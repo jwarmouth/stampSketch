@@ -115,6 +115,10 @@ class MenuBarButton
     menuBarCanvas.text(text, x+margin, y+h/1.5);
   }
 
+  void activateIfOver()
+  {
+    if (isOver()) select();
+  }
 
   boolean isOver()
   {

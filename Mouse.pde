@@ -129,6 +129,12 @@ void mouseReleased()
   print ("\nMOUSE IS RELEASED");
   attractTimerReset();
   
+  // Check Buttons
+  for (int i=0; i<menuBarButtons.length; i++)
+  {
+    menuBarButtons[i].activateIfOver();
+  }
+  
   lastRoot = null;
   //clearPreview();
 
