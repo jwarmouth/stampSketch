@@ -143,6 +143,7 @@ class EnterButton
   String text;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
+  boolean active;
 
   EnterButton(int _x, int _y, int _w, int _h, String _text)
   {
