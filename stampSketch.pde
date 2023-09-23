@@ -97,10 +97,36 @@ float attractModeDelay = 10; // seconds until Attract Mode starts
 float attractTimerStart;
 
 // Sound
-import processing.sound.*;
-SoundFile[] rootSounds;
-SoundFile[] segmentSounds;
-SoundFile[] tipSounds;
+//import processing.sound.*;
+//SoundFile[] rootSounds;
+//SoundFile[] segmentSounds;
+//SoundFile[] tipSounds;
+
+// Beads Audio
+import beads.*;
+import java.util.Arrays; 
+AudioContext audioContext;
+SamplePlayer[] rootSounds;
+SamplePlayer[] segmentSounds;
+SamplePlayer[] tipSounds;
+SamplePlayer rootSound, segmentSound, tipSound;
+Gain gain = new Gain(2, 0.5);
+Panner panner = new Panner(0);
+//Glide soundBalance;
+//Glide soundRate;
+
+// Minim Audio
+//import ddf.minim.*;
+//import ddf.minim.analysis.*;
+//import ddf.minim.effects.*;
+//import ddf.minim.signals.*;
+//import ddf.minim.spi.*;
+//import ddf.minim.ugens.*;
+//Minim minim;
+//AudioOutput audioOutput;
+//AudioPlayer[] rootSounds;
+//AudioPlayer[] segmentSounds;
+//AudioPlayer[] tipSounds;
 
 // Screen Size
 boolean aotm = false;

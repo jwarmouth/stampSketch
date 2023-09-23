@@ -13,6 +13,9 @@ void stampRoot()
 
   SpriteSet set = rootSets[currentRoot];
   if (set == null) return; // quick fix???
+  
+  //playSound(rootSound, mouseX, mouseY);
+  thread("playRootSound");
 
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
@@ -25,8 +28,7 @@ void stampRoot()
 
   // saveFrames only happens if recording
   saveFrames(12);
-  
-  playSound(rootSounds[0], mouseX, mouseY);
+ 
 }
 
 
@@ -37,8 +39,10 @@ void stampRoot()
 void stampSegment(int frames)
 {
   SpriteSet set = segmentSets[currentSegment];
-
   if (set == null) return; // quick fix???
+  
+  //playSound(segmentSound, mouseX, mouseY);
+  thread("playSegmentSound");
 
   lastAngle = angleToMouse(lastPoint);
 
@@ -49,8 +53,6 @@ void stampSegment(int frames)
   segmentBlocks.add(lastSegment);
 
   lastPoint = targetPoint;
-  
-  playSound(segmentSounds[0], mouseX, mouseY);
 
   saveFrames(frames);
 }
@@ -113,6 +115,9 @@ void stampTip(float stampAngle)
 {
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
+  
+  //playSound(tipSound, mouseX, mouseY);
+  thread("playTipSound");
 
   if (set.name == "eye block")
   {
@@ -162,8 +167,6 @@ void stampTip(float stampAngle)
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
   
-  
-  playSound(tipSounds[0], mouseX, mouseY);
   saveFrames(12);
 
   //if (debugging)

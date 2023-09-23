@@ -12,7 +12,6 @@ class StampButton
   boolean selected;
   boolean active;
   boolean hover;
-  boolean doubled = false;
   String methodToCall;
 
   StampButton(SpriteSet[] iSets, int _index, int _x, int _y, int _w, int _h, String _text, PImage _image)
@@ -29,12 +28,6 @@ class StampButton
     textColor = color(0);
     selectedColor = color(0);
     overColor = color(255, 0, 0);
-    //if (w < 100)
-    //{
-    // w *= 2;
-    // doubled = true;
-    //}
-    //print ("\n creating button: " + text);
   }
 
   void draw()
@@ -65,12 +58,6 @@ class StampButton
     if (image != null)
     {
       choiceCanvas.image(image, x, y, image.width, image.height);
-      //if (doubled)
-      //{
-      // choiceCanvas.image(image, x+image.width, y, image.width, image.height);
-      //}
-      //choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
-    
       choiceCanvas.rect(x, y+h-20, w, textHeight);
       textY = y+h;
     } 
@@ -223,31 +210,6 @@ class Heading
   }
 }
 
-
-
-// Make draw method of Button class -- much better
-//void drawButton(float buttonX, float buttonY, SpriteSet spriteSet)
-//{
-//  float buttonWidth = 200;
-//  float buttonHeight = 80;
-//  float buttonTextSize = 24;
-//  //float buttonVertSpacing = 100;
-//  color buttonColor = color(160);
-//  color buttonSelectedColor = color(255, 0, 0);
-//  color buttonTextColor = color(0);
-
-
-//  if (spriteSet != null)
-//  {
-//    PImage sprite = spriteSet.sprites[0];
-//    choiceCanvas.image(sprite, buttonX - buttonWidth/2, buttonY, buttonWidth, buttonHeight);
-//  } else {
-//    choiceCanvas.fill(buttonColor); // RED
-//    choiceCanvas.rect(buttonX-buttonWidth/2, buttonY, buttonWidth, buttonHeight);
-//  }
-//  choiceCanvas.fill(buttonTextColor);
-//  choiceCanvas.text("NONE", buttonX, buttonY+48);
-//}
 
 
 //ChoiceSprite[] choiceBeginSprites = new ChoiceSprite[2];

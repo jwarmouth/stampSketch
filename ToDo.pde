@@ -14,6 +14,7 @@
  [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
+ [ ] Button -- make more efficient by extending
  [ ] Root canvas -- make it go immediately instead of threaded?
  [ ] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
  [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
