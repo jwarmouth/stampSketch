@@ -19,6 +19,7 @@ void loadSpriteSets()
   armRedSet = new SpriteSet("arm r", "arm-red", 5, .9);
   armbSet = new SpriteSet("arm b", "armb", 5, .8);
   armcSet = new SpriteSet("arm c", "armc", 5, .8);
+  armcRedSet = new SpriteSet("arm c red", "armc-red", 5, .8);
   blocksmSet = new SpriteSet("block", "blocksm", 5, .8);
 
   // SEGMENTS -- STICKY
@@ -49,7 +50,7 @@ void loadSpriteSets()
 
   // Full Sets
   rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, blockBlack2Set, bigRedSet, bigBlackSet, rectSet, eyeBlockSet};
-  segmentSets = new SpriteSet[] {null, armSet, armRedSet, armbSet, armcSet, blocksmSet}; //, longRedSet, longBlackSet, redLineSet, blackLineSet};
+  segmentSets = new SpriteSet[] {null, armSet, armRedSet, armbSet, armcSet, armcRedSet, blocksmSet}; //, longRedSet, longBlackSet, redLineSet, blackLineSet};
   tipSets = new SpriteSet[] {null, handRedRSet, handBlackRSet, eyeSet, tipBlockRedSet, tipBlockBlackSet, swabBlackSet, swabRedSet, tipEyeBlockSet, eyeballSet};
   //currentRoot = 1;
   //currentSegment = 1;

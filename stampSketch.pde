@@ -17,7 +17,7 @@ int tipFlip = 0; // left or right
 float rootRotation = 0;
 
 // SEGMENTS
-SpriteSet armSet, armbSet, armcSet, blocksmSet, armRedSet;
+SpriteSet armSet, armbSet, armcSet, armcRedSet, blocksmSet, armRedSet;
 
 // FULL ARMS
 SpriteSet longRedSet, longBlackSet, redLineSet, blackLineSet;
@@ -81,6 +81,7 @@ String[] uiActiveMethods = new String[] {
   };
 */
 MenuBarButton[] menuBarButtons;
+float menuBarWidth;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
@@ -97,23 +98,23 @@ float attractModeDelay = 10; // seconds until Attract Mode starts
 float attractTimerStart;
 
 // Sound
-//import processing.sound.*;
-//SoundFile[] rootSounds;
-//SoundFile[] segmentSounds;
-//SoundFile[] tipSounds;
+import processing.sound.*;
+SoundFile[] rootSounds;
+SoundFile[] segmentSounds;
+SoundFile[] tipSounds;
+SoundFile rootSound, segmentSound, tipSound;
 
 // Beads Audio
-import beads.*;
-import java.util.Arrays; 
-AudioContext audioContext;
-SamplePlayer[] rootSounds;
-SamplePlayer[] segmentSounds;
-SamplePlayer[] tipSounds;
-SamplePlayer rootSound, segmentSound, tipSound;
-Gain gain = new Gain(2, 0.5);
-Panner panner = new Panner(0);
-//Glide soundBalance;
-//Glide soundRate;
+//import beads.*;
+//import java.util.Arrays; 
+//AudioContext audioContext;
+//SamplePlayer[] rootSounds;
+//SamplePlayer[] segmentSounds;
+//SamplePlayer[] tipSounds;
+//SamplePlayer rootSound, segmentSound, tipSound;
+//Gain gain = new Gain(2, 0.5);
+//Panner panner = new Panner(0);
+
 
 // Minim Audio
 //import ddf.minim.*;
@@ -196,7 +197,8 @@ void setup()
 
 void draw()
 {
-  thread("ifMouseDragged");
+  //thread("ifMouseDragged");
+  ifMouseDragged();
   attractTimerTick();
   
   drawCanvasFrame();

@@ -31,6 +31,8 @@ void stopRecording()
 
 void saveHiResImage()
 {
+  if (!hiResEnabled) return;
+  
   String imageName;
   if (recording) {
     imageName = clipFolder;
@@ -57,4 +59,15 @@ void saveFrames(int howManyFrames)
     print ("Saved frame" + nf(frameIndex, 4) + "\n");
     print ("saveCanvasNum: " + saveCanvasNum + "\n");
   }
+}
+
+void saveThreeFrames()
+{
+  startRecording();
+  saveFrames(3);
+  
+  // Stop Recording
+  saveHiResImage();
+  recording = false;
+  drawMenuBar();
 }

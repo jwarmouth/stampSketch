@@ -168,14 +168,6 @@ void stampTip(float stampAngle)
   tipBlocks.add(lastTip);
   
   saveFrames(12);
-
-  //if (debugging)
-  //{
-  //  debugCanvas.beginDraw();
-  //  debugCanvas.fill(0, 255, 0);
-  //  debugCanvas.circle(targetPoint.x, targetPoint.y, 10);
-  //  debugCanvas.endDraw();
-  //}
 }
 
 
@@ -185,7 +177,8 @@ void stampTip(float stampAngle)
 void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX)
 {
   if (spriteSet == null) return; // quick fix???
-  stampPreview(spriteSet, rotation, flipX);
+  
+  stampToPreviewCanvas(spriteSet, rotation, flipX);
   int index = (int)random(spriteSet.length);
 
   for (int i=0; i<canvasFramesCount; i++)
@@ -197,12 +190,6 @@ void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX
   {
     stampToHiRes(centerPoint, spriteSet, index, rotation, flipX);
   }
-
-  // NOT SURE WHY THIS IS DISABLED?????
-  //if (debugging)
-  //{
-  //  stampToDebug();
-  //}
 
   // https://discourse.processing.org/t/how-do-you-rotate-an-image-without-the-image-being-moved/6579/4
   // https://discourse.processing.org/t/solved-question-about-flipping-images/7391/2

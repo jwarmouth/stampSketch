@@ -23,9 +23,9 @@ void drawAttract()
 
 void randomizeAllStamps()
 {
+  print("\nRANDOMIZING ALL STAMPS");
   currentRoot = (int)random(1, rootSets.length);
   rootSets[currentRoot].loadSprites();
-  
   
   currentSegment = (int)random(1, segmentSets.length);
   segmentSets[currentSegment].loadSprites();
@@ -38,11 +38,26 @@ void randomizeAllStamps()
 
 void attractTimerTick()
 {
+  if (state == State.ATTRACTING) return;
+  
   if (millis() > attractTimerStart + attractModeDelay * 1000)
   {
-    eraseScreen();
-    state = State.ATTRACTING;
+    enterAttractMode();
   }
+}
+
+void enterAttractMode()
+{
+  saveThreeFrames();
+  eraseScreen();
+  state = State.ATTRACTING;
+  attractTimerReset();
+}
+
+void exitAttractMode()
+{
+  randomizeAllStamps();
+  attractTimerReset();
 }
 
 void attractTimerReset()

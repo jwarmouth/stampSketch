@@ -16,17 +16,16 @@ void drawMenuBar()
   
   // DRAW MENU BAR BUTTONS
   for (MenuBarButton button : menuBarButtons) button.draw();
-
-  /*
-  // Draw STATE
-  menuBarCanvas.text("State." + state, buttonWidth*12, 25);
-  
-  // Draw Frame Rate
-  menuBarCanvas.text(frameRate + " FPS", buttonWidth*14, 25);
   
   // Draw animFrameCount
-  menuBarCanvas.text("Anim " + animFrameCount%animationRate, buttonWidth*16, 25);
-  */
+  menuBarCanvas.text("Anim " + animFrameCount%animationRate, menuBarWidth + 20, 27);
+  
+  // Draw Frame Rate
+  menuBarCanvas.text("FPS: " + nf(frameRate, 0, 2), menuBarWidth + 100, 27);
+
+  // Draw STATE
+  menuBarCanvas.text("State." + state, menuBarWidth + 200, 27);
+
   menuBarCanvas.endDraw();
   image(menuBarCanvas, 0, 0, scaleUI(menuBarCanvas.width), scaleUI(menuBarCanvas.height)); //h-scaleUI(40)
 }
@@ -41,6 +40,8 @@ void menuBarSetup()
     menuBarButtons[i] = new MenuBarButton(menuBarItems[i], menuBarMethods[i], menuBarVars[i], buttonX, 0);
     buttonX += menuBarButtons[i].w;
   }
+  
+  menuBarWidth = buttonX;
 }
 
 void menuBarToggle()

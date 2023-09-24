@@ -7,34 +7,28 @@ void mousePressed()
   mouseIsPressed = true;
   print ("\nMOUSE IS PRESSED");
   attractTimerReset();
-  
-    
-  //for (int i=0; i<menuBarButtons.length; i++)
-  //{
-  //  menuBarButtons[i].hover();
-  //}
-  
+
   // Check Buttons
   for (MenuBarButton button : menuBarButtons) button.hover();
   for (StampButton button : rootButtons) button.hover();
   for (StampButton button : segmentButtons) button.hover();
   for (StampButton button : tipButtons) button.hover();
   enterButton.hover();
-  
+
   switch(state) {
   case ATTRACTING:
-    randomizeAllStamps();
+    exitAttractMode();
     state = State.WAITING;
-    
+
   case WAITING:
     resetVectorPoints();
     if (mouseY < 40) return;
     /*
     if (mouseX < 100 && mouseY < 40)
-    {
-      toggleChoiceMenu();
-    }
-    */
+     {
+     toggleChoiceMenu();
+     }
+     */
     Block overlapBlock = findOverlappingBlock();
     //tipFlip = (int)random(2);
 
@@ -64,7 +58,7 @@ void ifMouseDragged()
   if (!mousePressed) return;
 
   attractTimerReset();
-  SpriteSet currentSegmentSet = segmentSets[currentSegment];
+  //SpriteSet currentSegmentSet = segmentSets[currentSegment];
   float maxDistance;
 
   if ((keyPressed && key == ' ')) {
@@ -82,14 +76,15 @@ void ifMouseDragged()
     previewRoot();
     //thread("previewRoot");
     if (!overlaps(previewCanvas)) {
-      stampRoot();
       thread("findPointsOutsideBlock");
-      if (currentSegmentSet == null) {
+      stampRoot();
+      if (segmentSets[currentSegment] == null) {
         state = State.PREVIEWING_TIP;
-      } else if (currentSegmentSet.stretchy) {
+      } else if (segmentSets[currentSegment].stretchy) {
         state = State.PREVIEWING_STRETCHY_SEGMENT;
       } else {
         state = State.SEGMENTING;
+        print ("Segment: " + segmentSets[currentSegment].name);
       }
     }
     break;
@@ -98,18 +93,19 @@ void ifMouseDragged()
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
       thread("findPointsOutsideBlock");
-      if (currentSegmentSet == null) {
+      if (segmentSets[currentSegment] == null) {
         state = State.PREVIEWING_TIP;
-      } else if (currentSegmentSet.stretchy) {
+      } else if (segmentSets[currentSegment].stretchy) {
         state = State.PREVIEWING_STRETCHY_SEGMENT;
       } else {
         state = State.SEGMENTING;
+        print ("Segment: " + segmentSets[currentSegment].name);
       }
     }
     break;
 
   case SEGMENTING:
-    maxDistance = currentSegmentSet.armSegmentDistance;
+    maxDistance = segmentSets[currentSegment].armSegmentDistance;
     //calculateCenterAndTarget(maxDistance);
     thread("calculateCenterAndTarget");
     if (isSegmentFarEnough(maxDistance)) {
@@ -122,7 +118,7 @@ void ifMouseDragged()
 
   case PREVIEWING_STRETCHY_SEGMENT:
     //maxDistance = currentSegmentSet.armSegmentDistance;
-    maxDistance = currentSegmentSet.width;
+    maxDistance = segmentSets[currentSegment].width;
     calculateCenterAndTarget(maxDistance);
     thread("previewSegment");
     break;
@@ -141,24 +137,18 @@ void mouseReleased()
   mouseIsPressed = false;
   print ("\nMOUSE IS RELEASED");
   attractTimerReset();
-  
+
   // Check Buttons
   for (MenuBarButton button : menuBarButtons) button.select();
   for (StampButton button : rootButtons) button.select();
   for (StampButton button : segmentButtons) button.select();
   for (StampButton button : tipButtons) button.select();
   enterButton.select();
-  
-  //for (int i=0; i<menuBarButtons.length; i++)
-  //{
-  //  menuBarButtons[i].select();
-  //}
-  
+
   lastRoot = null;
   //clearPreview();
 
   switch(state) {
-  
   case CHOOSING:
     // let player choose stamps
     break;
