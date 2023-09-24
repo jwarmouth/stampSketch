@@ -4,29 +4,48 @@
 
 void playRootSound()
 {
-  playSound(rootSound, mouseX, mouseY);
+  SoundFile sound = rootSounds[(int)random(rootSounds.length)];
+  playSound(sound, mouseX, mouseY);
 }
 
 void playSegmentSound()
 {
-  playSound(segmentSound, mouseX, mouseY);
+  SoundFile sound = segmentSounds[(int)random(segmentSounds.length)];
+  playSound(sound, mouseX, mouseY);
 }
 
 void playTipSound()
 {
-  playSound(tipSound, mouseX, mouseY);
+  SoundFile sound = tipSounds[(int)random(tipSounds.length)];
+  playSound(sound, mouseX, mouseY);
 }
 
 // PROCESSING SOUND
 void soundSetup()
 {
-  //rootSounds = new SoundFile[1];
-  //segmentSounds = new SoundFile[1];
-  //tipSounds = new SoundFile[1];
+  rootSounds = new SoundFile[10];
+  segmentSounds = new SoundFile[26];
+  tipSounds = new SoundFile[31];
   
-  rootSound = new SoundFile(this, "sounds/root-1.wav");
-  segmentSound = new SoundFile(this, "sounds/segment-1.wav");
-  tipSound = new SoundFile(this, "sounds/tip-1.wav");
+  for (int i=0; i<rootSounds.length; i++)
+  {
+    rootSounds[i] = new SoundFile(this, "sounds/root-" +i + ".wav");
+  }
+  
+  for (int i=0; i<segmentSounds.length; i++)
+  {
+    segmentSounds[i] = new SoundFile(this, "sounds/block-" +i + ".wav");
+  }
+  
+  for (int i=0; i<tipSounds.length; i++)
+  {
+    tipSounds[i] = new SoundFile(this, "sounds/tip-" +i + ".wav");
+  }
+  
+  
+  //rootSound = new SoundFile(this, "sounds/root-1.wav");
+  //segmentSound = new SoundFile(this, "sounds/segment-1.wav");
+  //tipSound = new SoundFile(this, "sounds/tip-1.wav");
 }
 
 void playSound(SoundFile soundFile, float x, float y)
