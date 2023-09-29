@@ -7,7 +7,7 @@ float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, 
 ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint;
-float scaleFactor = 2.5; //2.0 - 8.0, default 2.5;
+float scaleFactor = 5; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
@@ -182,7 +182,7 @@ void setup()
   //fullScreen(FX2D, 1);
   size(1920, 1080, FX2D);
   background(255);
-  frameRate(240);
+  frameRate(60);  
   
   //refScale = refH / displayHeight;
   //scaleFactor *= refScale;
