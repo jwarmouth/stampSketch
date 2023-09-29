@@ -8,12 +8,13 @@
    [ ] Maybe the options go there too?
    [ ] Touch/Mouse mode - fix the UI
  [X] Reworked Menu Bar with MenuBarButton class
- [ ] FEATURE - add Sound to all stamps!
-   [ ] Record new sounds for stamps
+ [ ] Individual sound set for each stamp set?
+ [X] Record new sounds for stamps
  [ ] Make some new red versions of stamps, there aren't enough
  [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
+ [ ] Queue! Set up a Queue of stamps to process, and a thread to process them
  [ ] Button -- make more efficient by extending
  [ ] Thread - can I make custom thread to send x,y value?
  [ ] Root canvas -- make it go immediately instead of threaded?

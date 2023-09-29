@@ -19,9 +19,9 @@ void stampRoot()
 
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
-  stamp (set, centerPoint, stampAngle, rootFlip);
-  previewTo(rootCanvas);
-  makeTransparent(previewCanvas);
+  stamp (set, centerPoint, stampAngle, rootFlip, rootCanvas);
+  //previewTo(rootCanvas);
+  //makeTransparent(previewCanvas);
 
   lastRoot = new Block(lastPoint.x, lastPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
   rootBlocks.add(lastRoot);
@@ -46,8 +46,8 @@ void stampSegment(int frames)
 
   lastAngle = angleToMouse(lastPoint);
 
-  stamp(set, centerPoint, lastAngle, segmentScale(set));
-  previewTo(segmentCanvas);
+  stamp(set, centerPoint, lastAngle, segmentScale(set), segmentCanvas);
+  //previewTo(segmentCanvas);
 
   lastSegment = new Block(centerPoint.x, centerPoint.y, set.armSegmentDistance, set.armSegmentDistance, lastAngle, lastPoint, targetPoint);
   segmentBlocks.add(lastSegment);
@@ -152,7 +152,7 @@ void stampTip(float stampAngle)
     // Make sure it's the right hand set
   }
 
-  stamp (set, centerPoint, stampAngle, tipFlip);
+  stamp (set, centerPoint, stampAngle, tipFlip, tipCanvas);
   if (set.name == "eye block" && autoEyeball)
   {
     // AUTO-STAMP EYEBALL!
@@ -160,9 +160,9 @@ void stampTip(float stampAngle)
     PVector eyeballPoint = centerPoint;
     eyeballPoint.x += random(40)-20;
     eyeballPoint.y += random(20)-10;
-    stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+    stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip, tipCanvas);
   }
-  previewTo(tipCanvas);
+ // previewTo(tipCanvas);
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
@@ -174,53 +174,114 @@ void stampTip(float stampAngle)
 /********************************************************
  ***  STAMP  ********************************************
  *********************************************************/
-void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX)
+void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX, PGraphics previewToCanvas)
 {
   if (spriteSet == null) return; // quick fix???
   
-  stampToPreviewCanvas(spriteSet, rotation, flipX);
+  stampToPreviewCanvas(spriteSet, rotation, flipX, previewToCanvas);
   int index = (int)random(spriteSet.length);
 
   for (int i=0; i<canvasFramesCount; i++)
   {
-    stampToCanvas(canvasFrames[i], centerPoint, spriteSet, (index+i)%spriteSet.length, rotation, flipX);
+    stampToCanvas(canvasFrames[i], centerPoint, spriteSet, (index+i)%spriteSet.length, rotation, flipX, null);
   }
 
   if (hiResEnabled)
   {
-    stampToHiRes(centerPoint, spriteSet, index, rotation, flipX);
+    stampToHiRes(centerPoint, spriteSet, index, rotation, flipX, null);
   }
 
   // https://discourse.processing.org/t/how-do-you-rotate-an-image-without-the-image-being-moved/6579/4
   // https://discourse.processing.org/t/solved-question-about-flipping-images/7391/2
 }
 
-
-
-void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipX)
+void stampToPreviewCanvas(SpriteSet spriteSet, float rotation, float flipX, PGraphics previewToCanvas)
 {
+  //makeTransparent(previewCanvas);
+  //stampToCanvas(previewCanvas, centerPoint, spriteSet, 0, rotation, flipX, previewToCanvas);
+  stampFromQueue(previewCanvas, centerPoint, spriteSet, 0, rotation, flipX, previewToCanvas);
+  //if (debugging) {
+  //  stampToDebug();
+  //}
+}
+
+void stampToPreviewCanvas(SpriteSet spriteSet, float rotation)
+{
+  stampToPreviewCanvas(spriteSet, rotation, 1, null);
+}
+
+
+void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipX, PGraphics previewToCanvas)
+{
+  if (queuing)
+  {
+    QueuedStamp qs = new QueuedStamp(canvas, location, spriteSet, index, rotation, flipX, previewToCanvas);
+    queuedStamps.offer(qs);
+    print("\nQueuing sprite");
+  }
+  else
+  {
+    stampFromQueue(canvas, location, spriteSet, index, rotation, flipX, previewToCanvas);
+    print("\nDirectly Stamping sprite");
+  }
+}
+
+void stampFromQueue(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipX, PGraphics previewToCanvas)
+{
+  float scale = 1;
+  boolean hiRes = false;
+  if (canvas == hiResCanvas)
+  {
+    scale = scaleFactor;
+    hiRes = true;
+  }
+  if (canvas == previewCanvas)
+  {  
+    if (debugging) stampToDebug();
+    makeTransparent(previewCanvas);
+  }
   canvas.beginDraw();
   canvas.blendMode(MULTIPLY);
   canvas.imageMode(CENTER); // use image center instead of top left
   canvas.pushMatrix(); // remember current drawing matrix
-  canvas.translate(location.x, location.y);
+  canvas.translate(location.x * scale, location.y * scale);
   canvas.rotate(rotation);
   canvas.scale(1, flipX);
-  canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipX);
+  if (hiRes)
+  {
+    canvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * scaleFactor, spriteSet.offsetY * flipX * scaleFactor);
+  }
+  else
+  {
+    canvas.image(spriteSet.sprites[index], spriteSet.offsetX * scale, spriteSet.offsetY * flipX * scale);
+  }
   canvas.popMatrix();
   canvas.endDraw();
+  
+  if (canvas == previewCanvas)
+  {
+    previewTo(previewToCanvas);
+    if (previewToCanvas == rootCanvas)
+    {
+      makeTransparent(previewCanvas);
+    }
+  }
 }
 
-void stampToHiRes(PVector location, SpriteSet spriteSet, int index, float rotation, float flipX)
+void stampToHiRes(PVector location, SpriteSet spriteSet, int index, float rotation, float flipX, PGraphics previewToCanvas)
 {
-  hiResCanvas.beginDraw();
-  hiResCanvas.blendMode(MULTIPLY);
-  hiResCanvas.imageMode(CENTER); // use image center instead of top left
-  hiResCanvas.pushMatrix(); // remember current drawing matrix
-  hiResCanvas.translate(location.x * scaleFactor, location.y * scaleFactor);
-  hiResCanvas.rotate(rotation);
-  hiResCanvas.scale(1, flipX);
-  hiResCanvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * scaleFactor, spriteSet.offsetY * flipX * scaleFactor);
-  hiResCanvas.popMatrix();
-  hiResCanvas.endDraw();
+  
+  QueuedStamp qs = new QueuedStamp(hiResCanvas, location, spriteSet, index, rotation, flipX, previewToCanvas);
+  queuedStamps.offer(qs);
+  
+  //hiResCanvas.beginDraw();
+  //hiResCanvas.blendMode(MULTIPLY);
+  //hiResCanvas.imageMode(CENTER); // use image center instead of top left
+  //hiResCanvas.pushMatrix(); // remember current drawing matrix
+  //hiResCanvas.translate(location.x * scaleFactor, location.y * scaleFactor);
+  //hiResCanvas.rotate(rotation);
+  //hiResCanvas.scale(1, flipX);
+  //hiResCanvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * scaleFactor, spriteSet.offsetY * flipX * scaleFactor);
+  //hiResCanvas.popMatrix();
+  //hiResCanvas.endDraw();
 }

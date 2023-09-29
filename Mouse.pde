@@ -76,7 +76,7 @@ void ifMouseDragged()
     previewRoot();
     //thread("previewRoot");
     if (!overlaps(previewCanvas)) {
-      thread("findPointsOutsideBlock");
+      findPointsOutsideBlock();  //thread("findPointsOutsideBlock");
       stampRoot();
       if (segmentSets[currentSegment] == null) {
         state = State.PREVIEWING_TIP;
@@ -92,7 +92,7 @@ void ifMouseDragged()
   case OVERLAPPING_ROOT:
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
-      thread("findPointsOutsideBlock");
+      findPointsOutsideBlock(); //thread("findPointsOutsideBlock");
       if (segmentSets[currentSegment] == null) {
         state = State.PREVIEWING_TIP;
       } else if (segmentSets[currentSegment].stretchy) {
@@ -107,7 +107,7 @@ void ifMouseDragged()
   case SEGMENTING:
     maxDistance = segmentSets[currentSegment].armSegmentDistance;
     //calculateCenterAndTarget(maxDistance);
-    thread("calculateCenterAndTarget");
+    calculateCenterAndTarget(); //thread("calculateCenterAndTarget");
     if (isSegmentFarEnough(maxDistance)) {
       thread("stampSegment");
     } else {
@@ -124,7 +124,7 @@ void ifMouseDragged()
     break;
 
   case PREVIEWING_TIP:
-    thread("previewTip");
+    previewTip(); //thread("previewTip");
     break;
 
   default:
@@ -160,7 +160,7 @@ void mouseReleased()
 
   case SEGMENTING:
     if (mouseAutoTip) {
-      thread("stampTipAuto");
+      stampTipAuto(); //thread("stampTipAuto");
     }
     state = State.WAITING;
     break;
@@ -177,7 +177,7 @@ void mouseReleased()
     break;
 
   case PREVIEWING_TIP:
-    thread("stampTip");
+    stampTip(); //thread("stampTip");
     state = State.WAITING;
     break;
 

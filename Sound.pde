@@ -59,7 +59,7 @@ void playSound(SoundFile soundFile, float x, float y)
   float pan = map(x, 0, width, -.75, .75);
   soundFile.play(rate, pan, 1.0);
   //soundFile.pan(pan);
-  print ("\nPlaying sound. Rate: " + rate + " Pan: " + pan);
+  //print ("\nPlaying sound. Rate: " + rate + " Pan: " + pan);
 }
 
 // BEADS SOUND

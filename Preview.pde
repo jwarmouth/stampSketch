@@ -30,19 +30,6 @@ void clearPreview()
   previewCanvas.endDraw();
 }
 
-void stampToPreviewCanvas(SpriteSet spriteSet, float rotation, float flipX)
-{
-  makeTransparent(previewCanvas);
-  stampToCanvas(previewCanvas, centerPoint, spriteSet, 0, rotation, flipX);
-  if (debugging) {
-    stampToDebug();
-  }
-}
-
-void stampToPreviewCanvas(SpriteSet spriteSet, float rotation)
-{
-  stampToPreviewCanvas(spriteSet, rotation, 1);
-}
 
 void previewTo(PGraphics canvas)
 {
@@ -63,7 +50,7 @@ void previewRoot()
 
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
-  stampToPreviewCanvas (set, stampAngle, rootFlip);
+  stampToPreviewCanvas (set, stampAngle, rootFlip, rootCanvas);
 }
 
 
@@ -77,7 +64,7 @@ void previewSegment()
 
   float stampAngle = angleToMouse(lastPoint);
 
-  stampToPreviewCanvas (set, stampAngle, segmentScale(set));
+  stampToPreviewCanvas (set, stampAngle, segmentScale(set), segmentCanvas);
 }
 
 
@@ -111,5 +98,5 @@ void previewTip(float stampAngle)
 
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
-  stampToPreviewCanvas (set, stampAngle, tipFlip);
+  stampToPreviewCanvas (set, stampAngle, tipFlip, tipCanvas);
 }

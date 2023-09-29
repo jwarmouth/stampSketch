@@ -7,7 +7,7 @@ float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, 
 ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint;
-float scaleFactor = 2.5; //2.0 - 8.0, default 2.5;
+float scaleFactor = 5.0; //2.5; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
@@ -104,6 +104,12 @@ SoundFile[] segmentSounds;
 SoundFile[] tipSounds;
 SoundFile rootSound, segmentSound, tipSound;
 
+// Queue System
+import java.util.Queue;
+import java.util.ArrayDeque;
+Queue<QueuedStamp> queuedStamps = new ArrayDeque();
+boolean queuing = true;
+
 // Beads Audio
 //import beads.*;
 //import java.util.Arrays; 
@@ -193,6 +199,7 @@ void setup()
   //showMenu = true;
   //state = State.ATTRACTING;
   //savePrefs();
+  if (queuing) thread("stampThread");
 }
 
 void draw()

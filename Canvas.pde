@@ -72,7 +72,9 @@ void toggleRootCanvas()
 void drawRootCanvas()
 {
   if (!showRootCanvas) return;
+  blendMode(SCREEN);
   image(rootCanvas, 0, 0);
+  blendMode(BLEND);
 }
 
 void toggleSegmentCanvas()
@@ -101,6 +103,7 @@ void eraseScreen()
 {
   //createCanvases();
   clearAllCanvases();
+  queuedStamps.clear();
   //showMenu = true;
   //state = State.CHOOSING;
 }
