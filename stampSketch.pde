@@ -104,6 +104,12 @@ SoundFile[] segmentSounds;
 SoundFile[] tipSounds;
 SoundFile rootSound, segmentSound, tipSound;
 
+// Touch
+import processing.javafx.*;
+
+
+
+
 // Beads Audio
 //import beads.*;
 //import java.util.Arrays; 
@@ -173,8 +179,8 @@ void settings()
 
 void setup()
 {
-  //fullScreen();
-  size(1920, 1080);
+  //fullScreen(FX2D, 1);
+  size(1920, 1080, FX2D);
   background(255);
   frameRate(240);
   
