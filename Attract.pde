@@ -25,13 +25,13 @@ void randomizeAllStamps()
 {
   print("\nRANDOMIZING ALL STAMPS");
   currentRoot = (int)random(1, rootSets.length);
-  rootSets[currentRoot].loadSprites();
-  
   currentSegment = (int)random(1, segmentSets.length);
-  segmentSets[currentSegment].loadSprites();
-  
   currentTip = (int)random(1, tipSets.length);
+  
+  rootSets[currentRoot].loadSprites();
+  segmentSets[currentSegment].loadSprites();
   tipSets[currentTip].loadSprites();
+  if (tipSets[currentTip].name == "eye block") eyeballSet.loadSprites();
   
   savePrefs();
 }

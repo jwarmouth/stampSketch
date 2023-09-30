@@ -156,11 +156,13 @@ void stampTip(float stampAngle)
   if (set.name == "eye block" && autoEyeball)
   {
     // AUTO-STAMP EYEBALL!
-    eyeballSet.loadSprites();
-    PVector eyeballPoint = centerPoint;
-    eyeballPoint.x += random(40)-20;
-    eyeballPoint.y += random(20)-10;
-    stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+    //eyeballSet.loadSprites();
+    //eyeballPoint = centerPoint;
+    //eyeballPoint.x += random(40)-20;
+    //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
+    eyeballX = random(40)-20;
+    eyeballY = random(20)-10 - (abs(eyeballX)/5);
+    //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
   }
   previewTo(tipCanvas);
 
@@ -207,6 +209,11 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int 
   canvas.rotate(rotation);
   canvas.scale(1, flipX);
   canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipX);
+  if (spriteSet.name == "eye block" && autoEyeball)
+  {
+    canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
+    //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+  }
   canvas.popMatrix();
   canvas.endDraw();
 }

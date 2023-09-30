@@ -51,6 +51,11 @@ class SpriteSet
         loadSprite(i);
       }
     }
+    if (name == "eye block")
+      {
+        eyeballSet.loadSprites();
+      }
+    print ("\n" + name + " sprites loaded");
   }
 
   void unloadSprites()
@@ -63,6 +68,7 @@ class SpriteSet
         hiResSprites[i] = null;
       }
     }
+    print ("\n" + name + " sprites unloaded");
   }
 
   void loadSprite(int index)

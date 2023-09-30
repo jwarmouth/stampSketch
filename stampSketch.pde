@@ -6,7 +6,8 @@
 float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, lastAngle, targetAngle, armSegmentDistance;
 ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
-PVector lastPoint, targetPoint, centerPoint;
+PVector lastPoint, targetPoint, centerPoint, eyeballPoint;
+float eyeballX, eyeballY;
 float scaleFactor = 5; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
@@ -180,9 +181,9 @@ void settings()
 void setup()
 {
   //fullScreen(FX2D, 1);
-  size(1920, 1080, FX2D);
+  size(1920, 1080);
   background(255);
-  frameRate(60);  
+  frameRate(24);  
   
   //refScale = refH / displayHeight;
   //scaleFactor *= refScale;

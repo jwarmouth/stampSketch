@@ -8,14 +8,19 @@ void mousePressed()
   print ("\nMOUSE IS PRESSED");
   attractTimerReset();
 
-  // Check Buttons
+  // Check MenuBar Buttons
   for (MenuBarButton button : menuBarButtons) button.hover();
-  for (StampButton button : rootButtons) button.hover();
-  for (StampButton button : segmentButtons) button.hover();
-  for (StampButton button : tipButtons) button.hover();
-  enterButton.hover();
+
 
   switch(state) {
+  case CHOOSING:
+    // let player choose stamps
+    for (StampButton button : rootButtons) button.hover();
+    for (StampButton button : segmentButtons) button.hover();
+    for (StampButton button : tipButtons) button.hover();
+    enterButton.hover();
+    break;
+
   case ATTRACTING:
     exitAttractMode();
     state = State.WAITING;
@@ -138,12 +143,9 @@ void mouseReleased()
   print ("\nMOUSE IS RELEASED");
   attractTimerReset();
 
-  // Check Buttons
+  // Check MenuBar Buttons
   for (MenuBarButton button : menuBarButtons) button.select();
-  for (StampButton button : rootButtons) button.select();
-  for (StampButton button : segmentButtons) button.select();
-  for (StampButton button : tipButtons) button.select();
-  enterButton.select();
+
 
   lastRoot = null;
   //clearPreview();
@@ -151,6 +153,11 @@ void mouseReleased()
   switch(state) {
   case CHOOSING:
     // let player choose stamps
+    // Check Stamp Buttons
+    for (StampButton button : rootButtons) button.select();
+    for (StampButton button : segmentButtons) button.select();
+    for (StampButton button : tipButtons) button.select();
+    enterButton.select();
     break;
 
   case PREVIEWING_ROOT:

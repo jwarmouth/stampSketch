@@ -100,6 +100,10 @@ class StampButton
     if (sets[index] != null)
     {
       sets[index].loadSprites();
+      //if (sets[index].name == "eye block")
+      //{
+      //  eyeballSet.loadSprites();
+      //}
     }
     savePrefs();
   }
