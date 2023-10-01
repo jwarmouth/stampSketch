@@ -11,6 +11,8 @@
  [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
+ [ ] PreviewTo -- stamp directly to root, segment, or tip canvas?
+ [ ] BLINKING tip -- gotta stop this
  [ ] Randomizer -- make red/black alternate
  [ ] Button -- make more efficient by extending
  [ ] Thread - can I make custom thread to send x,y value?

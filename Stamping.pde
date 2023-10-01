@@ -156,7 +156,6 @@ void stampTip(float stampAngle)
     stampAngle += radians (random(200) - 100);
   }
 
-  stamp (set, centerPoint, stampAngle, tipFlip);
   if (set.name == "eye block" || set.name == "eye block black")
   {
     stampAngle += radians(90);
@@ -172,6 +171,8 @@ void stampTip(float stampAngle)
       //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
     }
   }
+  
+  stamp (set, centerPoint, stampAngle, tipFlip);
   previewTo(tipCanvas);
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
