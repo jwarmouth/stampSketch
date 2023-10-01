@@ -3,6 +3,7 @@
  *********************************************************
  
  404 TODO
+ [ ] Optimize for multiple users on touch screen
  [ ] Attract Mode - finger that drags on screen to entice participants
  [ ] Choose menu - needs to "feel" better - on the left side of screen?
    [ ] Maybe the options go there too?
@@ -21,19 +22,22 @@
  [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
- [ ] can eyeball move around???
- [ ] better algorithm for eyeball placement re: eye block
  [ ] Stretchy Arms are not drawing correctly
- [ ] Optimize for multiple users on touch screen
  [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
+ [ ] Choose ScaleFactor -- make slider or other selector
+ 
+ STRETCH GOALS -- not likely
+ [ ] can eyeball move around???
  [ ] Store last move in a temp PGraphics so it can be undone?
  [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
  [ ] Undo for a specific arm if it sucks?
  [ ] Record animation as data & play it back procedurally
  [ ] If you record animation, you can have it draw to Hi-Res in separate process
- [ ] Choose ScaleFactor -- make slider or other selector
  
  DONE
+ [X] better algorithm for eyeball placement re: eye block
+ [X] Eyeball - fixed so it stamps automatically with eye block, with offset
+ [X] DEBUG - glitch, user can accidentally select a new stamp while drawing -- only check buttons in CHOOSING mode
  [X] Quick test - Attract state, with canvas that says "Attract Mode"
  [X] Attract mode Pressing mouse will select random blocks
  [X] Must double-click to push a button, fix this!

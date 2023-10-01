@@ -18,13 +18,13 @@ int tipFlip = 0; // left or right
 float rootRotation = 0;
 
 // SEGMENTS
-SpriteSet armSet, armbSet, armcSet, armcRedSet, blocksmSet, armRedSet;
+SpriteSet armSet, armRedSet, armbSet, armbRedSet, armcSet, armcRedSet, blocksmSet, blocksmRedSet, armdSet, armdRedSet;
 
 // FULL ARMS
 SpriteSet longRedSet, longBlackSet, redLineSet, blackLineSet;
 
 // TIPS
-SpriteSet handRedLSet, handRedRSet, handBlackLSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, eyeSet, swabBlackSet, swabRedSet, tipEyeBlockSet, eyeballSet;
+SpriteSet handRedLSet, handRedRSet, handBlackLSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, eyeSet, swabBlackSet, swabRedSet, tipEyeBlockSet, eyeballSet, hornSet, hornRedSet;
 
 // CURRENT SET PLACEHOLDERS
 SpriteSet rootSet, segmentSet, tipSet;
@@ -183,7 +183,7 @@ void setup()
   //fullScreen(FX2D, 1);
   size(1920, 1080);
   background(255);
-  frameRate(24);  
+  frameRate(48);  
   
   //refScale = refH / displayHeight;
   //scaleFactor *= refScale;

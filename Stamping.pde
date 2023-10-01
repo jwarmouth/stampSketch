@@ -136,33 +136,41 @@ void stampTip(float stampAngle)
   {
     stampAngle = angleToMouse(lastPoint);
   }
+  
+  
+  if (set.name == "horn" || set.name == "horn red")
+  {
+    stampAngle = lastAngle;
+  }
 
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
-  if (set.name == "eye block") {
-    stampAngle += radians(90);
+
+  if (set.name.indexOf("hand") > 0) {
+    // Make sure it's the right hand set
   }
+
   
   if (set.name == "eye")
   {
     stampAngle += radians (random(200) - 100);
   }
 
-  if (set.name.indexOf("hand") > 0) {
-    // Make sure it's the right hand set
-  }
-
   stamp (set, centerPoint, stampAngle, tipFlip);
-  if (set.name == "eye block" && autoEyeball)
+  if (set.name == "eye block")
   {
-    // AUTO-STAMP EYEBALL!
-    //eyeballSet.loadSprites();
-    //eyeballPoint = centerPoint;
-    //eyeballPoint.x += random(40)-20;
-    //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
-    eyeballX = random(40)-20;
-    eyeballY = random(20)-10 - (abs(eyeballX)/5);
-    //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+    stampAngle += radians(90);
+    if (autoEyeball)
+    {
+      // AUTO-STAMP EYEBALL!
+      //eyeballSet.loadSprites();
+      //eyeballPoint = centerPoint;
+      //eyeballPoint.x += random(40)-20;
+      //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
+      eyeballX = random(40)-20;
+      eyeballY = random(20)-10 - (abs(eyeballX)/5);
+      //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+    }
   }
   previewTo(tipCanvas);
 
@@ -199,7 +207,7 @@ void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX
 
 
 
-void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipX)
+void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipY)
 {
   canvas.beginDraw();
   canvas.blendMode(MULTIPLY);
@@ -207,8 +215,8 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int 
   canvas.pushMatrix(); // remember current drawing matrix
   canvas.translate(location.x, location.y);
   canvas.rotate(rotation);
-  canvas.scale(1, flipX);
-  canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipX);
+  canvas.scale(1, flipY);
+  canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipY);
   if (spriteSet.name == "eye block" && autoEyeball)
   {
     canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
