@@ -13,6 +13,7 @@ void loadSpriteSets()
   rectSet = new SpriteSet("rect", "rect", 5);
   rectRedSet = new SpriteSet("rect red", "rect-red", 5);
   blockBlack2Set = new SpriteSet("block b", "block-b", 5, .9);
+  malletRedSet = new SpriteSet("mallet red", "mallet-red", 5, .9);
   //eyeBlockSet = new SpriteSet("eye block", "eye-block", 5);
   //rectSet = new SpriteSet("rect", "red-rect", 4);
 
@@ -59,7 +60,7 @@ void loadSpriteSets()
   //swabRedSet = new SpriteSet("swab r", "swab-red", 4);
 
   // Full Sets
-  rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectRedSet, rectSet, blockBlack2Set};
+  rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectRedSet, rectSet, blockBlack2Set, malletRedSet};
   segmentSets = new SpriteSet[] {null, armSet, armRedSet, armcSet, armcRedSet, armbSet, armbRedSet, blocksmSet, blocksmRedSet, armdSet, armdRedSet}; //, longRedSet, longBlackSet, redLineSet, blackLineSet};
   tipSets = new SpriteSet[] {null, handRedRSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, tipEyeBlockSet, tipEyeBlockBlackSet, hornRedSet, hornSet};
   //currentRoot = 1;
@@ -80,13 +81,13 @@ void setSpriteSet(SpriteSet set, SpriteSet[] sets, int index)
   set.loadSprites();
   for (int i=1; i<sets.length; i++)
   {
-    //if (i!=index)
-    //{
-    //  sets[i].unloadSprites();
-    //} else
-    //{
+    if (i!=index)
+    {
+      sets[i].unloadSprites();
+    } else
+    {
       sets[i].loadSprites();
-    //}
+    }
   }
 
   print (set.name + " loaded. \n");

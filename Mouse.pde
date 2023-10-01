@@ -166,16 +166,19 @@ void mouseReleased()
     break;
 
   case SEGMENTING:
-   if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
+   if (!overlapsAnyButLastSegment()) //overlaps()) //rootCanvas) && !overlaps(tipCanvas))
+    {
     if (mouseAutoTip) {
-      thread("stampTipAuto");
+      //thread("stampTipAuto");
+      stampTipAuto();
     }
    }
     state = State.WAITING;
     break;
 
   case PREVIEWING_STRETCHY_SEGMENT:
-    if (!overlaps()) {
+    if (!overlapsAnyButLastSegment()) //
+    {
       stampSegment(6);
       if (mouseAutoTip)
       {
@@ -186,7 +189,8 @@ void mouseReleased()
     break;
 
   case PREVIEWING_TIP:
-   if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
+   if (!overlapsAnyButLastSegment()) //if (!overlaps()) //rootCanvas) && !overlaps(tipCanvas)) 
+   {
     thread("stampTip");
    }
     state = State.WAITING;

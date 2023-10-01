@@ -8,11 +8,11 @@ ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint, eyeballPoint;
 float eyeballX, eyeballY;
-float scaleFactor = 5; //2.0 - 8.0, default 2.5;
+float scaleFactor = 6; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
-SpriteSet blockRedSet, blockBlackSet, blockBlack2Set, bigRedSet, bigBlackSet, rectSet, rectRedSet, eyeBlockSet;
+SpriteSet blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectSet, rectRedSet, blockBlack2Set, malletRedSet; //eyeBlockSet;
 int rootFlip = 1;
 int tipFlip = 0; // left or right
 float rootRotation = 0;

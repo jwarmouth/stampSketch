@@ -19,8 +19,8 @@ void stampRoot()
 
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
-  stamp (set, centerPoint, stampAngle, rootFlip);
-  previewTo(rootCanvas);
+  stamp (set, centerPoint, stampAngle, rootFlip, rootCanvas);
+  //previewTo(rootCanvas);
   makeTransparent(previewCanvas);
 
   lastRoot = new Block(lastPoint.x, lastPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
@@ -46,8 +46,8 @@ void stampSegment(int frames)
 
   lastAngle = angleToMouse(lastPoint);
 
-  stamp(set, centerPoint, lastAngle, segmentScale(set));
-  previewTo(segmentCanvas);
+  stamp(set, centerPoint, lastAngle, segmentScale(set), segmentCanvas);
+  //previewTo(segmentCanvas);
 
   lastSegment = new Block(centerPoint.x, centerPoint.y, set.armSegmentDistance, set.armSegmentDistance, lastAngle, lastPoint, targetPoint);
   segmentBlocks.add(lastSegment);
@@ -161,19 +161,12 @@ void stampTip(float stampAngle)
     stampAngle += radians(90);
     if (autoEyeball)
     {
-      // AUTO-STAMP EYEBALL!
-      //eyeballSet.loadSprites();
-      //eyeballPoint = centerPoint;
-      //eyeballPoint.x += random(40)-20;
-      //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
-      eyeballX = random(40)-20;
-      eyeballY = random(20)-10 - (abs(eyeballX)/5);
-      //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+      eyeballRandomLook();
     }
   }
   
-  stamp (set, centerPoint, stampAngle, tipFlip);
-  previewTo(tipCanvas);
+  stamp (set, centerPoint, stampAngle, tipFlip, tipCanvas);
+  //previewTo(tipCanvas);
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
@@ -181,21 +174,55 @@ void stampTip(float stampAngle)
   saveFrames(12);
 }
 
+void eyeballRandomLook()
+{
+  // AUTO-STAMP EYEBALL!
+  eyeballX = random(-95, 95);
+  eyeballY = random(-45, 45);
+  float absX = abs(eyeballX);
+  if (absX > 30)
+  {
+    absX = map(absX, 30, 100, 1, 0.01);
+    // if it's 31, reduce a bit, if it's 100, reduce to 0
+    eyeballY *= absX;
+  }
+  
+  eyeballX /= scaleFactor;
+  eyeballY /= scaleFactor;
+      //eyeballSet.loadSprites();
+      //eyeballPoint = centerPoint;
+      //eyeballPoint.x += random(40)-20;
+      //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
+      
+      //eyeballX = random(36)-18;
+      //eyeballY = random(18)-9;
+      //if (abs(eyeballX) > 8)
+      //{
+      //  eyeballY /= abs(eyeballX)/5 + 1;
+      //}
+      
+      // - (abs(eyeballX)/5);
+      //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+}
+
 
 /********************************************************
  ***  STAMP  ********************************************
  *********************************************************/
-void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX)
+void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX, PGraphics previewCanvas)
 {
   if (spriteSet == null) return; // quick fix???
   
-  stampToPreviewCanvas(spriteSet, rotation, flipX);
+  // NOT SURE WHY WE DO THIS
+  //stampToPreviewCanvas(spriteSet, rotation, flipX);
+  
   int index = (int)random(spriteSet.length);
-
   for (int i=0; i<canvasFramesCount; i++)
   {
     stampToCanvas(canvasFrames[i], centerPoint, spriteSet, (index+i)%spriteSet.length, rotation, flipX);
   }
+  stampToCanvas(previewCanvas, centerPoint, spriteSet, index, rotation, flipX);
+  
 
   if (hiResEnabled)
   {
@@ -212,6 +239,10 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet set, int index,
 {
   canvas.beginDraw();
   canvas.blendMode(MULTIPLY);
+  if (canvas == rootCanvas || canvas == segmentCanvas || canvas == tipCanvas)
+  {
+    canvas.blendMode(SUBTRACT);
+  }
   canvas.imageMode(CENTER); // use image center instead of top left
   canvas.pushMatrix(); // remember current drawing matrix
   canvas.translate(location.x, location.y);

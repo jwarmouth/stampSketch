@@ -8,17 +8,12 @@
  [ ] Choose menu - needs to "feel" better - on the left side of screen?
    [ ] Maybe the options go there too?
    [ ] Touch/Mouse mode - fix the UI
- [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
- [ ] PreviewTo -- stamp directly to root, segment, or tip canvas?
  [ ] BLINKING tip -- gotta stop this
+ [ ] PreviewTo -- stamp directly to root, segment, or tip canvas?
  [ ] Randomizer -- make red/black alternate
- [ ] Button -- make more efficient by extending
- [ ] Thread - can I make custom thread to send x,y value?
- [ ] Root canvas -- make it go immediately instead of threaded?
- [ ] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
- [ ] Preview is glitched -- make it so preview canvas only shows when mouse is down? NOPE - did not work
+ [X] Root canvas -- make it go immediately instead of threaded?
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
  [ ] Stretchy Arms are not drawing correctly
@@ -26,15 +21,26 @@
  [ ] Choose ScaleFactor -- make slider or other selector
  
  STRETCH GOALS -- not likely
+ [ ] Multi-touch? NOT for Mexico City -- can't get it working reliably
  [ ] can eyeball move around???
  [ ] Store last move in a temp PGraphics so it can be undone?
  [ ] Store Arms in separate ArrayLists within a larger array. ArrayList of ArrayLists, each is a single arm
  [ ] Undo for a specific arm if it sucks?
  [ ] Record animation as data & play it back procedurally
  [ ] If you record animation, you can have it draw to Hi-Res in separate process
+ [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  [ ] FEATURE - different sound for each stamp set!
  
+ OPTIMIZING
+ [ ] Button -- make more efficient by extending
+ [ ] Thread - can I make custom thread to send x,y value? -- Tried, but not great results
+ 
  DONE
+ [X] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
+ [X] Preview is glitched -- preview canvas only shows when mouse is down OR State.CHOOSING
+ [X] Even better eyeball look algorithm
+ [X] Don't stamp a tip when mouseUp overlaps segment canvas
+ [X] Unless it's the last segment stamped
  [X] Reworked Menu Bar with MenuBarButton class
  [X] Make some new red versions of stamps, there aren't enough
  [X] better algorithm for eyeball placement re: eye block

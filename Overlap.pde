@@ -24,6 +24,14 @@ boolean overlaps()
   return (overlaps(rootCanvas) || overlaps(segmentCanvas) || overlaps(tipCanvas));
 }
 
+boolean overlapsAnyButLastSegment()
+{
+  boolean ov = false;
+  if (overlaps(rootCanvas) || overlaps(tipCanvas)) ov = true;
+  if (overlaps(segmentCanvas) && findOverlappingBlock() != lastSegment) ov = true;
+  return ov;
+}
+
 Block findOverlappingBlock()
 {
   if (overlaps(rootCanvas)) {

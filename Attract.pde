@@ -23,10 +23,16 @@ void drawAttract()
 
 void randomizeAllStamps()
 {
+  saveHiResImage();
   print("\nRANDOMIZING ALL STAMPS");
-  currentRoot = (int)random(1, rootSets.length);
-  currentSegment = (int)random(1, segmentSets.length);
-  currentTip = (int)random(1, tipSets.length);
+  int ranRoot, ranSeg, ranTip;
+  ranRoot = (int)random(1, rootSets.length);
+  ranSeg = (int)random(1, segmentSets.length);
+  ranTip = (int)random(1, tipSets.length);
+  
+  currentRoot = ranRoot;
+  currentSegment = ranSeg;
+  currentTip = ranTip;
   
   rootSets[currentRoot].loadSprites();
   segmentSets[currentSegment].loadSprites();
