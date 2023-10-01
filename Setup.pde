@@ -10,9 +10,11 @@ void loadSpriteSets()
   blockBlackSet = new SpriteSet("block b", "black-block", 3, .8);
   bigRedSet = new SpriteSet("big red", "big-block", 2, .8);
   bigBlackSet = new SpriteSet("big black", "big-block-black", 2, .8);
-  rectSet = new SpriteSet("rect", "red-rect", 4);
+  rectSet = new SpriteSet("rect", "rect", 5);
+  rectRedSet = new SpriteSet("rect red", "rect-red", 5);
   blockBlack2Set = new SpriteSet("block b", "block-b", 5, .9);
   //eyeBlockSet = new SpriteSet("eye block", "eye-block", 5);
+  //rectSet = new SpriteSet("rect", "red-rect", 4);
 
   // SEGMENTS
   armSet = new SpriteSet("arm", "arm", 5, .85);
@@ -48,6 +50,7 @@ void loadSpriteSets()
   tipBlockRedSet = new SpriteSet("block r", "red-block", 3);
   tipBlockBlackSet = new SpriteSet("block b", "black-block", 3);
   tipEyeBlockSet = new SpriteSet("eye block", "eye-block", 5);
+  tipEyeBlockBlackSet = new SpriteSet("eye block black", "eye-block-black", 5);
   eyeballSet = new SpriteSet("eyeball", "black-eyeball", 5);
   hornSet = new SpriteSet("horn", "horn", 5);
   hornRedSet = new SpriteSet("horn red", "horn-red", 5);
@@ -56,9 +59,9 @@ void loadSpriteSets()
   //swabRedSet = new SpriteSet("swab r", "swab-red", 4);
 
   // Full Sets
-  rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectSet, blockBlack2Set};
+  rootSets = new SpriteSet[] {null, blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectRedSet, rectSet, blockBlack2Set};
   segmentSets = new SpriteSet[] {null, armSet, armRedSet, armcSet, armcRedSet, armbSet, armbRedSet, blocksmSet, blocksmRedSet, armdSet, armdRedSet}; //, longRedSet, longBlackSet, redLineSet, blackLineSet};
-  tipSets = new SpriteSet[] {null, handRedRSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, tipEyeBlockSet, hornSet, hornRedSet};
+  tipSets = new SpriteSet[] {null, handRedRSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, tipEyeBlockSet, tipEyeBlockBlackSet, hornRedSet, hornSet};
   //currentRoot = 1;
   //currentSegment = 1;
   //currentTip = 1;

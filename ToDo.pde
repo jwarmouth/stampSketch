@@ -8,13 +8,10 @@
  [ ] Choose menu - needs to "feel" better - on the left side of screen?
    [ ] Maybe the options go there too?
    [ ] Touch/Mouse mode - fix the UI
- [X] Reworked Menu Bar with MenuBarButton class
- [ ] FEATURE - add Sound to all stamps!
-   [ ] Record new sounds for stamps
- [ ] Make some new red versions of stamps, there aren't enough
  [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  
  TODO
+ [ ] Randomizer -- make red/black alternate
  [ ] Button -- make more efficient by extending
  [ ] Thread - can I make custom thread to send x,y value?
  [ ] Root canvas -- make it go immediately instead of threaded?
@@ -33,8 +30,11 @@
  [ ] Undo for a specific arm if it sucks?
  [ ] Record animation as data & play it back procedurally
  [ ] If you record animation, you can have it draw to Hi-Res in separate process
+ [ ] FEATURE - different sound for each stamp set!
  
  DONE
+ [X] Reworked Menu Bar with MenuBarButton class
+ [X] Make some new red versions of stamps, there aren't enough
  [X] better algorithm for eyeball placement re: eye block
  [X] Eyeball - fixed so it stamps automatically with eye block, with offset
  [X] DEBUG - glitch, user can accidentally select a new stamp while drawing -- only check buttons in CHOOSING mode

@@ -6,7 +6,7 @@ void drawPreview()
 {
   //if (state == State.WAITING) return;
   
-  if (showPreview)
+  if (showPreview && mouseIsPressed)
   {
     blendMode(MULTIPLY);
     if (state != State.CHOOSING) {

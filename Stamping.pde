@@ -157,7 +157,7 @@ void stampTip(float stampAngle)
   }
 
   stamp (set, centerPoint, stampAngle, tipFlip);
-  if (set.name == "eye block")
+  if (set.name == "eye block" || set.name == "eye block black")
   {
     stampAngle += radians(90);
     if (autoEyeball)
@@ -207,7 +207,7 @@ void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX
 
 
 
-void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int index, float rotation, float flipY)
+void stampToCanvas(PGraphics canvas, PVector location, SpriteSet set, int index, float rotation, float flipY)
 {
   canvas.beginDraw();
   canvas.blendMode(MULTIPLY);
@@ -216,17 +216,20 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet spriteSet, int 
   canvas.translate(location.x, location.y);
   canvas.rotate(rotation);
   canvas.scale(1, flipY);
-  canvas.image(spriteSet.sprites[index], spriteSet.offsetX, spriteSet.offsetY * flipY);
-  if (spriteSet.name == "eye block" && autoEyeball)
+  canvas.image(set.sprites[index], set.offsetX, set.offsetY * flipY);
+  if (autoEyeball)
   {
-    canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
+    if (set.name == "eye block" || set.name == "eye block black")
+    {
+      canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
+    }
     //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
   }
   canvas.popMatrix();
   canvas.endDraw();
 }
 
-void stampToHiRes(PVector location, SpriteSet spriteSet, int index, float rotation, float flipX)
+void stampToHiRes(PVector location, SpriteSet set, int index, float rotation, float flipX)
 {
   hiResCanvas.beginDraw();
   hiResCanvas.blendMode(MULTIPLY);
@@ -235,7 +238,7 @@ void stampToHiRes(PVector location, SpriteSet spriteSet, int index, float rotati
   hiResCanvas.translate(location.x * scaleFactor, location.y * scaleFactor);
   hiResCanvas.rotate(rotation);
   hiResCanvas.scale(1, flipX);
-  hiResCanvas.image(spriteSet.hiResSprites[index], spriteSet.offsetX * scaleFactor, spriteSet.offsetY * flipX * scaleFactor);
+  hiResCanvas.image(set.hiResSprites[index], set.offsetX * scaleFactor, set.offsetY * flipX * scaleFactor);
   hiResCanvas.popMatrix();
   hiResCanvas.endDraw();
 }

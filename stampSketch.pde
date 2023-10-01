@@ -12,7 +12,7 @@ float scaleFactor = 5; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
-SpriteSet blockRedSet, blockBlackSet, blockBlack2Set, bigRedSet, bigBlackSet, rectSet, eyeBlockSet;
+SpriteSet blockRedSet, blockBlackSet, blockBlack2Set, bigRedSet, bigBlackSet, rectSet, rectRedSet, eyeBlockSet;
 int rootFlip = 1;
 int tipFlip = 0; // left or right
 float rootRotation = 0;
@@ -24,7 +24,8 @@ SpriteSet armSet, armRedSet, armbSet, armbRedSet, armcSet, armcRedSet, blocksmSe
 SpriteSet longRedSet, longBlackSet, redLineSet, blackLineSet;
 
 // TIPS
-SpriteSet handRedLSet, handRedRSet, handBlackLSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, eyeSet, swabBlackSet, swabRedSet, tipEyeBlockSet, eyeballSet, hornSet, hornRedSet;
+SpriteSet handRedLSet, handRedRSet, handBlackLSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, tipEyeBlockSet, tipEyeBlockBlackSet, eyeballSet, hornSet, hornRedSet;
+// , eyeSet, swabBlackSet, swabRedSet
 
 // CURRENT SET PLACEHOLDERS
 SpriteSet rootSet, segmentSet, tipSet;
