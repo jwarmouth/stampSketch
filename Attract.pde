@@ -57,6 +57,7 @@ void enterAttractMode()
   saveThreeFrames();
   eraseScreen();
   state = State.ATTRACTING;
+  showChoiceMenu = false;
   attractTimerReset();
 }
 

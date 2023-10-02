@@ -44,13 +44,13 @@ void stampToPreviewCanvas(SpriteSet spriteSet, float rotation)
   stampToPreviewCanvas(spriteSet, rotation, 1);
 }
 
-void previewTo(PGraphics canvas)
-{
-  canvas.beginDraw();
-  canvas.blendMode(SUBTRACT);
-  canvas.image(previewCanvas, 0, 0);
-  canvas.endDraw();
-}
+//void previewTo(PGraphics canvas)
+//{
+//  canvas.beginDraw();
+//  canvas.blendMode(SUBTRACT);
+//  canvas.image(previewCanvas, 0, 0);
+//  canvas.endDraw();
+//}
 
 
 /********************************************************

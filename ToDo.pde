@@ -10,15 +10,11 @@
    [ ] Touch/Mouse mode - fix the UI
  
  TODO
- [ ] BLINKING tip -- gotta stop this
- [ ] PreviewTo -- stamp directly to root, segment, or tip canvas?
+ [ ] Fix gap between root & segment when user swipes quickly
  [ ] Randomizer -- make red/black alternate
- [X] Root canvas -- make it go immediately instead of threaded?
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
  [ ] Stretchy Arms are not drawing correctly
- [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
- [ ] Choose ScaleFactor -- make slider or other selector
  
  STRETCH GOALS -- not likely
  [ ] Multi-touch? NOT for Mexico City -- can't get it working reliably
@@ -30,12 +26,18 @@
  [ ] If you record animation, you can have it draw to Hi-Res in separate process
  [ ] STRETCH GOAL: Export animated gif to web for QR code to retrieve? -- HAHA no internet! :)
  [ ] FEATURE - different sound for each stamp set!
+ [ ] In Mouse Auto mode, User can left-click on Eye Block to preview/place Black Eyeball
+ [ ] Choose ScaleFactor -- make slider or other selector
  
  OPTIMIZING
  [ ] Button -- make more efficient by extending
  [ ] Thread - can I make custom thread to send x,y value? -- Tried, but not great results
  
  DONE
+ [X] Slightly tweak Choice Menu
+ [X] BLINKING tip -- gotta stop this -- MAYBE?
+ [X] PreviewTo -- stamp directly to root, segment, or tip canvas? -- WOW this optimized frame rate!
+ [X] Root canvas -- make it go immediately instead of threaded?
  [X] DEBUG - Dragging off Root will not stamp it to RootCanvas? Only mouse up.
  [X] Preview is glitched -- preview canvas only shows when mouse is down OR State.CHOOSING
  [X] Even better eyeball look algorithm

@@ -62,6 +62,12 @@ void stampSegment()
   stampSegment(1);
 }
 
+void ghostSegment()
+{
+  lastAngle = angleToMouse(lastPoint);
+  lastPoint = targetPoint;
+}
+
 
 /********************************************************
  ***  STAMP ARM (full)   ***********************************

@@ -95,6 +95,8 @@ void ifMouseDragged()
     break;
 
   case OVERLAPPING_ROOT:
+  
+       ghostSegment();
     // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
        findPointsOutsideBlock(); //thread("findPointsOutsideBlock");

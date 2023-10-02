@@ -100,6 +100,7 @@ float attractModeDelay = 10; // seconds until Attract Mode starts
 float attractTimerStart;
 
 // Sound
+boolean soundEnabled = false;
 import processing.sound.*;
 SoundFile[] rootSounds;
 SoundFile[] segmentSounds;
@@ -184,7 +185,7 @@ void setup()
   //fullScreen(FX2D, 1);
   size(1920, 1080);
   background(255);
-  frameRate(48);  
+  frameRate(60);  
   
   //refScale = refH / displayHeight;
   //scaleFactor *= refScale;
@@ -210,9 +211,9 @@ void draw()
   attractTimerTick();
   
   drawCanvasFrame();
-  drawFrame();
+  //drawFrame();
   drawAOTM();
-  drawMenu();
+  drawChoiceMenu();
   drawMenuBar();
   drawPreview();
   drawDebug();

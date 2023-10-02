@@ -36,7 +36,7 @@ void choiceMenuSetup()
   int nextSectionOffsetY = 160;
 
   // create Menu Heading
-  menuHeading = new Heading("Choose Stamps", width/2, menuY);
+  menuHeading = new Heading("Choose Stamps", leftMargin, menuY);
   menuY += 60;
 
   // create Root menu section
@@ -59,7 +59,7 @@ void choiceMenuSetup()
   tipButtons = createButtonsInRows(tipSets, leftMargin, menuY);
 
   // create Enter button
-  menuY += 120;
+  //menuY += buttonsOffsetY;
   enterButton = new EnterButton(leftMargin, menuY, 120, 80, "Enter");
   
   // create bottom buttons
@@ -156,24 +156,26 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 //  return buttons;
 //}
 
-void drawMenu()
+void drawChoiceMenu()
 {
-  if (!showChoiceMenu) return;
-
+  //if (!showChoiceMenu) return;
+  if (state != State.CHOOSING) return;
   //int menuTopY = 100;
   //int categoryTopY = 150;
   //int currentY = 200;
 
   choiceCanvas.beginDraw();
-  choiceCanvas.background(255);
+  //choiceCanvas.background(255);
+  choiceCanvas.fill(255);
+  choiceCanvas.rect(1, 1, 1280, 800);
   choiceCanvas.fill(255, 0, 0);
   choiceCanvas.textSize(48);
-  choiceCanvas.textAlign(CENTER);
+  choiceCanvas.textAlign(LEFT);
   //choiceCanvas.text("Choose Stamps", width/2, menuTopY);
   menuHeading.draw();
 
   // LEFT -- CENTER PIECES
-  choiceCanvas.textAlign(LEFT);
+  //choiceCanvas.textAlign(LEFT);
   choiceCanvas.textSize(36);
 
   rootHeading.draw();

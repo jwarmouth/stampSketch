@@ -50,6 +50,7 @@ void soundSetup()
 
 void playSound(SoundFile soundFile, float x, float y)
 {
+  if (!soundEnabled) return;
   //float rate = 1 + (-y/height + 0.5)/2;//(y-height/2)/height/2;
   //float pan = 1 - (-x/width + 0.5)/2;
   x = constrain(x, 0, width);
