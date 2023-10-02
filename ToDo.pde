@@ -10,8 +10,9 @@
    [ ] Touch/Mouse mode - fix the UI
  
  TODO
- [ ] Fix gap between root & segment when user swipes quickly
+ [ ] Fix gap between root & segment when user swipes quickly -- ghostSegment?
  [ ] Randomizer -- make red/black alternate
+ [ ] Horn -- add sound lines in the opposite color?
  [ ] START SCREEN - instructions?
  [ ] UI that shows current tool & lets user select CHOICE
  [ ] Stretchy Arms are not drawing correctly

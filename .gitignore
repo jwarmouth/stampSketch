@@ -11,3 +11,5 @@ prefs
 /prefs
 out
 /saved
+/macos-*
+/windows-*
