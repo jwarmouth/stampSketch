@@ -8,7 +8,7 @@ class StampButton
   SpriteSet[] sets;
   int index, x, y, w, h, margin;
   String text;
-  color bgColor, selectedColor, textColor, overColor;
+  color bgColor, selectedColor, textColor, overColor, invisible;
   boolean selected;
   boolean active;
   boolean hover;
@@ -29,6 +29,7 @@ class StampButton
     textColor = color(0);
     selectedColor = color(0);
     overColor = color(255, 0, 0);
+    invisible = color(255, 255, 255, 0);
     if (text=="eye black" || text=="eye red")
     {
       pupil = loadImage("images/black-eyeball-0.png");
@@ -38,11 +39,19 @@ class StampButton
   void draw()
   {
     choiceCanvas.strokeWeight(3);
-    choiceCanvas.fill(0, 0, 0, 0);
     
     if (!touchMode)
     {
       hover = isOver();
+    }
+    
+    if (image == null)
+    {
+      choiceCanvas.fill(bgColor);
+    }
+    else
+    {
+      choiceCanvas.noFill();
     }
     
     if (isSelected())
@@ -51,29 +60,41 @@ class StampButton
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
     }
     
-    if (hover)
+    else if (hover)
     {
       choiceCanvas.stroke(overColor);
       choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
     }
+    else if (image == null)
+    {
+      choiceCanvas.noStroke();
+      choiceCanvas.fill(bgColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
+    }
     
-    choiceCanvas.fill(bgColor);
+    
     float textHeight = 18;
     float textY;
     
     if (image != null)
     {
-      choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
+      choiceCanvas.imageMode(CENTER);
+      choiceCanvas.image(image, x+w/2, y+h/2, image.width, image.height);
+      
+      //choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
       if (pupil != null)
       {
-        choiceCanvas.image(pupil, x+image.width/3, y+h-image.height/3*2, pupil.width/4, pupil.height/4);
+        choiceCanvas.image(pupil, x+w/2, y+h/2, pupil.width/4, pupil.height/4);
       }
+      
+      choiceCanvas.imageMode(CORNER);
       //choiceCanvas.rect(x, y+h-20, w, textHeight);
       textY = y+h+textHeight+margin;
     } 
     else
     {
-      choiceCanvas.rect(x, y, w, h, 3);
+      //choiceCanvas.rect(x, y, w, h, 3);
+      //choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
       textY = y+h/1.75;
     }
     
