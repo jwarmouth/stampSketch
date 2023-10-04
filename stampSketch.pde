@@ -52,7 +52,7 @@ boolean allowOverlap = true;
 boolean showRootCanvas, showSegmentCanvas, showTipCanvas;
 
 // Canvases
-PGraphics previewCanvas, menuBarCanvas, choiceCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
+PGraphics previewCanvas, menuBarCanvas, choiceCanvas, cornerMenuCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
 PGraphics[] canvasFrames;
 int canvasFramesCount = 3; // how many looping canvases? Default = 3
 int animationRate = 12;
@@ -84,8 +84,10 @@ String[] uiActiveMethods = new String[] {
 */
 MenuBarButton[] menuBarButtons;
 float menuBarWidth;
-int choiceMenuOffsetX = 200;
+int choiceMenuOffsetX = 220;
 int choiceMenuOffsetY = 40;
+
+int cornerMenuHeight = 600;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
@@ -227,6 +229,7 @@ void draw()
   drawSegmentCanvas();
   drawTipCanvas();
   drawAttract();
+  drawCornerMenu();
 }
 
 

@@ -7,6 +7,12 @@ void mousePressed()
   mouseIsPressed = true;
   println("MOUSE IS PRESSED");
   attractTimerReset();
+  
+  // Check Options Click
+  if (mouseX < choiceMenuOffsetX && mouseY < cornerMenuHeight)
+  {
+    toggleChoiceMenu();
+  }
 
   // Check MenuBar Buttons
   for (MenuBarButton button : menuBarButtons) button.hover();

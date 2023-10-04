@@ -10,7 +10,8 @@ void createCanvases()
   tipCanvas = createGraphics(width, height);
   debugCanvas = createGraphics(width, height);
   attractCanvas = createGraphics(width, height);
-  choiceCanvas = createGraphics(width, height-40);
+  choiceCanvas = createGraphics(width, height);
+  cornerMenuCanvas = createGraphics(choiceMenuOffsetX, cornerMenuHeight);
   menuBarCanvas = createGraphics(1920, 40);
 
   canvasFrames = new PGraphics[canvasFramesCount]; // default = 3
