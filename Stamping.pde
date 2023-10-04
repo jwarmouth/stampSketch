@@ -125,7 +125,7 @@ void stampTip(float stampAngle)
   //playSound(tipSound, mouseX, mouseY);
   thread("playTipSound");
 
-  if (set.name == "eye block")
+  if (set.name == "eye red" || set.name == "eye black")
   {
     if (overlaps(tipCanvas))
     {
@@ -162,7 +162,7 @@ void stampTip(float stampAngle)
     stampAngle += radians (random(200) - 100);
   }
 
-  if (set.name == "eye block" || set.name == "eye block black")
+  if (set.name == "eye red" || set.name == "eye black")
   {
     stampAngle += radians(90);
     if (autoEyeball)
@@ -257,7 +257,7 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet set, int index,
   canvas.image(set.sprites[index], set.offsetX, set.offsetY * flipY);
   if (autoEyeball)
   {
-    if (set.name == "eye block" || set.name == "eye block black")
+    if (set.name == "eye red" || set.name == "eye black")
     {
       canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
     }

@@ -13,6 +13,7 @@ void drawMenuBar()
   menuBarCanvas.noStroke();
   menuBarCanvas.fill (255, 0, 0); // RED
   menuBarCanvas.textSize(16);
+  //menuBarCanvas.textFont(fjordFont);
   
   // DRAW MENU BAR BUTTONS
   for (MenuBarButton button : menuBarButtons) button.draw();
@@ -68,7 +69,8 @@ class MenuBarButton
     activeVar = _activeVar;
     x = _x;
     y = _y;
-    w = text.length() * 10;
+    //w = text.length() * 10;
+    w = (int)textWidth(text) + margin * 4;
     h = 40;
     bgColor = color(200);
     textColor = color(0);

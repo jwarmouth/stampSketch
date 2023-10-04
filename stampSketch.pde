@@ -84,6 +84,8 @@ String[] uiActiveMethods = new String[] {
 */
 MenuBarButton[] menuBarButtons;
 float menuBarWidth;
+int choiceMenuOffsetX = 200;
+int choiceMenuOffsetY = 40;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
@@ -108,10 +110,10 @@ SoundFile[] tipSounds;
 SoundFile rootSound, segmentSound, tipSound;
 
 // Touch
-import processing.javafx.*;
+//import processing.javafx.*;
 
-
-
+// Font
+PFont fjordFont, frescoFont;
 
 // Beads Audio
 //import beads.*;
@@ -186,7 +188,10 @@ void setup()
   size(1920, 1080);
   //fullScreen();
   background(255);
-  frameRate(48);  
+  frameRate(48);
+  
+  loadFonts();
+  eyeballRandomLook();
   
   //refScale = refH / displayHeight;
   //scaleFactor *= refScale;

@@ -32,8 +32,8 @@ void choiceMenuSetup()
 {
   int menuY = 50;
   int leftMargin = 20;
-  int buttonsOffsetY = 160;
-  int nextSectionOffsetY = 160;
+  int buttonsOffsetY = 170;
+  int nextSectionOffsetY = 140;
 
   // create Menu Heading
   menuHeading = new Heading("Choose Stamps", leftMargin, menuY);
@@ -59,7 +59,7 @@ void choiceMenuSetup()
   tipButtons = createButtonsInRows(tipSets, leftMargin, menuY);
 
   // create Enter button
-  //menuY += buttonsOffsetY;
+  menuY += 20;
   enterButton = new EnterButton(leftMargin, menuY, 120, 80, "Enter");
   
   // create bottom buttons
@@ -90,7 +90,7 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
     if (set != null)
     {
 
-      buttonImage = loadImage(dataPath("images/" + set.fileName + "-0.png"));
+      buttonImage = loadImage("images/" + set.fileName + "-0.png");
       buttonText = sets[i].name;
     } 
     else
@@ -167,8 +167,9 @@ void drawChoiceMenu()
   choiceCanvas.beginDraw();
   //choiceCanvas.background(255);
   choiceCanvas.fill(255);
-  choiceCanvas.rect(1, 1, 1280, 800);
+  choiceCanvas.rect(choiceMenuOffsetX, choiceMenuOffsetY, 1280, 800, 3);
   choiceCanvas.fill(255, 0, 0);
+  choiceCanvas.textFont(fjordFont);  
   choiceCanvas.textSize(48);
   choiceCanvas.textAlign(LEFT);
   //choiceCanvas.text("Choose Stamps", width/2, menuTopY);
@@ -191,7 +192,7 @@ void drawChoiceMenu()
 
   choiceCanvas.textAlign(CENTER);
   choiceCanvas.noStroke();
-  choiceCanvas.textSize(20);
+  choiceCanvas.textSize(18);
 
   // DRAW BUTTONS
   for (StampButton button : rootButtons) button.draw();
@@ -200,7 +201,7 @@ void drawChoiceMenu()
   enterButton.draw();
   
   choiceCanvas.endDraw();
-  image(choiceCanvas, 0, 40, scaleUI(choiceCanvas.width), scaleUI(choiceCanvas.height));
+  image(choiceCanvas, 0,0);
 
 
   // Draw preview of root/segment/tip
@@ -238,6 +239,11 @@ void drawChoiceMenu()
     }
     drawCurrentTools(set, location);
     //location.y -= set.width/2;
+    
+    if (set.name == "eye red" || set.name == "eye black")
+    {
+      previewCanvas.image(eyeballSet.sprites[0], location.x - eyeballX, location.y - eyeballY);
+    }
   }
 
 

@@ -51,7 +51,7 @@ class SpriteSet
         loadSprite(i);
       }
     }
-    if (name == "eye block" || name == "eye block black")
+    if (name == "eye red" || name == "eye black")
       {
         eyeballSet.loadSprites();
       }

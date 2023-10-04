@@ -4,9 +4,9 @@
 
 class StampButton
 {
-  PImage image;
+  PImage image, pupil;
   SpriteSet[] sets;
-  int index, x, y, w, h;
+  int index, x, y, w, h, margin;
   String text;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
@@ -18,21 +18,27 @@ class StampButton
   {
     sets = iSets;
     index = _index;
-    x = _x;
-    y = _y;
+    x = _x + choiceMenuOffsetX;
+    y = _y + choiceMenuOffsetY;
     w = _w;
     h = _h;
     text = _text;
     image = _image;
+    margin = 3;
     bgColor = color(200);
     textColor = color(0);
     selectedColor = color(0);
     overColor = color(255, 0, 0);
+    if (text=="eye black" || text=="eye red")
+    {
+      pupil = loadImage("images/black-eyeball-0.png");
+    }
   }
 
   void draw()
   {
-    int margin = 5;
+    choiceCanvas.strokeWeight(3);
+    choiceCanvas.fill(0, 0, 0, 0);
     
     if (!touchMode)
     {
@@ -41,29 +47,33 @@ class StampButton
     
     if (isSelected())
     {
-      choiceCanvas.fill(selectedColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+      choiceCanvas.stroke(selectedColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
     }
     
     if (hover)
     {
-      choiceCanvas.fill(overColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+      choiceCanvas.stroke(overColor);
+      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
     }
     
     choiceCanvas.fill(bgColor);
-    float textHeight = 20;
+    float textHeight = 18;
     float textY;
     
     if (image != null)
     {
-      choiceCanvas.image(image, x, y, image.width, image.height);
-      choiceCanvas.rect(x, y+h-20, w, textHeight);
-      textY = y+h;
+      choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
+      if (pupil != null)
+      {
+        choiceCanvas.image(pupil, x+image.width/3, y+h-image.height/3*2, pupil.width/4, pupil.height/4);
+      }
+      //choiceCanvas.rect(x, y+h-20, w, textHeight);
+      textY = y+h+textHeight+margin;
     } 
     else
     {
-      choiceCanvas.rect(x, y, w, h);
+      choiceCanvas.rect(x, y, w, h, 3);
       textY = y+h/1.75;
     }
     
@@ -123,7 +133,7 @@ class StampButton
 
   boolean isOver()
   {
-    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+    return (mouseX > x-margin && mouseX < x+w+margin*2 && mouseY > y-margin && mouseY < y+h+margin*2);
   }
 }
 
@@ -143,8 +153,8 @@ class EnterButton
 
   EnterButton(int _x, int _y, int _w, int _h, String _text)
   {
-    x = _x;
-    y = _y;
+    x = _x + choiceMenuOffsetX;
+    y = _y + choiceMenuOffsetY;
     w = _w;
     h = _h;
     text = _text;
@@ -157,6 +167,8 @@ class EnterButton
 
   void draw()
   {
+    choiceCanvas.strokeWeight(3);
+    choiceCanvas.fill(bgColor);
     
     if (!touchMode)
     {
@@ -165,12 +177,16 @@ class EnterButton
     
     if (hover)
     {
-      choiceCanvas.fill(overColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
+      choiceCanvas.stroke(overColor);
+      choiceCanvas.rect(x, y, w, h, 3);
+      choiceCanvas.stroke(textColor);
+      //choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
     }
-    
-    choiceCanvas.fill(bgColor); // bg color
-    choiceCanvas.rect(x, y, w, h);
+    else
+    {
+      choiceCanvas.stroke(textColor); // bg color
+      choiceCanvas.rect(x, y, w, h, 3);
+    }
     //choiceCanvas.fill(bgColor);
     //choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
     choiceCanvas.fill(textColor);
@@ -204,8 +220,8 @@ class Heading
   Heading(String _text, int _x, int _y)
   {
     text = _text;
-    x = _x;
-    y = _y;
+    x = _x + choiceMenuOffsetX;
+    y = _y + choiceMenuOffsetY;
   }
   
   void draw()

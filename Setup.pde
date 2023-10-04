@@ -2,6 +2,12 @@
  ***  SETUP  *********************************************
  *********************************************************/
 
+void loadFonts()
+{
+  frescoFont = createFont("fonts/FrescoStamp.ttf", 16);
+  fjordFont = createFont("fonts/Fjord-Stamp.otf", 48);
+}
+
 void loadSpriteSets()
 {
   // name, filename, length(how many files)
@@ -10,8 +16,8 @@ void loadSpriteSets()
   blockBlackSet = new SpriteSet("block b", "black-block", 3, .8);
   bigRedSet = new SpriteSet("big red", "big-block", 2, .8);
   bigBlackSet = new SpriteSet("big black", "big-block-black", 2, .8);
-  rectSet = new SpriteSet("rect", "rect", 5);
   rectRedSet = new SpriteSet("rect red", "rect-red", 5);
+  rectSet = new SpriteSet("rect black", "rect", 5);
   blockBlack2Set = new SpriteSet("block b", "block-b", 5, .9);
   malletRedSet = new SpriteSet("mallet red", "mallet-red", 5, .9);
   //eyeBlockSet = new SpriteSet("eye block", "eye-block", 5);
@@ -39,19 +45,19 @@ void loadSpriteSets()
 
   // TIPS
   // Hand Tips
-  handRedRSet = new SpriteSet("hand-red", "hand-red-r", 5);
-  handRedLSet = new SpriteSet("hand-red", "hand-red-l", 5);
+  handRedRSet = new SpriteSet("hand red", "hand-red-r", 5);
+  handRedLSet = new SpriteSet("hand red", "hand-red-l", 5);
   handRedSets = new SpriteSet[] {handRedRSet, handRedLSet};
 
-  handBlackRSet = new SpriteSet("hand-black", "hand-black-r", 5);
-  handBlackLSet = new SpriteSet("hand-black", "hand-black-l", 5);
+  handBlackRSet = new SpriteSet("hand black", "hand-black-r", 5);
+  handBlackLSet = new SpriteSet("hand black", "hand-black-l", 5);
   handBlackSets = new SpriteSet[] {handBlackRSet, handBlackLSet};
   
   // Block Tips
   tipBlockRedSet = new SpriteSet("block r", "red-block", 3);
   tipBlockBlackSet = new SpriteSet("block b", "black-block", 3);
-  tipEyeBlockSet = new SpriteSet("eye block", "eye-block", 5);
-  tipEyeBlockBlackSet = new SpriteSet("eye block black", "eye-block-black", 5);
+  tipEyeBlockSet = new SpriteSet("eye red", "eye-block", 5);
+  tipEyeBlockBlackSet = new SpriteSet("eye black", "eye-block-black", 5);
   eyeballSet = new SpriteSet("eyeball", "black-eyeball", 5);
   hornSet = new SpriteSet("horn", "horn", 5);
   hornRedSet = new SpriteSet("horn red", "horn-red", 5);
