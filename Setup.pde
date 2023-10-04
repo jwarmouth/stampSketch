@@ -90,7 +90,7 @@ void setSpriteSet(SpriteSet set, SpriteSet[] sets, int index)
     }
   }
 
-  print (set.name + " loaded. \n");
+  println(set.name + " loaded");
 }
 
 void resetChoices()

@@ -111,7 +111,7 @@ class MenuBarButton
     
     method(method);
     hover = false;
-    print ("\nselecting" + text);
+    println("selecting" + text);
   }
   
   boolean isOver()

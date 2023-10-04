@@ -56,8 +56,8 @@ void saveFrames(int howManyFrames)
     canvasFrames[frameIndex%3].save(saveFolder + clipFolder + "/" + fileName + "_" + tempName + "_" + nf(frameIndex, 4) + saveFormat);
     frameIndex++;
     //saveCanvasNum = frameIndex%3;
-    print ("Saved frame" + nf(frameIndex, 4) + "\n");
-    print ("saveCanvasNum: " + saveCanvasNum + "\n");
+    println("Saved frame" + nf(frameIndex, 4));
+    println("saveCanvasNum: " + saveCanvasNum);
   }
 }
 

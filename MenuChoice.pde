@@ -8,7 +8,7 @@ void toggleChoiceMenu()
   if (showChoiceMenu)
   {
     state = State.CHOOSING;
-    print("\n"  + state);
+    println(state);
   } else
   {
     hideChoiceMenu();
@@ -90,7 +90,7 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
     if (set != null)
     {
 
-      buttonImage = loadImage("images/" + set.fileName + "-0.png");
+      buttonImage = loadImage(dataPath("images/" + set.fileName + "-0.png"));
       buttonText = sets[i].name;
     } 
     else

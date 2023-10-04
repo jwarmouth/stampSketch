@@ -5,7 +5,7 @@
 void mousePressed()
 {
   mouseIsPressed = true;
-  print ("\nMOUSE IS PRESSED");
+  println("MOUSE IS PRESSED");
   attractTimerReset();
 
   // Check MenuBar Buttons
@@ -106,7 +106,7 @@ void ifMouseDragged()
         state = State.PREVIEWING_STRETCHY_SEGMENT;
       } else {
         state = State.SEGMENTING;
-        print ("Segment: " + segmentSets[currentSegment].name);
+        println("Segment: " + segmentSets[currentSegment].name);
       }
     }
     break;
@@ -142,7 +142,7 @@ void ifMouseDragged()
 void mouseReleased()
 {
   mouseIsPressed = false;
-  print ("\nMOUSE IS RELEASED");
+  println("MOUSE IS RELEASED");
   attractTimerReset();
 
   // Check MenuBar Buttons

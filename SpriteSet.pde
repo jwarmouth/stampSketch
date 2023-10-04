@@ -28,7 +28,7 @@ class SpriteSet
       loadSprites();
     }
     armSegmentDistance = width * _armSegmentMultiplier;
-    print("SpriteSet " + name + ": w" + width + ", h " + height + "\n");
+    println("SpriteSet " + name + ": w" + width + ", h " + height);
   }
 
   SpriteSet(String _name, String _fileName, int _length, float _armSegmentMultiplier)
@@ -55,7 +55,7 @@ class SpriteSet
       {
         eyeballSet.loadSprites();
       }
-    print ("\n" + name + " sprites loaded");
+    println(name + " sprites loaded");
   }
 
   void unloadSprites()
@@ -68,7 +68,7 @@ class SpriteSet
         hiResSprites[i] = null;
       }
     }
-    print ("\n" + name + " sprites unloaded");
+    println(name + " sprites unloaded");
   }
 
   void loadSprite(int index)

@@ -107,7 +107,7 @@ void stampTipAuto()
     //stampTip(targetAngle);
     //thread("previewTip");
     stampTip(targetAngle + angleAdjust);
-    print ("\nangleAdjust: " + angleAdjust);
+    println("angleAdjust: " + angleAdjust);
     clearPreview();
   }
 }

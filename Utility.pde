@@ -169,7 +169,7 @@ SpriteSet rightOrLeftHand(SpriteSet set)
   if (whichSet == -1) {
     whichSet = 0;
   } */
-  print ("\nTip Set: " + set.name + " " + whichSet);
+  println("Tip Set: " + set.name + " " + whichSet);
   if (set.name == "hand-red") {
     return handRedSets[whichSet];
     //return handRedSets[(int)random(handRedSets.length)];
