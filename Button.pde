@@ -18,7 +18,7 @@ class StampButton
   {
     sets = iSets;
     index = _index;
-    x = _x + choiceMenuOffsetX;
+    x = _x + cornerW;
     y = _y + choiceMenuOffsetY;
     w = _w;
     h = _h;
@@ -161,24 +161,25 @@ class StampButton
 
 
 // Should be optimized better, but this is OK for now...
-class EnterButton
+class TextButton
 {
   PImage image;
   int index, x, y, w, h;
   int margin = 10;
-  String text;
+  String text, method;
   color bgColor, selectedColor, textColor, overColor;
   boolean selected;
   boolean active;
   boolean hover;
 
-  EnterButton(int _x, int _y, int _w, int _h, String _text)
+  TextButton(int _x, int _y, int _w, int _h, String _text, String _method)
   {
-    x = _x + choiceMenuOffsetX;
+    x = _x + cornerW;
     y = _y + choiceMenuOffsetY;
     w = _w;
     h = _h;
     text = _text;
+    method = _method;
     bgColor = color(200);
     textColor = color(0);
     selectedColor = color(0);
@@ -222,7 +223,8 @@ class EnterButton
   void select()
   {
     if (!isOver()) return;
-    hideChoiceMenu();
+    method(method);
+    //hideChoiceMenu();
   }
   
   boolean isOver()
@@ -241,7 +243,7 @@ class Heading
   Heading(String _text, int _x, int _y)
   {
     text = _text;
-    x = _x + choiceMenuOffsetX;
+    x = _x + cornerW;
     y = _y + choiceMenuOffsetY;
   }
   

@@ -125,13 +125,10 @@ void stampTip(float stampAngle)
   //playSound(tipSound, mouseX, mouseY);
   thread("playTipSound");
 
-  if (set.name == "eye red" || set.name == "eye black")
+  if (set.name.contains("eye") && overlaps(tipCanvas))
   {
-    if (overlaps(tipCanvas))
-    {
-      set = eyeballSet;
-      set.loadSprites();
-    }
+    set = eyeballSet;
+    set.loadSprites();
   }
 
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
@@ -144,7 +141,7 @@ void stampTip(float stampAngle)
   }
   
   
-  if (set.name == "horn" || set.name == "horn red")
+  if (set.name.contains("horn"))
   {
     stampAngle = lastAngle;
   }
@@ -155,19 +152,26 @@ void stampTip(float stampAngle)
   if (set.name.indexOf("hand") > 0) {
     // Make sure it's the right hand set
   }
-
   
-  if (set.name == "eye")
+  if (set.name.contains("hand"))
   {
-    stampAngle += radians (random(200) - 100);
+    centerPoint = lastPoint;
+    // not sure what do actually do if true
   }
 
-  if (set.name == "eye red" || set.name == "eye black")
+  
+
+
+  if (set.name.contains("eye"))
   {
     stampAngle += radians(90);
     if (autoEyeball)
     {
       eyeballRandomLook();
+    }
+    if (set.name == "eye")
+    {
+      stampAngle += radians (random(200) - 100);
     }
   }
   
@@ -255,13 +259,10 @@ void stampToCanvas(PGraphics canvas, PVector location, SpriteSet set, int index,
   canvas.rotate(rotation);
   canvas.scale(1, flipY);
   canvas.image(set.sprites[index], set.offsetX, set.offsetY * flipY);
-  if (autoEyeball)
+  if (autoEyeball && set.name.contains("eye"))
   {
-    if (set.name == "eye red" || set.name == "eye black")
-    {
-      canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
-    }
-    //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+    canvas.image(eyeballSet.sprites[index], eyeballX, eyeballY);
+  //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
   }
   canvas.popMatrix();
   canvas.endDraw();

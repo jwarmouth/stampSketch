@@ -9,14 +9,16 @@ void mousePressed()
   attractTimerReset();
   
   // Check Options Click
-  if (mouseX < choiceMenuOffsetX && mouseY < cornerMenuHeight)
+  if (overCornerMenu())
   {
-    toggleChoiceMenu();
+    state = State.DRAGGING;
   }
 
   // Check MenuBar Buttons
-  for (MenuBarButton button : menuBarButtons) button.hover();
-
+  if (showMenuBar)
+  {
+    for (MenuBarButton button : menuBarButtons) button.hover();
+  }
 
   switch(state) {
   case CHOOSING:
@@ -83,6 +85,11 @@ void ifMouseDragged()
    */
 
   switch(state) {
+  case DRAGGING:
+    cornerX = mouseX - cornerW/2;
+    cornerY = mouseY - cornerH/2;
+    break;
+    
   case PREVIEWING_ROOT:
     previewRoot();
     //thread("previewRoot");
@@ -150,15 +157,29 @@ void mouseReleased()
   mouseIsPressed = false;
   println("MOUSE IS RELEASED");
   attractTimerReset();
+  
+  if (overCornerMenu())
+  {
+    toggleChoiceMenu();
+  }
+  else if (!overChoiceMenu())
+  {
+    hideChoiceMenu();
+  }
 
   // Check MenuBar Buttons
-  for (MenuBarButton button : menuBarButtons) button.select();
-
+  if (showMenuBar)
+  {
+    for (MenuBarButton button : menuBarButtons) button.select();
+  }
 
   lastRoot = null;
   //clearPreview();
 
   switch(state) {
+  case DRAGGING:
+    showChoiceMenu();
+    break;
   case CHOOSING:
     // let player choose stamps
     // Check Stamp Buttons
@@ -216,4 +237,15 @@ void toggleMouseAuto()
 {
   mouseAutoTip = !mouseAutoTip;
   savePrefs();
+}
+
+boolean overCornerMenu()
+{
+  return (mouseX > cornerX && mouseX < cornerX + cornerW && mouseY > cornerY && mouseY < cornerY + cornerH);
+}
+
+boolean overChoiceMenu()
+{
+  return (mouseX > cornerW && mouseX < cornerW + choiceMenuWidth &&
+          mouseY > choiceMenuOffsetY && mouseY < choiceMenuOffsetY + choiceMenuHeight);
 }

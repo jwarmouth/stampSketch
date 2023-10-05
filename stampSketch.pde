@@ -8,7 +8,7 @@ ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
 Block lastRoot, lastSegment, lastTip;
 PVector lastPoint, targetPoint, centerPoint, eyeballPoint;
 float eyeballX, eyeballY;
-float scaleFactor = 6; //2.0 - 8.0, default 2.5;
+float scaleFactor = 7; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
@@ -46,7 +46,7 @@ boolean recording;
 boolean debugging;
 boolean animating = true;
 boolean showPreview = true;
-boolean showMenuBar = true;
+boolean showMenuBar = false;
 boolean showChoiceMenu = false;
 boolean allowOverlap = true;
 boolean showRootCanvas, showSegmentCanvas, showTipCanvas;
@@ -84,14 +84,18 @@ String[] uiActiveMethods = new String[] {
 */
 MenuBarButton[] menuBarButtons;
 float menuBarWidth;
-int choiceMenuOffsetX = 220;
-int choiceMenuOffsetY = 40;
+int choiceMenuOffsetY = 0;
+int choiceMenuWidth;
+int choiceMenuHeight;
 
-int cornerMenuHeight = 600;
+int cornerW;
+int cornerH;
+int cornerX;
+int cornerY;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
-EnterButton enterButton;
+TextButton enterButton;
 
 // Mouse Auto
 boolean mouseAutoTip = true;
@@ -111,36 +115,10 @@ SoundFile[] segmentSounds;
 SoundFile[] tipSounds;
 SoundFile rootSound, segmentSound, tipSound;
 
-// Touch
-//import processing.javafx.*;
 
 // Font
 PFont fjordFont, frescoFont;
 
-// Beads Audio
-//import beads.*;
-//import java.util.Arrays; 
-//AudioContext audioContext;
-//SamplePlayer[] rootSounds;
-//SamplePlayer[] segmentSounds;
-//SamplePlayer[] tipSounds;
-//SamplePlayer rootSound, segmentSound, tipSound;
-//Gain gain = new Gain(2, 0.5);
-//Panner panner = new Panner(0);
-
-
-// Minim Audio
-//import ddf.minim.*;
-//import ddf.minim.analysis.*;
-//import ddf.minim.effects.*;
-//import ddf.minim.signals.*;
-//import ddf.minim.spi.*;
-//import ddf.minim.ugens.*;
-//Minim minim;
-//AudioOutput audioOutput;
-//AudioPlayer[] rootSounds;
-//AudioPlayer[] segmentSounds;
-//AudioPlayer[] tipSounds;
 
 // Screen Size
 boolean aotm = false;
@@ -162,7 +140,8 @@ float aotm_ScaleFactor =   5;
 //int aotm_guide2;
 
 enum State {
-  CHOOSING, WAITING, PREVIEWING_ROOT, OVERLAPPING_ROOT, PREVIEWING_TIP, SEGMENTING, PREVIEWING_STRETCHY_SEGMENT, ENDING, ATTRACTING
+  CHOOSING, WAITING, PREVIEWING_ROOT, OVERLAPPING_ROOT, PREVIEWING_TIP, SEGMENTING, 
+  PREVIEWING_STRETCHY_SEGMENT, ENDING, ATTRACTING, DRAGGING
 };
 State state = State.ATTRACTING;
 
@@ -202,11 +181,12 @@ void setup()
   resetChoices();
   loadSpriteSets();
   resetArrayLists();
+  cornerMenuSetup();
   choiceMenuSetup();
+  menuBarSetup();
   armSegmentDistance = armSet.width * .9; //.8;
   createCanvases();
   soundSetup();
-  menuBarSetup();
   //showMenu = true;
   //state = State.ATTRACTING;
   //savePrefs();

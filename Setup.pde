@@ -5,7 +5,7 @@
 void loadFonts()
 {
   frescoFont = createFont("fonts/FrescoStamp.ttf", 16);
-  fjordFont = createFont("fonts/Fjord-Stamp.otf", 48);
+  fjordFont = createFont("fonts/Fjord-Stamp.otf", 96);
 }
 
 void loadSpriteSets()

@@ -3,6 +3,7 @@
  *********************************************************
  
  404 TODO
+ [ ] Allow Corner menu to minimize
  [ ] Optimize for multiple users on touch screen
  [ ] Attract Mode - finger that drags on screen to entice participants
  [ ] Choose menu - needs to "feel" better - on the left side of screen?
@@ -35,6 +36,8 @@
  [ ] Thread - can I make custom thread to send x,y value? -- Tried, but not great results
  
  DONE
+ [X] Hand is stamping with extra space? Fix
+ [X] Get scale factor right -- 7 for accurate scale on the big touch table
  [X] Slightly tweak Choice Menu
  [X] BLINKING tip -- gotta stop this -- MAYBE?
  [X] PreviewTo -- stamp directly to root, segment, or tip canvas? -- WOW this optimized frame rate!

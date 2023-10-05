@@ -8,11 +8,17 @@ void toggleChoiceMenu()
   if (showChoiceMenu)
   {
     state = State.CHOOSING;
-    println(state);
+    //println(state);
   } else
   {
     hideChoiceMenu();
   }
+}
+
+void showChoiceMenu()
+{
+  showChoiceMenu = true;
+  state = State.CHOOSING;
 }
 
 void hideChoiceMenu()
@@ -31,51 +37,54 @@ int scaleUI (int input)
 void choiceMenuSetup()
 {
   int menuY = 50;
-  int leftMargin = 20;
-  int buttonsOffsetY = 170;
-  int nextSectionOffsetY = 140;
+  int margin = 20;
+  int buttonSize = 80;
+  int buttonSpacing = 10;
+  int offsetY = 140;
 
   // create Menu Heading
-  menuHeading = new Heading("Choose Stamps", leftMargin, menuY);
-  menuY += 60;
+  //menuHeading = new Heading("Choose Stamps", margin, menuY);
+  //menuY += 60;
 
   // create Root menu section
-  rootHeading = new Heading("Root", leftMargin, menuY);
-  menuY += buttonsOffsetY;
-  rootButtons = createButtonsInRows(rootSets, leftMargin, menuY);
-  menuY = rootButtons[rootButtons.length - 1].y + nextSectionOffsetY;
+  rootHeading = new Heading("Root", margin, menuY);
+  menuY += offsetY;
+  rootButtons = createButtonsInRows(rootSets, margin, menuY, buttonSize, buttonSpacing);
+  menuY = rootButtons[rootButtons.length - 1].y + offsetY;
   //menuY += nextSectionOffsetY;
 
   // create Segment menu section
-  segmentHeading = new Heading("Segment", leftMargin, menuY);
-  menuY += buttonsOffsetY;
-  segmentButtons = createButtonsInRows(segmentSets, leftMargin, menuY);
-  menuY = segmentButtons[segmentButtons.length - 1].y + nextSectionOffsetY;
+  segmentHeading = new Heading("Segment", margin, menuY);
+  menuY += offsetY;
+  segmentButtons = createButtonsInRows(segmentSets, margin, menuY, buttonSize, buttonSpacing);
+  menuY = segmentButtons[segmentButtons.length - 1].y + offsetY;
   // menuY += nextSectionOffsetY;
 
   // create Tip menu section
-  tipHeading = new Heading("Tip", leftMargin, menuY);
-  menuY += buttonsOffsetY;
-  tipButtons = createButtonsInRows(tipSets, leftMargin, menuY);
+  tipHeading = new Heading("Tip", margin, menuY);
+  menuY += offsetY;
+  tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
 
   // create Enter button
   menuY += 20;
-  enterButton = new EnterButton(leftMargin, menuY, 120, 80, "Enter");
+  enterButton = new TextButton(margin, menuY, 120, 80, "Enter", "hideChoiceMenu");
+  
+  choiceMenuWidth = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
+  choiceMenuHeight = menuY + buttonSize + margin;
   
   // create bottom buttons
   
 }
 
 // To replace createButtonsInColumns???
-StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
+StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY, int buttonSize, int buttonSpacing)
 {
   //PImage buttonImage;
   String buttonText;
-  int maxWidth = 100;
-  int maxHeight = 100;
-  int buttonWidth = 100;
-  int buttonHeight = 100;
-  int buttonHorizSpacing = 10;
+  int maxWidth = buttonSize;
+  int maxHeight = buttonSize;
+  int buttonWidth = buttonSize;
+  int buttonHeight = buttonSize;
   int x = startX;
   int y = startY - buttonWidth/2;
 
@@ -117,7 +126,7 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY)
 
     buttons[i] = new StampButton(sets, i, x, y-buttonHeight, buttonWidth, buttonHeight, buttonText, buttonImage);
 
-    x += buttonWidth + buttonHorizSpacing;
+    x += buttonWidth + buttonSpacing;
     if (x + maxWidth > w)
     {
       x = startX;
@@ -167,13 +176,13 @@ void drawChoiceMenu()
   choiceCanvas.beginDraw();
   //choiceCanvas.background(255);
   choiceCanvas.fill(255);
-  choiceCanvas.rect(choiceMenuOffsetX, choiceMenuOffsetY, 1280, 800, 3);
+  choiceCanvas.rect(cornerW, choiceMenuOffsetY, choiceMenuWidth, choiceMenuHeight, 3);
   choiceCanvas.fill(255, 0, 0);
   choiceCanvas.textFont(fjordFont);  
   choiceCanvas.textSize(48);
   choiceCanvas.textAlign(LEFT);
   //choiceCanvas.text("Choose Stamps", width/2, menuTopY);
-  menuHeading.draw();
+  //menuHeading.draw();
 
   // LEFT -- CENTER PIECES
   //choiceCanvas.textAlign(LEFT);

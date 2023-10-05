@@ -19,13 +19,13 @@ void drawMenuBar()
   for (MenuBarButton button : menuBarButtons) button.draw();
   
   // Draw animFrameCount
-  menuBarCanvas.text("Anim " + animFrameCount%animationRate, menuBarWidth + 20 + choiceMenuOffsetX, 27);
+  menuBarCanvas.text("Anim " + animFrameCount%animationRate, menuBarWidth + 20 + cornerW, 27);
   
   // Draw Frame Rate
-  menuBarCanvas.text("FPS: " + nf(frameRate, 0, 2), menuBarWidth + 100 + choiceMenuOffsetX, 27);
+  menuBarCanvas.text("FPS: " + nf(frameRate, 0, 2), menuBarWidth + 100 + cornerW, 27);
 
   // Draw STATE
-  menuBarCanvas.text("State." + state, menuBarWidth + 200 + choiceMenuOffsetX, 27);
+  menuBarCanvas.text("State." + state, menuBarWidth + 200 + cornerW, 27);
 
   menuBarCanvas.endDraw();
   image(menuBarCanvas, 0, 0, scaleUI(menuBarCanvas.width), scaleUI(menuBarCanvas.height)); //h-scaleUI(40)
@@ -67,7 +67,7 @@ class MenuBarButton
     text = _text;
     method = _method;
     activeVar = _activeVar;
-    x = _x + choiceMenuOffsetX;
+    x = _x + cornerW;
     y = _y;
     //w = text.length() * 10;
     w = (int)textWidth(text) + margin * 4;

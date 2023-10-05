@@ -2,6 +2,14 @@
  ***  CORNER MENU  ***************************************
  *********************************************************/
  
+ void cornerMenuSetup()
+ {
+   cornerW = (int)(1320/scaleFactor);
+   cornerH = 600;
+   cornerX = 0;
+   cornerY = 0;
+ }
+ 
  void drawCornerMenu()
  {
      // Draw preview of root/segment/tip
@@ -12,7 +20,7 @@
   cornerMenuCanvas.stroke(color(0));
   cornerMenuCanvas.strokeWeight(strokeW);
   cornerMenuCanvas.fill(255);
-  cornerMenuCanvas.rect(0, 0, choiceMenuOffsetX-strokeW, cornerMenuHeight, 3);
+  cornerMenuCanvas.rect(0, 0, cornerW-strokeW, cornerH, 3);
   
   //cornerMenuCanvas.fill(color(255));
   //cornerMenuCanvas.stroke(color(0));
@@ -26,23 +34,23 @@
 
   //PVector previewMargin = new PVector (50, 50);
   //float marginX = 25;
-  float marginY = 25;
-  float textHeight = marginY + 10;
-  float x = choiceMenuOffsetX/2;
+  float marginY = cornerW/10;
+  float textHeight = marginY * 1.5;
+  float x = cornerW/2;
   float y = textHeight;
   //PVector location = new PVector(marginX, previewMargin.y); // margin
   
   cornerMenuCanvas.textAlign(CENTER);
-  //cornerMenuCanvas.text("StampSketch", x, y);
-  //y += textHeight;
-  cornerMenuCanvas.text("Options", x, y);
+  cornerMenuCanvas.text("Choose", x, y);
+  y += textHeight;
+  cornerMenuCanvas.text("Stamps", x, y);
   y += marginY;
 
   SpriteSet set = rootSets[currentRoot];
   if (set != null) {
     y += set.width/2;
     //x += set.height/2;
-    x = choiceMenuOffsetX/2;
+    x = cornerW/2;
     drawCurrentTools(set, x, y);
     y += set.width/2;
   }
@@ -82,10 +90,10 @@
   cornerMenuCanvas.endDraw();
   
   
-  cornerMenuHeight = (int)y;
+  cornerH = (int)y;
 
  
- image(cornerMenuCanvas, 0, 0);
+ image(cornerMenuCanvas, cornerX, cornerY);
  
    //for (int i=0; i<sets.length; i++) {
   //  SpriteSet set = sets[i];
