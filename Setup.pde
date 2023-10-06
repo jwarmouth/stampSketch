@@ -61,7 +61,7 @@ void loadSpriteSets()
   eyeballSet = new SpriteSet("eyeball", "black-eyeball", 5);
   hornSet = new SpriteSet("horn", "horn", 5);
   hornRedSet = new SpriteSet("horn", "horn-red", 5);
-  //eyeSet = new SpriteSet("eye", "eye", 8);
+  //eyeSet = new SpriteSet("circles", "eye", 8);
   //swabBlackSet = new SpriteSet("swab b", "swab", 4);
   //swabRedSet = new SpriteSet("swab r", "swab-red", 4);
 

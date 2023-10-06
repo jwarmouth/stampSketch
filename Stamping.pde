@@ -127,7 +127,7 @@ void stampTip(float stampAngle)
     {
       eyeballRandomLook();
     }
-    if (set.name == "eye")
+    if (set.name == "circles")
     {
       stampAngle += radians (random(200) - 100);
     }
