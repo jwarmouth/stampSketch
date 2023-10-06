@@ -42,7 +42,7 @@ int scaleUI (int input)
 
 void choiceMenuSetup()
 {
-  int menuY = 50;
+  int menuY = 20;
   int margin = 20;
   int buttonSize = 80;
   int buttonSpacing = 10;
@@ -51,6 +51,11 @@ void choiceMenuSetup()
   // create Menu Heading
   //menuHeading = new Heading("Choose Stamps", margin, menuY);
   //menuY += 60;
+  
+
+  // create Enter button
+  eraseButton = new TextButton(margin, menuY, 240, 80, "Erase Screen", "eraseScreen");
+  menuY += offsetY;
 
   // create Root menu section
   rootHeading = new Heading("Root", margin, menuY);
@@ -70,10 +75,6 @@ void choiceMenuSetup()
   tipHeading = new Heading("Tip", margin, menuY);
   menuY += offsetY;
   tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
-
-  // create Enter button
-  menuY += 20;
-  enterButton = new TextButton(margin, menuY, 120, 80, "Enter", "hideChoiceMenu");
   
   choiceMenuWidth = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
   choiceMenuHeight = menuY + buttonSize + margin;
@@ -183,6 +184,10 @@ void drawChoiceMenu()
   //choiceCanvas.background(255);
   choiceCanvas.fill(255);
   choiceCanvas.rect(cornerW, choiceMenuOffsetY, choiceMenuWidth, choiceMenuHeight, 3);
+  
+  
+  eraseButton.draw();
+  
   choiceCanvas.fill(255, 0, 0);
   choiceCanvas.textFont(fjordFont);  
   choiceCanvas.textSize(48);
@@ -213,7 +218,6 @@ void drawChoiceMenu()
   for (StampButton button : rootButtons) button.draw();
   for (StampButton button : segmentButtons) button.draw();
   for (StampButton button : tipButtons) button.draw();
-  enterButton.draw();
   
   choiceCanvas.endDraw();
   image(choiceCanvas, 0,0);

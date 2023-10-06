@@ -26,7 +26,7 @@ void mousePressed()
     for (StampButton button : rootButtons) button.hover();
     for (StampButton button : segmentButtons) button.hover();
     for (StampButton button : tipButtons) button.hover();
-    enterButton.hover();
+    eraseButton.hover();
     break;
 
   case ATTRACTING:
@@ -152,7 +152,7 @@ void mouseReleased()
     for (StampButton button : rootButtons) button.select();
     for (StampButton button : segmentButtons) button.select();
     for (StampButton button : tipButtons) button.select();
-    enterButton.select();
+    eraseButton.select();
     break;
 
   case PREVIEWING_ROOT:

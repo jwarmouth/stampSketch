@@ -45,22 +45,22 @@ void loadSpriteSets()
 
   // TIPS
   // Hand Tips
-  handRedRSet = new SpriteSet("hand red", "hand-red-r", 5);
-  handRedLSet = new SpriteSet("hand red", "hand-red-l", 5);
+  handRedRSet = new SpriteSet("hand", "hand-red-r", 5);
+  handRedLSet = new SpriteSet("hand", "hand-red-l", 5);
   handRedSets = new SpriteSet[] {handRedRSet, handRedLSet};
 
-  handBlackRSet = new SpriteSet("hand black", "hand-black-r", 5);
-  handBlackLSet = new SpriteSet("hand black", "hand-black-l", 5);
+  handBlackRSet = new SpriteSet("hand", "hand-black-r", 5);
+  handBlackLSet = new SpriteSet("hand", "hand-black-l", 5);
   handBlackSets = new SpriteSet[] {handBlackRSet, handBlackLSet};
   
   // Block Tips
-  tipBlockRedSet = new SpriteSet("block r", "red-block", 3);
-  tipBlockBlackSet = new SpriteSet("block b", "black-block", 3);
-  tipEyeBlockSet = new SpriteSet("eye red", "eye-block", 5);
-  tipEyeBlockBlackSet = new SpriteSet("eye black", "eye-block-black", 5);
+  tipBlockRedSet = new SpriteSet("block", "red-block", 3);
+  tipBlockBlackSet = new SpriteSet("block", "black-block", 3);
+  tipEyeBlockSet = new SpriteSet("eye", "eye-block", 5);
+  tipEyeBlockBlackSet = new SpriteSet("eye", "eye-block-black", 5);
   eyeballSet = new SpriteSet("eyeball", "black-eyeball", 5);
   hornSet = new SpriteSet("horn", "horn", 5);
-  hornRedSet = new SpriteSet("horn red", "horn-red", 5);
+  hornRedSet = new SpriteSet("horn", "horn-red", 5);
   //eyeSet = new SpriteSet("eye", "eye", 8);
   //swabBlackSet = new SpriteSet("swab b", "swab", 4);
   //swabRedSet = new SpriteSet("swab r", "swab-red", 4);

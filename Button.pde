@@ -30,7 +30,7 @@ class StampButton
     selectedColor = color(0);
     overColor = color(255, 0, 0);
     invisible = color(255, 255, 255, 0);
-    if (text=="eye black" || text=="eye red")
+    if (text.contains("eye"))
     {
       pupil = loadImage("images/black-eyeball-0.png");
     }

@@ -138,7 +138,7 @@ void drawCurrentTools(SpriteSet set, float x, float y)
   canvas.pushMatrix(); // remember current drawing matrix
   canvas.translate(x, y);
   //canvas.rotate(radians(90));
-  if (set.name != "eye red" && set.name != "eye black")
+  if (!set.name.contains("eye"))
   {
     canvas.rotate(radians(90));
   }

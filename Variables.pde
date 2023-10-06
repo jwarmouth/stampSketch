@@ -100,7 +100,7 @@ int cornerOffsetY;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;
-TextButton enterButton;
+TextButton eraseButton;
 
 // Mouse Auto
 boolean mouseAutoTip = true;
