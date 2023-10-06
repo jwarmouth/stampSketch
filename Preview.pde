@@ -61,40 +61,57 @@ void previewRoot()
  ***  PREVIEW SEGMENT   *********************************
  *********************************************************/
 
-void startSegmentFromPreview()
-{
-  println("Starting segment from Preview Root");
-  mouseToVector(lastPoint);
-  lastAngle = angleToMouse(lastPoint);
+//void startSegmentFromPreview()
+//{
+//  println("Starting segment from Preview Root");
+//  //mouseToVector(lastPoint);
+  
+//  mouseToVector(targetPoint);
+  
+//  PVector toCenter = PVector.sub(lastPoint, targetPoint);
+//  //toCenter.limit(20);    // Start a TEENY bit back toward the center of lastRoot
+//  float mag = sqrt(findDistSq(mouseX, mouseY, pmouseX, pmouseY)) / 2 + 5;
+//  toCenter.limit(mag); // reduce based on mouse speed
+//  println("sonic reduction " + mag);
+//  lastPoint = PVector.add(targetPoint, toCenter);
+  
+//  lastAngle = angleToMouse(lastPoint);
+//  startPreviewingSegment();
+//}
 
-  startPreviewingSegment();
-}
-
-void startSegmentFromOverlap()
-{
-  println("Starting segment from Overlap Root");
-  //mouseToVector(lastPoint);
-  //targetPoint = lastPoint;
-  PVector toCenter = PVector.sub(lastPoint, targetPoint);
-  int toCenterMag = (int)toCenter.mag();
-  for (int i=1; i<toCenterMag; i++)
-  {
-    PVector lt = PVector.add(targetPoint, toCenter.setMag(i));
-    if (overlaps(rootCanvas, lt) || overlaps(tipCanvas, lt))
-    {
-      //println((toCenter.limit(i)).mag() + " units from center to edge");
-      println("FOUND A SPOT ON THE EDGE");
-      lastPoint = PVector.add(targetPoint, toCenter.limit(i)); //lt;
-      centerPoint = lastPoint;
-      lastAngle = angleToMouse(lastPoint);
-      return;
-    }
-  }
-  startPreviewingSegment();
-}
+//void startSegmentFromOverlap()
+//{
+//  println("Starting segment from Overlap Root");
+//  //mouseToVector(lastPoint);
+//  //targetPoint = lastPoint;
+//  PVector toCenter = PVector.sub(lastPoint, targetPoint);
+//  int toCenterMag = (int)toCenter.mag();
+//  for (int i=1; i<toCenterMag; i++)
+//  {
+//    PVector lt = PVector.add(targetPoint, toCenter.setMag(i));
+//    if (overlaps(rootCanvas, lt) || overlaps(tipCanvas, lt))
+//    {
+//      //println((toCenter.limit(i)).mag() + " units from center to edge");
+//      println("FOUND A SPOT ON THE EDGE");
+//      lastPoint = PVector.add(targetPoint, toCenter.limit(i)); //lt;
+//      centerPoint = lastPoint;
+//      lastAngle = angleToMouse(lastPoint);
+//      return;
+//    }
+//  }
+//  startPreviewingSegment();
+//}
 
 void startPreviewingSegment()
 {
+  mouseToVector(targetPoint);
+  PVector toCenter = PVector.sub(lastPoint, targetPoint);
+  float mag = sqrt(findDistSq(mouseX, mouseY, pmouseX, pmouseY)) / 2 + 5;
+  toCenter.limit(mag); // reduce based on mouse speed
+  println("sonic reduction " + mag);
+  lastPoint = PVector.add(targetPoint, toCenter);
+  lastAngle = angleToMouse(lastPoint);
+  
   if (segmentSets[currentSegment] == null)         state = State.PREVIEWING_TIP;
   else if (segmentSets[currentSegment].stretchy)   state = State.PREVIEWING_STRETCHY_SEGMENT;
   else state = State.SEGMENTING;

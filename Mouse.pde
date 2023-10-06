@@ -86,8 +86,7 @@ void ifMouseDragged()
     previewRoot();
     if (!overlaps(previewCanvas)) {
       stampRoot();
-      startSegmentFromPreview();
-      //startPreviewingSegmentOld();
+      startPreviewingSegment();
     }
     break;
 
@@ -95,8 +94,7 @@ void ifMouseDragged()
     // 1st Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
 
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
-      startSegmentFromPreview();
-      //startSegmentFromOverlap();
+     startPreviewingSegment();
     }
     break;
 
