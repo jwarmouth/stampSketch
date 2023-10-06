@@ -143,6 +143,7 @@ void mouseReleased()
   switch(state) {
   case DRAGGING:
     toggleChoiceMenu();
+    savePrefs();
     break;
 
   case CHOOSING:

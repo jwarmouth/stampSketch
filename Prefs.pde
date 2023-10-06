@@ -15,6 +15,8 @@
       currentSegment = int(pieces[1]);
       currentTip = int(pieces[2]);
       mouseAutoTip = boolean(pieces[3]);
+      cornerX = int(pieces[4]);
+      cornerY = int(pieces[5]);
       // root
     }
     reader.close();
@@ -26,7 +28,7 @@
 void savePrefs()
 {
   PrintWriter prefsFile = createWriter("prefs/prefs.txt");
-  prefsFile.println(currentRoot + "\t" + currentSegment + "\t" + currentTip + "\t" + str(mouseAutoTip));
+  prefsFile.println(currentRoot + "\t" + currentSegment + "\t" + currentTip + "\t" + str(mouseAutoTip) + "\t" + cornerX + "\t" + cornerY);
   prefsFile.flush();
   prefsFile.close();
   // https://processing.org/reference/createWriter_.html

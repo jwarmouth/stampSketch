@@ -26,6 +26,8 @@ void dragCorner()
 {
   cornerX = mouseX - cornerOffsetX; //cornerW/2;
   cornerY = mouseY - cornerOffsetY; //cornerH/2;
+  cornerX = constrain(cornerX, 0, width - cornerW);
+  cornerY = constrain(cornerY, 0, height - cornerH);
 }
 
 void drawCornerMenu()
