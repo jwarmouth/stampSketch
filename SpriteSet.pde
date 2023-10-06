@@ -51,7 +51,7 @@ class SpriteSet
         loadSprite(i);
       }
     }
-    if (name.contains("eye"))
+    if (name=="eye")
       {
         eyeballSet.loadSprites();
       }
