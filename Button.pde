@@ -84,7 +84,7 @@ class StampButton
       //choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
       if (pupil != null)
       {
-        choiceCanvas.image(pupil, x+w/2, y+h/2, pupil.width/4, pupil.height/4);
+        choiceCanvas.image(pupil, x+w/2, y+h/2, pupil.width/5, pupil.height/5);
       }
       
       choiceCanvas.imageMode(CORNER);

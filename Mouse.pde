@@ -5,13 +5,13 @@
 void mousePressed()
 {
   mouseIsPressed = true;
-  println("MOUSE IS PRESSED");
+  //println("MOUSE IS PRESSED");
   attractTimerReset();
-  
+
   // Check Options Click
   if (overCornerMenu())
   {
-    state = State.DRAGGING;
+    startDraggingCorner();
   }
 
   // Check MenuBar Buttons
@@ -35,25 +35,28 @@ void mousePressed()
 
   case WAITING:
     resetVectorPoints();
-    if (mouseY < 40) return;
-    /*
-    if (mouseX < 100 && mouseY < 40)
-     {
-     toggleChoiceMenu();
-     }
-     */
-    Block overlapBlock = findOverlappingBlock();
+
+    Block overlapBlock = overlappingBlock();
     //tipFlip = (int)random(2);
 
-    if (mouseButton == RIGHT) {
-      state = State.PREVIEWING_TIP;
-      tipFlip = randomSignum();
-    } else if (overlapBlock != null) {
-      lastPoint = new PVector (overlapBlock.x, overlapBlock.y);
+    //if (mouseButton == RIGHT)
+    //{
+    //  state = State.PREVIEWING_TIP;
+    //  tipFlip = randomSignum();
+    //}
+    if (overlapBlock != null)
+    {
+      println("OVERLAPPING ROOT");
+      //lastPoint = new PVector (overlapBlock.x, overlapBlock.y);
+      mouseToVector(lastPoint);
       state = State.OVERLAPPING_ROOT;
-    } else if (rootSets[currentRoot] == null) {
+    } 
+    else if (rootSets[currentRoot] == null)
+    {
       state = State.OVERLAPPING_ROOT;
-    } else {
+    } 
+    else
+    {
       state = State.PREVIEWING_ROOT;
       rootFlip = randomSignum();
       rootRotation = randomRotationNSEW();
@@ -71,67 +74,39 @@ void ifMouseDragged()
   if (!mousePressed) return;
 
   attractTimerReset();
-  //SpriteSet currentSegmentSet = segmentSets[currentSegment];
+  moveSpriteWithSpace();
   float maxDistance;
-
-  if ((keyPressed && key == ' ')) {
-    moveSpriteWithSpace();
-  }
-
-  /*
-  if (mouseButton == RIGHT && mouseButton == LEFT) {
-   moveSpriteWithSpace();
-   }
-   */
 
   switch(state) {
   case DRAGGING:
-    cornerX = mouseX - cornerW/2;
-    cornerY = mouseY - cornerH/2;
+    dragCorner();
     break;
-    
+
   case PREVIEWING_ROOT:
     previewRoot();
-    //thread("previewRoot");
     if (!overlaps(previewCanvas)) {
-      findPointsOutsideBlock(); //thread("findPointsOutsideBlock");
       stampRoot();
-      if (segmentSets[currentSegment] == null) {
-        state = State.PREVIEWING_TIP;
-      } else if (segmentSets[currentSegment].stretchy) {
-        state = State.PREVIEWING_STRETCHY_SEGMENT;
-      } else {
-        state = State.SEGMENTING;
-        print ("Segment: " + segmentSets[currentSegment].name);
-      }
+      startSegmentFromPreview();
+      //startPreviewingSegmentOld();
     }
     break;
 
   case OVERLAPPING_ROOT:
-    
-    //ghostSegment(); // Good idea, but isn't gonna work
-    // UPDATE -- First Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
+    // 1st Segment shouldn't be drawn until mouse is outside all blocks. And that will be the lastPoint...
+
     if (!overlaps(rootCanvas) && !overlaps(tipCanvas)) {
-       findPointsOutsideBlock(); //thread("findPointsOutsideBlock");
-      if (segmentSets[currentSegment] == null) {
-        state = State.PREVIEWING_TIP;
-      } else if (segmentSets[currentSegment].stretchy) {
-        state = State.PREVIEWING_STRETCHY_SEGMENT;
-      } else {
-        state = State.SEGMENTING;
-        println("Segment: " + segmentSets[currentSegment].name);
-      }
+      startSegmentFromPreview();
+      //startSegmentFromOverlap();
     }
     break;
 
   case SEGMENTING:
     maxDistance = segmentSets[currentSegment].armSegmentDistance;
-    //calculateCenterAndTarget(maxDistance);
-    calculateCenterAndTarget(); //thread("calculateCenterAndTarget");
+    calculateCenterAndTarget(maxDistance);
     if (isSegmentFarEnough(maxDistance)) {
-      thread("stampSegment");
+      stampSegment();
     } else {
-      thread("previewSegment"); //previewSegment();
+      previewSegment();
     }
 
     break;
@@ -155,17 +130,8 @@ void ifMouseDragged()
 void mouseReleased()
 {
   mouseIsPressed = false;
-  println("MOUSE IS RELEASED");
+  //println("MOUSE IS RELEASED");
   attractTimerReset();
-  
-  if (overCornerMenu())
-  {
-    toggleChoiceMenu();
-  }
-  else if (!overChoiceMenu())
-  {
-    hideChoiceMenu();
-  }
 
   // Check MenuBar Buttons
   if (showMenuBar)
@@ -178,9 +144,11 @@ void mouseReleased()
 
   switch(state) {
   case DRAGGING:
-    showChoiceMenu();
+    toggleChoiceMenu();
     break;
+
   case CHOOSING:
+    if (!overChoiceMenu()) hideChoiceMenu();
     // let player choose stamps
     // Check Stamp Buttons
     for (StampButton button : rootButtons) button.select();
@@ -195,13 +163,10 @@ void mouseReleased()
     break;
 
   case SEGMENTING:
-   if (!overlapsAnyButLastSegment()) //overlaps()) //rootCanvas) && !overlaps(tipCanvas))
+    if (!overlapsAnyButLastSegment()) //overlaps()) //rootCanvas) && !overlaps(tipCanvas))
     {
-    if (mouseAutoTip) {
-      //thread("stampTipAuto");
-      stampTipAuto();
+      if (mouseAutoTip) stampTipAuto();
     }
-   }
     state = State.WAITING;
     break;
 
@@ -209,19 +174,16 @@ void mouseReleased()
     if (!overlapsAnyButLastSegment()) //
     {
       stampSegment(6);
-      if (mouseAutoTip)
-      {
-        stampTip(lastAngle);
-      }
+      if (mouseAutoTip) stampTipAuto(); // stampTip(lastAngle);
     }
     state = State.WAITING;
     break;
 
   case PREVIEWING_TIP:
-   if (!overlapsAnyButLastSegment()) //if (!overlaps()) //rootCanvas) && !overlaps(tipCanvas)) 
-   {
-    thread("stampTip");
-   }
+    if (!overlapsAnyButLastSegment()) //if (!overlaps()) //rootCanvas) && !overlaps(tipCanvas))
+    {
+      thread("stampTip");
+    }
     state = State.WAITING;
     break;
 
@@ -237,15 +199,4 @@ void toggleMouseAuto()
 {
   mouseAutoTip = !mouseAutoTip;
   savePrefs();
-}
-
-boolean overCornerMenu()
-{
-  return (mouseX > cornerX && mouseX < cornerX + cornerW && mouseY > cornerY && mouseY < cornerY + cornerH);
-}
-
-boolean overChoiceMenu()
-{
-  return (mouseX > cornerW && mouseX < cornerW + choiceMenuWidth &&
-          mouseY > choiceMenuOffsetY && mouseY < choiceMenuOffsetY + choiceMenuHeight);
 }

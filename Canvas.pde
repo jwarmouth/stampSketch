@@ -146,8 +146,6 @@ void makeWhite(PGraphics canvas)
   canvas.endDraw();
 }
 
-
-
 void drawFrame()
 {
   if (aotm || state == State.CHOOSING) return;

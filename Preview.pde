@@ -1,11 +1,11 @@
 /*********************************************************
  ***  PREVIEW     ****************************************
  *********************************************************/
- 
+
 void drawPreview()
 {
   //if (state == State.WAITING) return;
-  
+
   if (showPreview && (mouseIsPressed || state == State.CHOOSING))
   {
     blendMode(MULTIPLY);
@@ -20,7 +20,7 @@ void drawPreview()
 
 void togglePreview()
 {
- showPreview = !showPreview; 
+  showPreview = !showPreview;
 }
 
 void clearPreview()
@@ -34,9 +34,6 @@ void stampToPreviewCanvas(SpriteSet spriteSet, float rotation, float flipX)
 {
   makeTransparent(previewCanvas);
   stampToCanvas(previewCanvas, centerPoint, spriteSet, 0, rotation, flipX);
-  if (debugging) {
-    stampToDebug();
-  }
 }
 
 void stampToPreviewCanvas(SpriteSet spriteSet, float rotation)
@@ -44,13 +41,6 @@ void stampToPreviewCanvas(SpriteSet spriteSet, float rotation)
   stampToPreviewCanvas(spriteSet, rotation, 1);
 }
 
-//void previewTo(PGraphics canvas)
-//{
-//  canvas.beginDraw();
-//  canvas.blendMode(SUBTRACT);
-//  canvas.image(previewCanvas, 0, 0);
-//  canvas.endDraw();
-//}
 
 
 /********************************************************
@@ -70,6 +60,167 @@ void previewRoot()
 /********************************************************
  ***  PREVIEW SEGMENT   *********************************
  *********************************************************/
+
+void startSegmentFromPreview()
+{
+  println("Starting segment from Preview Root");
+  mouseToVector(lastPoint);
+  lastAngle = angleToMouse(lastPoint);
+
+  startPreviewingSegment();
+}
+
+void startSegmentFromOverlap()
+{
+  println("Starting segment from Overlap Root");
+  //mouseToVector(lastPoint);
+  //targetPoint = lastPoint;
+  PVector toCenter = PVector.sub(lastPoint, targetPoint);
+  int toCenterMag = (int)toCenter.mag();
+  for (int i=1; i<toCenterMag; i++)
+  {
+    PVector lt = PVector.add(targetPoint, toCenter.setMag(i));
+    if (overlaps(rootCanvas, lt) || overlaps(tipCanvas, lt))
+    {
+      //println((toCenter.limit(i)).mag() + " units from center to edge");
+      println("FOUND A SPOT ON THE EDGE");
+      lastPoint = PVector.add(targetPoint, toCenter.limit(i)); //lt;
+      centerPoint = lastPoint;
+      lastAngle = angleToMouse(lastPoint);
+      return;
+    }
+  }
+  startPreviewingSegment();
+}
+
+void startPreviewingSegment()
+{
+  if (segmentSets[currentSegment] == null)         state = State.PREVIEWING_TIP;
+  else if (segmentSets[currentSegment].stretchy)   state = State.PREVIEWING_STRETCHY_SEGMENT;
+  else state = State.SEGMENTING;
+}
+
+void startPreviewingSegmentOld()
+{
+  // YOU ONLY NEED TO set lastPoint on the edge -- don't worry about targetPoint
+
+  println("FINDING POINTS OUTSIDE BLOCK");
+
+  // OPTION 1 -- not great, it's temperamental
+  //mouseToVector(targetPoint);
+  //PVector toCenter = PVector.sub(lastPoint, targetPoint);
+  //toCenter.limit(20);    // Start a TEENY bit back toward the center of lastRoot
+  //lastPoint = PVector.add(targetPoint, toCenter);
+  //lastAngle = angleToMouse(lastPoint);
+
+
+  // OPTION 2 -- Good for OVERLAP ROOT but not for PREVIEW ROOT
+  //PVector toTarget = PVector.sub(targetPoint, lastPoint);
+  //int targetMag = (int)toTarget.mag();
+  //println(targetMag + " units from center to target");
+
+  //for (int i=1; i<targetMag; i++)
+  //{
+  //  println("distance " + i + " overlaps");
+  //  PVector lt = PVector.add(lastPoint, toTarget.limit(i));
+  //  if (!overlaps(rootCanvas, lt) && !overlaps(tipCanvas, lt))
+  //  {
+  //    println((toTarget.limit(i)).mag() + " units from center to edge");
+  //    float arm = segmentSets[currentSegment].armSegmentDistance;
+  //    lt = PVector.add(lastPoint, toTarget.limit(i-arm/4));
+  //    lastPoint = lt;
+  //    centerPoint = lt;
+  //    lastAngle = angleToMouse(lastPoint);
+  //    return;
+  //  }
+  //}
+
+
+  //OPTION 3 -- Good for OVERLAP ROOT but not for PREVIEW ROOT
+  //PVector toCenter = PVector.sub(lastPoint, targetPoint);
+  //int toCenterMag = (int)toCenter.mag();
+  //for (int i=1; i<toCenterMag; i++)
+  //{
+  //  PVector lt = PVector.add(targetPoint, toCenter.setMag(i));
+  //  if (overlaps(rootCanvas, lt) || overlaps(tipCanvas, lt))
+  //  {
+  //    //println((toCenter.limit(i)).mag() + " units from center to edge");
+  //    println("FOUND A SPOT ON THE EDGE");
+  //    lastPoint = PVector.add(targetPoint, toCenter.limit(i)); //lt;
+  //    centerPoint = lastPoint;
+  //    lastAngle = angleToMouse(lastPoint);
+  //    return;
+  //  }
+  //}
+
+  //OPTION 4 -- Good for OVERLAP ROOT but not for PREVIEW ROOT
+  //ONLY find lastPoint
+  //PVector toTarget = PVector.sub(targetPoint, lastPoint);
+  //int targetMag = (int)toTarget.mag();
+  //PVector temp = lastPoint;
+  ////println(targetMag + " units from center to target");
+
+  //for (int i=1; i<targetMag; i++)
+  //{
+  //  temp = PVector.add(lastPoint, toTarget.limit(i));
+  //  if (!overlaps(rootCanvas, temp) && !overlaps(tipCanvas, temp))
+  //  {
+  //    // THIS NEVER HAPPENS. WHY?????
+  //    println("FOUND EDGE: " + (toTarget.limit(i)).mag() + " units from center");
+  //    float arm = segmentSets[currentSegment].armSegmentDistance;
+  //    lastPoint = PVector.add(lastPoint, toTarget.limit(i-arm/4));
+  //    //lastPoint = lt;
+  //    //centerPoint = lt;
+  //    lastAngle = angleToMouse(lastPoint);
+  //    //return;
+  //  }
+  //  println("distance " + i + " overlaps");
+  //}
+
+  // OPTION 5 -- NONONO
+  PVector toLastNorm = PVector.sub(lastPoint, targetPoint);
+  toLastNorm.normalize();
+  PVector temp = new PVector(mouseX, mouseY);
+  //while (!overlaps(rootCanvas, temp) && !overlaps(tipCanvas, temp))
+  //{
+  //  temp.add(toLastNorm);
+  //  targetPoint = temp;
+  //  println("no overlap");
+  //}
+  println("FOUND EDGE");
+  lastPoint = temp; //PVector.add(targetPoint, toTarget.limit(i-arm/4));
+  lastAngle = angleToMouse(lastPoint);
+
+
+  // OPTION 6 -- NONONO
+  //mouseToVector(targetPoint);
+  //lastAngle = angleToMouse(lastPoint);
+
+  //OPTION 7 -- Good for PREVIEW ROOT but not OVERLAP ROOT
+  //mouseToVector(targetPoint);
+  //float mag = sqrt(findDistSq(mouseX, mouseY, pmouseX, pmouseY));
+  //PVector reduce = PVector.sub(targetPoint, lastPoint);
+  //lastPoint.add(reduce.setMag(mag));
+  //println("sonic reduction " +mag);
+  //lastAngle = angleToMouse(lastPoint);
+
+
+  if (segmentSets[currentSegment] == null) {
+    state = State.PREVIEWING_TIP;
+  } else if (segmentSets[currentSegment].stretchy)
+  {
+    state = State.PREVIEWING_STRETCHY_SEGMENT;
+  } else
+  {
+    //lastAngle = angleToMouse(lastPoint);
+    //lastPoint = targetPoint;
+    state = State.SEGMENTING;
+    //stampSegment();
+    //println("START PREVIEWING Segment: " + segmentSets[currentSegment].name);
+  }
+}
+
+
 void previewSegment()
 {
   SpriteSet set = segmentSets[currentSegment];
@@ -93,20 +244,21 @@ void previewTip(float stampAngle)
 {
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
-  
+
   if (set.name == "eye block" && overlaps(tipCanvas)) {
     set = eyeballSet;
     set.loadSprites();
   }
 
-  targetPoint = new PVector (mouseX, mouseY);
+  mouseToVector(targetPoint);
+  ;
   // stamp end with rotation to mouse
   if (stampAngle == 0) {
     stampAngle = angleToMouse(lastPoint);
   }
-  
+
   if (set.name == "eye block") {
-   stampAngle += radians(90); 
+    stampAngle += radians(90);
   }
 
   centerPointMatchesTip(set);

@@ -117,6 +117,7 @@ void resetArrayLists()
 
 void resetVectorPoints()
 {
+  println("RESET VECTOR POINTS");
   // Reset Vector Points
   lastPoint = new PVector(mouseX, mouseY);
   targetPoint = new PVector (mouseX, mouseY);

@@ -28,42 +28,26 @@ boolean overlapsAnyButLastSegment()
 {
   boolean ov = false;
   if (overlaps(rootCanvas) || overlaps(tipCanvas)) ov = true;
-  if (overlaps(segmentCanvas) && findOverlappingBlock() != lastSegment) ov = true;
+  if (overlaps(segmentCanvas) && overlappingBlock() != lastSegment) ov = true;
   return ov;
 }
 
-Block findOverlappingBlock()
+Block overlappingBlock()
 {
   if (overlaps(rootCanvas)) {
     return nearestBlock(rootBlocks);
-  } else if (overlaps(tipCanvas)) {
+  }
+  if (overlaps(tipCanvas)) {
     return nearestBlock(tipBlocks);
-  } else if (overlaps(segmentCanvas)) {
+  }
+  if (overlaps(segmentCanvas)) {
     return nearestBlock(segmentBlocks);
   }
 
   return null;
 }
 
-
-// Find Nearest Block
-Block nearestBlock(ArrayList<Block> blocks)
-{
-  Block returnBlock = null;
-  float distSq = width * width;
-
-  for (Block block : blocks) {
-    float newDistSq = findDistSq(mouseX, mouseY, block.x, block.y);
-    if (newDistSq < distSq) {
-      distSq = newDistSq;
-      returnBlock = block;
-    }
-  }
-  return returnBlock;
-}
-
-
-Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
+Block overlappingBlock(ArrayList<Block> blocks, float safeZone)
 {
   // safeZone is a multiplier to the block's width & height
   for (Block block : blocks) {
@@ -82,13 +66,27 @@ Block findOverlappingBlock(ArrayList<Block> blocks, float safeZone)
   return null;
 }
 
-
 boolean isOverlappingBlocks(ArrayList<Block> blocks, float safeZone)
 {
-  Block block = findOverlappingBlock(blocks, safeZone);
+  Block block = overlappingBlock(blocks, safeZone);
   if (block != null) {
     return true;
   }
 
   return false;
+}
+
+Block nearestBlock(ArrayList<Block> blocks)
+{
+  Block returnBlock = null;
+  float distSq = width * width;
+
+  for (Block block : blocks) {
+    float newDistSq = findDistSq(mouseX, mouseY, block.x, block.y);
+    if (newDistSq < distSq) {
+      distSq = newDistSq;
+      returnBlock = block;
+    }
+  }
+  return returnBlock;
 }

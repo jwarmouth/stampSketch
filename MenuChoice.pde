@@ -2,6 +2,12 @@
  ***  CHOICE MENU  ***************************************
  *********************************************************/
 
+boolean overChoiceMenu()
+{
+  return (mouseX > cornerW && mouseX < cornerW + choiceMenuWidth &&
+          mouseY > choiceMenuOffsetY && mouseY < choiceMenuOffsetY + choiceMenuHeight);
+}
+
 void toggleChoiceMenu()
 {
   showChoiceMenu = !showChoiceMenu;

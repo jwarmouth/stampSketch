@@ -20,15 +20,12 @@ void stampRoot()
   float stampAngle = angleToMouse(lastPoint) + rootRotation;
 
   stamp (set, centerPoint, stampAngle, rootFlip, rootCanvas);
-  //previewTo(rootCanvas);
   makeTransparent(previewCanvas);
 
   lastRoot = new Block(lastPoint.x, lastPoint.y, set.width, set.height, stampAngle + randomRotationNSEW(), lastPoint, targetPoint);
   rootBlocks.add(lastRoot);
 
-  // saveFrames only happens if recording
-  saveFrames(12);
- 
+  saveFrames(12); // only if recording
 }
 
 
@@ -41,32 +38,21 @@ void stampSegment(int frames)
   SpriteSet set = segmentSets[currentSegment];
   if (set == null) return; // quick fix???
   
-  //playSound(segmentSound, mouseX, mouseY);
   thread("playSegmentSound");
-
   lastAngle = angleToMouse(lastPoint);
-
   stamp(set, centerPoint, lastAngle, segmentScale(set), segmentCanvas);
-  //previewTo(segmentCanvas);
-
   lastSegment = new Block(centerPoint.x, centerPoint.y, set.armSegmentDistance, set.armSegmentDistance, lastAngle, lastPoint, targetPoint);
   segmentBlocks.add(lastSegment);
 
   lastPoint = targetPoint;
 
-  saveFrames(frames);
+  saveFrames(frames); // only if recording
 }
 
 void stampSegment()
 {
   stampSegment(1);
-}
-
-void ghostSegment()
-{
-  lastAngle = angleToMouse(lastPoint);
-  lastPoint = targetPoint;
-}
+} //<>//
 
 
 /********************************************************
@@ -100,21 +86,17 @@ void stampTipAuto()
 {
   if (allowOverlap || !overlaps())
   {
-    //previewTip(targetAngle); that doesn't fix the issue
     tipFlip = randomSignum();
     float angleAdjust = radians(random(6) + random(6) + random(6) - 9);
-    //targetAngle += angleAdjust;
-    //stampTip(targetAngle);
-    //thread("previewTip");
-    stampTip(targetAngle + angleAdjust);
-    println("angleAdjust: " + angleAdjust);
+    stampTip(lastAngle + angleAdjust);
+    //println("angleAdjust: " + angleAdjust);
     clearPreview();
   }
 }
 
 void stampTip()
 {
-  stampTip(targetAngle);
+  stampTip(lastAngle);
 }
 
 void stampTip(float stampAngle)
@@ -122,48 +104,24 @@ void stampTip(float stampAngle)
   SpriteSet set = tipSets[currentTip];
   if (set == null) return; // quick fix???
   
-  //playSound(tipSound, mouseX, mouseY);
   thread("playTipSound");
-
-  if (set.name.contains("eye") && overlaps(tipCanvas))
-  {
-    set = eyeballSet;
-    set.loadSprites();
-  }
-
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
-
-  targetPoint = new PVector (mouseX, mouseY);
-  // stamp end with rotation to mouse
-  if (stampAngle == 0)
-  {
-    stampAngle = angleToMouse(lastPoint);
-  }
-  
-  
-  if (set.name.contains("horn"))
-  {
-    stampAngle = lastAngle;
-  }
-
+  mouseToVector(centerPoint);
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
-
-  if (set.name.indexOf("hand") > 0) {
-    // Make sure it's the right hand set
-  }
   
-  if (set.name.contains("hand"))
-  {
-    centerPoint = lastPoint;
-    // not sure what do actually do if true
-  }
-
+  if (stampAngle == 0) stampAngle = angleToMouse(lastPoint); 
+  if (set.name.contains("horn")) stampAngle = lastAngle;
   
-
+  if (set.name.contains("hand")) centerPoint = lastPoint;
 
   if (set.name.contains("eye"))
   {
+    if (overlaps(tipCanvas))
+    {
+      set = eyeballSet;
+      set.loadSprites();
+    }
     stampAngle += radians(90);
     if (autoEyeball)
     {
@@ -176,7 +134,6 @@ void stampTip(float stampAngle)
   }
   
   stamp (set, centerPoint, stampAngle, tipFlip, tipCanvas);
-  //previewTo(tipCanvas);
 
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);

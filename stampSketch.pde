@@ -2,148 +2,7 @@
  ***  STAMP SKETCH   *************************************
  *********************************************************/
 
-// Variables
-float currentX, currentY, lastX, lastY, targetX, targetY, redblockX, redblockY, lastAngle, targetAngle, armSegmentDistance;
-ArrayList<Block> rootBlocks, segmentBlocks, tipBlocks;
-Block lastRoot, lastSegment, lastTip;
-PVector lastPoint, targetPoint, centerPoint, eyeballPoint;
-float eyeballX, eyeballY;
-float scaleFactor = 7; //2.0 - 8.0, default 2.5;
 
-//PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
-// ROOTS
-SpriteSet blockRedSet, blockBlackSet, bigRedSet, bigBlackSet, rectSet, rectRedSet, blockBlack2Set, malletRedSet; //eyeBlockSet;
-int rootFlip = 1;
-int tipFlip = 0; // left or right
-float rootRotation = 0;
-
-// SEGMENTS
-SpriteSet armSet, armRedSet, armbSet, armbRedSet, armcSet, armcRedSet, blocksmSet, blocksmRedSet, armdSet, armdRedSet;
-
-// FULL ARMS
-SpriteSet longRedSet, longBlackSet, redLineSet, blackLineSet;
-
-// TIPS
-SpriteSet handRedLSet, handRedRSet, handBlackLSet, handBlackRSet, tipBlockRedSet, tipBlockBlackSet, tipEyeBlockSet, tipEyeBlockBlackSet, eyeballSet, hornSet, hornRedSet;
-// , eyeSet, swabBlackSet, swabRedSet
-
-// CURRENT SET PLACEHOLDERS
-SpriteSet rootSet, segmentSet, tipSet;
-SpriteSet[] handRedSets, handBlackSets, rootSets, segmentSets, tipSets;
-int currentRoot, currentSegment, currentTip;
-
-// Save Info
-String clipFolder, tempName;
-String saveFolder = "saved/";
-String fileName = "stamp";
-String saveFormat = ".png";
-String saveHiResFormat = ".png"; //.tif
-boolean hiResEnabled = false;
-int frameIndex, currentCanvas, saveCanvasNum;
-
-// Screen Info
-boolean recording;
-boolean debugging;
-boolean animating = true;
-boolean showPreview = true;
-boolean showMenuBar = false;
-boolean showChoiceMenu = false;
-boolean allowOverlap = true;
-boolean showRootCanvas, showSegmentCanvas, showTipCanvas;
-
-// Canvases
-PGraphics previewCanvas, menuBarCanvas, choiceCanvas, cornerMenuCanvas, debugCanvas, rootCanvas, segmentCanvas, tipCanvas, hiResCanvas, attractCanvas;
-PGraphics[] canvasFrames;
-int canvasFramesCount = 3; // how many looping canvases? Default = 3
-int animationRate = 12;
-int animFrameCount;
-
-//Menu Bar
-String[] menuBarItems = new String[] {
-  "[C]hoose", "[S]ave", "[R]ecording", "[D]ebug", "[P]review", "[M]ouse Auto", 
-  "[Z]Cancel", "[X]Erase", "[U]I Toggle", "r[O]ot", "s[E]gment", "[T]ip",
-  "[A]nimating", "[1]", "[2]", "[3]"
-  };
-String[] menuBarMethods = new String[] {
-  "toggleChoiceMenu", "saveHiResImage", "toggleRecording", "toggleDebug", "togglePreview", "toggleMouseAuto", 
-  "cancel", "eraseScreen", "menuBarToggle", "toggleRootCanvas", "toggleSegmentCanvas", "toggleTipCanvas",
-  "toggleAnimating", "showOne", "showTwo", "showThree"
-  };
-String[] menuBarVars = new String[] {
-  "showChoiceMenu", "null", "recording", "debugging", "showPreview", "mouseAutoTip",
-  "null", "null", "null", "showRootCanvas", "showSegmentCanvas", "showTipCanvas",
-  "animating", "isOneActive", "isTwoActive", "isThreeActive"
-  };
-  
-/*
-String[] uiActiveMethods = new String[] {
-  "isChooseActive", "isNullActive", "isRecordingActive", "isDebugActive", "isPreviewActive", "isMouseAutoActive",
-  "isNullActive", "isNullActive", "isNullActive", "isRootActive", "isSegmentActive", "isTipActive",
-  "isAnimatingActive", "isOneActive", "isTwoActive", "isThreeActive"
-  };
-*/
-MenuBarButton[] menuBarButtons;
-float menuBarWidth;
-int choiceMenuOffsetY = 0;
-int choiceMenuWidth;
-int choiceMenuHeight;
-
-int cornerW;
-int cornerH;
-int cornerX;
-int cornerY;
-
-StampButton[] rootButtons, segmentButtons, tipButtons;
-Heading menuHeading, rootHeading, segmentHeading, tipHeading;
-TextButton enterButton;
-
-// Mouse Auto
-boolean mouseAutoTip = true;
-boolean autoEyeball = true;
-boolean mouseIsPressed;
-boolean touchMode = true;
-
-// Attract Mode
-float attractModeDelay = 10; // seconds until Attract Mode starts
-float attractTimerStart;
-
-// Sound
-boolean soundEnabled = true;
-import processing.sound.*;
-SoundFile[] rootSounds;
-SoundFile[] segmentSounds;
-SoundFile[] tipSounds;
-SoundFile rootSound, segmentSound, tipSound;
-
-
-// Font
-PFont fjordFont, frescoFont;
-
-
-// Screen Size
-boolean aotm = false;
-int w = 1920;
-int h = 1080;
-int refW = 1920;
-int refH = 1080;
-float refScale = 1;
-
-// Art on the Marquee
-int aotm_w1 = 346;
-int aotm_w2 = 106;
-int aotm_w3 = 412;
-int aotm_h = 1088;
-int aotm_guide_y = 864;
-int aotm_guide1_w = 402;
-int aotm_guide2_x = 505;
-float aotm_ScaleFactor =   5;
-//int aotm_guide2;
-
-enum State {
-  CHOOSING, WAITING, PREVIEWING_ROOT, OVERLAPPING_ROOT, PREVIEWING_TIP, SEGMENTING, 
-  PREVIEWING_STRETCHY_SEGMENT, ENDING, ATTRACTING, DRAGGING
-};
-State state = State.ATTRACTING;
 
 /*
 void settings()
@@ -201,20 +60,23 @@ void draw()
   drawCanvasFrame();
   //drawFrame();
   drawAOTM();
-  drawChoiceMenu();
-  drawMenuBar();
   drawPreview();
-  drawDebug();
   drawRootCanvas();
   drawSegmentCanvas();
   drawTipCanvas();
+  drawDebug();
   drawAttract();
+  
+  // Menus
+  drawChoiceMenu();
+  drawMenuBar();
   drawCornerMenu();
 }
 
 
 void moveSpriteWithSpace()
 {
+  if (!(keyPressed && key == ' ')) return;   // if (mouseButton == RIGHT && mouseButton == LEFT)
   float dmouseX = mouseX - pmouseX;
   float dmouseY = mouseY - pmouseY;
 

@@ -9,52 +9,24 @@ boolean findTargetCenterPoints(float distance)
   // find vector from lastXY to mouseXY
   PVector toTarget = new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
 
-  if (toTarget.magSq() > sq(distance))
-  {
     toTarget.limit(distance/2);
     centerPoint = PVector.add(lastPoint, toTarget);
     targetPoint = PVector.add(centerPoint, toTarget);
     targetAngle = angleLastToTarget();
-    return true;
-  } else
-  {
-    toTarget.limit(distance/2);
-    centerPoint = PVector.add(lastPoint, toTarget);
-    targetPoint = PVector.add(centerPoint, toTarget);
-    targetAngle = angleLastToTarget();
-    return false;
-  }
+    return (toTarget.magSq() > sq(distance));
+
   // targetXY is stampLength distance along that vector
 }
 
-void findPointsOutsideBlock()
+void mouseToVector(PVector v)
 {
-  targetPoint = new PVector(mouseX, mouseY);
-  PVector toCenter = PVector.sub(lastPoint, targetPoint);
-  toCenter.limit(20);    // Start a TEENY bit back toward the center of lastRoot
-  lastPoint = PVector.add(targetPoint, toCenter);
-  lastAngle = angleToMouse(lastPoint);
-}
-
-boolean isSegmentFarEnough(float distance)
-{
-  // Check to see if current x,y is beyond threshold distance away from lastX, lastY
-  return lastPointToMouse().magSq() > sq(distance);
+  v.x = mouseX;
+  v.y = mouseY;
 }
 
 PVector lastPointToMouse()
 {
   return new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
-}
-
-float distanceLastPointToMouse()
-{
-  return lastPointToMouse().mag();
-}
-
-void calculateCenterAndTarget()
-{
-  calculateCenterAndTarget(segmentSets[currentSegment].armSegmentDistance);
 }
 
 void calculateCenterAndTarget(float distance)
@@ -63,19 +35,22 @@ void calculateCenterAndTarget(float distance)
 
   if (segmentSets[currentSegment].stretchy)
   {
-    float mag = lastPointToMouse.mag();
-    if (distance > mag) {
-      distance = mag;
-    }
+    distance = max(distance, lastPointToMouse.mag());
   }
 
-  lastPointToMouse.limit(distance/2);
+  lastPointToMouse.setMag(distance/2);
 
   centerPoint = PVector.add(lastPoint, lastPointToMouse);
   targetPoint = PVector.add(centerPoint, lastPointToMouse);
-  targetAngle = angleLastToTarget();
+  lastAngle = angleLastToTarget();
 
   // targetXY is stampLength distance along that vector
+}
+
+boolean isSegmentFarEnough(float distance)
+{
+  // Check to see if current x,y is beyond threshold distance away from lastX, lastY
+  return lastPointToMouse().magSq() > sq(distance);
 }
 
 float segmentScale(SpriteSet set)
@@ -84,10 +59,10 @@ float segmentScale(SpriteSet set)
 
   if (set.stretchy)
   {
-    float distanceFromLastPointToMouse = distanceLastPointToMouse();
-    if (distanceFromLastPointToMouse < set.width)
+    float dist = lastPointToMouse().mag();
+    if (dist < set.width)
     {
-      scaleX = distanceFromLastPointToMouse / set.width;
+      scaleX = dist / set.width;
     }
   }
 
