@@ -4,8 +4,8 @@
 
 boolean overChoiceMenu()
 {
-  return (mouseX > cornerW && mouseX < cornerW + choiceMenuWidth &&
-          mouseY > choiceMenuOffsetY && mouseY < choiceMenuOffsetY + choiceMenuHeight);
+  return (mouseX > cornerW && mouseX < cornerW + choiceW &&
+          mouseY > choiceY && mouseY < choiceY + choiceH);
 }
 
 void toggleChoiceMenu()
@@ -42,7 +42,7 @@ int scaleUI (int input)
 
 void choiceMenuSetup()
 {
-  int menuY = 20;
+  int menuY = 40;
   int margin = 20;
   int buttonSize = 80;
   int buttonSpacing = 10;
@@ -52,10 +52,6 @@ void choiceMenuSetup()
   //menuHeading = new Heading("Choose Stamps", margin, menuY);
   //menuY += 60;
   
-
-  // create Enter button
-  eraseButton = new TextButton(margin, menuY, 240, 80, "Erase Screen", "eraseScreen");
-  menuY += offsetY;
 
   // create Root menu section
   rootHeading = new Heading("Root", margin, menuY);
@@ -76,10 +72,14 @@ void choiceMenuSetup()
   menuY += offsetY;
   tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
   
-  choiceMenuWidth = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
-  choiceMenuHeight = menuY + buttonSize + margin;
   
-  // create bottom buttons
+
+  // create Enter button
+  eraseButton = new TextButton(margin, menuY, 240, 80, "Erase Screen", "eraseScreen");
+  //menuY += offsetY;
+  
+  choiceW = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
+  choiceH = menuY + buttonSize + margin;
   
 }
 
@@ -181,9 +181,9 @@ void drawChoiceMenu()
   //int currentY = 200;
 
   choiceCanvas.beginDraw();
-  //choiceCanvas.background(255);
-  choiceCanvas.fill(255);
-  choiceCanvas.rect(cornerW, choiceMenuOffsetY, choiceMenuWidth, choiceMenuHeight, 3);
+  choiceCanvas.background(255, 255, 255, 0);
+  choiceCanvas.fill(255, 255, 255, 200);
+  choiceCanvas.rect(choiceX, choiceY, choiceW, choiceH, 3);
   
   
   eraseButton.draw();

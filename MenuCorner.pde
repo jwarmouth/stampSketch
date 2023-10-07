@@ -6,8 +6,10 @@ void cornerMenuSetup()
 {
   cornerW = (int)(1320/scaleFactor);
   cornerH = 600;
-  cornerX = 0;
-  cornerY = 0;
+  //cornerX = 0;
+  //cornerY = 0;
+  
+  choiceX = cornerW;
 }
 
 boolean overCornerMenu()
@@ -39,18 +41,8 @@ void drawCornerMenu()
 
   cornerMenuCanvas.stroke(color(0));
   cornerMenuCanvas.strokeWeight(strokeW);
-  cornerMenuCanvas.fill(255);
+  cornerMenuCanvas.fill(255, 255, 255, 200);
   cornerMenuCanvas.rect(0, 0, cornerW-strokeW, cornerH, 3);
-
-  //cornerMenuCanvas.fill(color(255));
-  //cornerMenuCanvas.stroke(color(0));
-  //cornerMenuCanvas.strokeWeight(strokeW);
-  //cornerMenuCanvas.rect(0, choiceMenuOffsetY, choiceMenuOffsetX-strokeW, cornerMenuHeight-strokeW, 3);
-
-
-  cornerMenuCanvas.fill(255, 0, 0);
-  cornerMenuCanvas.textFont(fjordFont);
-  cornerMenuCanvas.textSize(28);
 
   //PVector previewMargin = new PVector (50, 50);
   //float marginX = 25;
@@ -60,11 +52,19 @@ void drawCornerMenu()
   float y = textHeight;
   //PVector location = new PVector(marginX, previewMargin.y); // margin
 
+
+
+  // "Choose Stamps"
+  cornerMenuCanvas.fill(255, 0, 0);
+  cornerMenuCanvas.textFont(fjordFont);
+  cornerMenuCanvas.textSize(28);
   cornerMenuCanvas.textAlign(CENTER);
   cornerMenuCanvas.text("Choose", x, y);
   y += textHeight;
   cornerMenuCanvas.text("Stamps", x, y);
   y += marginY;
+  
+  cornerMenuCanvas.blendMode(MULTIPLY);
 
   SpriteSet set = rootSets[currentRoot];
   if (set != null) {
@@ -108,28 +108,11 @@ void drawCornerMenu()
   }
   cornerMenuCanvas.endDraw();
 
-
   cornerH = (int)y;
-
+  cornerY = constrain(cornerY, 0, height - cornerH);
 
   image(cornerMenuCanvas, cornerX, cornerY);
 
-  //for (int i=0; i<sets.length; i++) {
-  //  SpriteSet set = sets[i];
-  //  if (set != null) {
-  //    if (i==0) {
-  //      location.x -= set.height/2;
-  //    }
-  //    location.y -= set.width/2;
-  //    //stampToCanvas(choiceCanvas, location, sets[i], 0, 0, 1);
-  //    // WTF -- this is causing buttons to shift?
-  //    drawCurrentTools(set, location);
-
-  //    location.y -= sets[i].width/2;
-  //  }
-  //}
-
-  //image(previewCanvas, 0, 0);
 }
 
 void drawCurrentTools(SpriteSet set, float x, float y)

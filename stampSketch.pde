@@ -2,26 +2,6 @@
  ***  STAMP SKETCH   *************************************
  *********************************************************/
 
-
-
-/*
-void settings()
-{
-  refScale = refW / w;
-  scaleFactor *= refScale;
-
-  // only if AOTM project
-  if (aotm) {
-    w = aotm_w1 + aotm_w2 + aotm_w3;
-    h = aotm_h;
-    scaleFactor = aotm_ScaleFactor;
-    fileName = "aotm";
-  }
-
-  size (w, h);
-}
-*/
-
 void setup()
 {
   //fullScreen(FX2D, 1);
@@ -29,6 +9,7 @@ void setup()
   //fullScreen();
   background(255);
   frameRate(48);
+  //noCursor();
   
   loadFonts();
   eyeballRandomLook();
@@ -73,7 +54,6 @@ void draw()
   drawCornerMenu();
 }
 
-
 void moveSpriteWithSpace()
 {
   if (!(keyPressed && key == ' ')) return;   // if (mouseButton == RIGHT && mouseButton == LEFT)
@@ -90,8 +70,19 @@ void moveSpriteWithSpace()
   centerPoint.y += dmouseY;
 }
 
+/*
+void settings()
+{
+  refScale = refW / w;
+  scaleFactor *= refScale;
 
-
-/********************************************************
- ***  CLASSES  *******************************************
- *********************************************************/
+  // only if AOTM project
+  if (aotm) {
+    w = aotm_w1 + aotm_w2 + aotm_w3;
+    h = aotm_h;
+    scaleFactor = aotm_ScaleFactor;
+    fileName = "aotm";
+  }
+  size (w, h);
+}
+*/

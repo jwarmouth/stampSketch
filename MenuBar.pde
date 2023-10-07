@@ -2,6 +2,23 @@
  ***  MENU BAR  ******************************************
  *********************************************************/
 
+//Menu Bar
+String[] menuBarItems = new String[] {
+  "[C]hoose", "[S]ave", "[R]ecording", "[D]ebug", "[P]review", "[M]ouse Auto", 
+  "[Z]Cancel", "[X]Erase", "[U]I Toggle", "r[O]ot", "s[E]gment", "[T]ip",
+  "[A]nimating", "[1]", "[2]", "[3]"
+  };
+String[] menuBarMethods = new String[] {
+  "toggleChoiceMenu", "saveHiResImage", "toggleRecording", "toggleDebug", "togglePreview", "toggleMouseAuto", 
+  "cancel", "eraseScreen", "menuBarToggle", "toggleRootCanvas", "toggleSegmentCanvas", "toggleTipCanvas",
+  "toggleAnimating", "showOne", "showTwo", "showThree"
+  };
+String[] menuBarVars = new String[] {
+  "showChoiceMenu", "null", "recording", "debugging", "showPreview", "mouseAutoTip",
+  "null", "null", "null", "showRootCanvas", "showSegmentCanvas", "showTipCanvas",
+  "animating", "isOneActive", "isTwoActive", "isThreeActive"
+  };
+  
 void drawMenuBar()
 {
   if (!showMenuBar) return;

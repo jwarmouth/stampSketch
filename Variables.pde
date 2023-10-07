@@ -61,40 +61,18 @@ int canvasFramesCount = 3; // how many looping canvases? Default = 3
 int animationRate = 12;
 int animFrameCount;
 
-//Menu Bar
-String[] menuBarItems = new String[] {
-  "[C]hoose", "[S]ave", "[R]ecording", "[D]ebug", "[P]review", "[M]ouse Auto", 
-  "[Z]Cancel", "[X]Erase", "[U]I Toggle", "r[O]ot", "s[E]gment", "[T]ip",
-  "[A]nimating", "[1]", "[2]", "[3]"
-  };
-String[] menuBarMethods = new String[] {
-  "toggleChoiceMenu", "saveHiResImage", "toggleRecording", "toggleDebug", "togglePreview", "toggleMouseAuto", 
-  "cancel", "eraseScreen", "menuBarToggle", "toggleRootCanvas", "toggleSegmentCanvas", "toggleTipCanvas",
-  "toggleAnimating", "showOne", "showTwo", "showThree"
-  };
-String[] menuBarVars = new String[] {
-  "showChoiceMenu", "null", "recording", "debugging", "showPreview", "mouseAutoTip",
-  "null", "null", "null", "showRootCanvas", "showSegmentCanvas", "showTipCanvas",
-  "animating", "isOneActive", "isTwoActive", "isThreeActive"
-  };
-  
-/*
-String[] uiActiveMethods = new String[] {
-  "isChooseActive", "isNullActive", "isRecordingActive", "isDebugActive", "isPreviewActive", "isMouseAutoActive",
-  "isNullActive", "isNullActive", "isNullActive", "isRootActive", "isSegmentActive", "isTipActive",
-  "isAnimatingActive", "isOneActive", "isTwoActive", "isThreeActive"
-  };
-*/
+
 MenuBarButton[] menuBarButtons;
 float menuBarWidth;
-int choiceMenuOffsetY = 0;
-int choiceMenuWidth;
-int choiceMenuHeight;
+int choiceX;
+int choiceY;
+int choiceW;
+int choiceH;
 
-int cornerW;
-int cornerH;
 int cornerX;
 int cornerY;
+int cornerW;
+int cornerH;
 int cornerOffsetX;
 int cornerOffsetY;
 
@@ -109,7 +87,7 @@ boolean mouseIsPressed;
 boolean touchMode = true;
 
 // Attract Mode
-float attractModeDelay = 10; // seconds until Attract Mode starts
+float attractModeDelay; // seconds until Attract Mode starts
 float attractTimerStart;
 
 // Sound

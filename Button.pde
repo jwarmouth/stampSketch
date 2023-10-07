@@ -18,8 +18,8 @@ class StampButton
   {
     sets = iSets;
     index = _index;
-    x = _x + cornerW;
-    y = _y + choiceMenuOffsetY;
+    x = _x;
+    y = _y;
     w = _w;
     h = _h;
     text = _text;
@@ -57,19 +57,19 @@ class StampButton
     if (isSelected())
     {
       choiceCanvas.stroke(selectedColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
+      choiceCanvas.rect(x-margin+choiceX, y-margin+choiceY, w+margin*2, h+margin*2, 3);
     }
     
     else if (hover)
     {
       choiceCanvas.stroke(overColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
+      choiceCanvas.rect(x-margin+choiceX, y-margin+choiceY, w+margin*2, h+margin*2, 3);
     }
     else if (image == null)
     {
       choiceCanvas.noStroke();
       choiceCanvas.fill(bgColor);
-      choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
+      choiceCanvas.rect(x-margin+choiceX, y-margin+choiceY, w+margin*2, h+margin*2, 3);
     }
     
     
@@ -79,12 +79,12 @@ class StampButton
     if (image != null)
     {
       choiceCanvas.imageMode(CENTER);
-      choiceCanvas.image(image, x+w/2, y+h/2, image.width, image.height);
+      choiceCanvas.image(image, x+w/2+choiceX, y+h/2+choiceY, image.width, image.height);
       
       //choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
       if (pupil != null)
       {
-        choiceCanvas.image(pupil, x+w/2, y+h/2, pupil.width/5, pupil.height/5);
+        choiceCanvas.image(pupil, x+w/2+choiceX, y+h/2+choiceY, pupil.width/5, pupil.height/5);
       }
       
       choiceCanvas.imageMode(CORNER);
@@ -99,7 +99,7 @@ class StampButton
     }
     
     choiceCanvas.fill(textColor);
-    choiceCanvas.text(text, x+w/2, textY);
+    choiceCanvas.text(text, x+w/2+choiceX, textY+choiceY);
   }
 
   void hover()
@@ -154,7 +154,8 @@ class StampButton
 
   boolean isOver()
   {
-    return (mouseX > x-margin && mouseX < x+w+margin*2 && mouseY > y-margin && mouseY < y+h+margin*2);
+    return (mouseX > x-margin+choiceX && mouseX < x+w+margin*2+choiceX && 
+            mouseY > y-margin+choiceY && mouseY < y+h+margin*2+choiceY);
   }
 }
 
@@ -174,8 +175,8 @@ class TextButton
 
   TextButton(int _x, int _y, int _w, int _h, String _text, String _method)
   {
-    x = _x + cornerW;
-    y = _y + choiceMenuOffsetY;
+    x = _x;
+    y = _y;
     w = _w;
     h = _h;
     text = _text;
@@ -200,19 +201,21 @@ class TextButton
     if (hover)
     {
       choiceCanvas.stroke(overColor);
-      choiceCanvas.rect(x, y, w, h, 3);
+      choiceCanvas.rect(x+choiceX, y+choiceY, w, h, 3);
       choiceCanvas.stroke(textColor);
       //choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2);
     }
     else
     {
       choiceCanvas.stroke(textColor); // bg color
-      choiceCanvas.rect(x, y, w, h, 3);
+      choiceCanvas.rect(x+choiceX, y+choiceY, w, h, 3);
     }
     //choiceCanvas.fill(bgColor);
     //choiceCanvas.rect(x, y+h-margin*3, w, margin*3);
     choiceCanvas.fill(textColor);
-    choiceCanvas.text(text, x+w/2, y+h/1.5);
+    choiceCanvas.textSize(30);
+    choiceCanvas.text(text, x+w/2+choiceX, y+h/1.5+choiceY);
+    
   }
   
   void hover()
@@ -229,7 +232,7 @@ class TextButton
   
   boolean isOver()
   {
-    return (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h);
+    return (mouseX > x+choiceX && mouseX < x+w+choiceX && mouseY > y+choiceY && mouseY < y+h+choiceY);
   }
 }
 
@@ -243,13 +246,13 @@ class Heading
   Heading(String _text, int _x, int _y)
   {
     text = _text;
-    x = _x + cornerW;
-    y = _y + choiceMenuOffsetY;
+    x = _x;
+    y = _y;
   }
   
   void draw()
   {
-     choiceCanvas.text(text, x, y); 
+     choiceCanvas.text(text, x+choiceX, y+choiceY); 
   }
 }
 
