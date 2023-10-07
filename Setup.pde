@@ -4,8 +4,11 @@
 
 void loadFonts()
 {
-  frescoFont = createFont("fonts/FrescoStamp.ttf", 16);
-  fjordFont = createFont("fonts/Fjord-Stamp.otf", 96);
+  headingFont = createFont("fonts/Fjord-Stamp.otf", 96);
+  //headingFont = createFont("fonts/COCOGOOSELETTERPRESS TRIAL.ttf", 96);
+  //headingFont = createFont("fonts/HighVoltage Rough.ttf", 96);
+  //
+  buttonFont = createFont("fonts/FrescoStamp.ttf", 16);
 }
 
 void loadSpriteSets()
@@ -45,12 +48,12 @@ void loadSpriteSets()
 
   // TIPS
   // Hand Tips
-  handRedRSet = new SpriteSet("hand", "hand-red-r", 5);
-  handRedLSet = new SpriteSet("hand", "hand-red-l", 5);
+  handRedRSet = new SpriteSet("hand red r", "hand-red-r", 5);
+  handRedLSet = new SpriteSet("hand red l", "hand-red-l", 5);
   handRedSets = new SpriteSet[] {handRedRSet, handRedLSet};
 
-  handBlackRSet = new SpriteSet("hand", "hand-black-r", 5);
-  handBlackLSet = new SpriteSet("hand", "hand-black-l", 5);
+  handBlackRSet = new SpriteSet("hand black r", "hand-black-r", 5);
+  handBlackLSet = new SpriteSet("hand black l", "hand-black-l", 5);
   handBlackSets = new SpriteSet[] {handBlackRSet, handBlackLSet};
   
   // Block Tips
@@ -117,7 +120,7 @@ void resetArrayLists()
 
 void resetVectorPoints()
 {
-  println("RESET VECTOR POINTS");
+  //println("RESET VECTOR POINTS");
   // Reset Vector Points
   lastPoint = new PVector(mouseX, mouseY);
   targetPoint = new PVector (mouseX, mouseY);

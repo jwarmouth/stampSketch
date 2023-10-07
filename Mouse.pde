@@ -37,18 +37,10 @@ void mousePressed()
 
   case WAITING:
     resetVectorPoints();
-
     Block overlapBlock = overlappingBlock();
-    //tipFlip = (int)random(2);
-
-    //if (mouseButton == RIGHT)
-    //{
-    //  state = State.PREVIEWING_TIP;
-    //  tipFlip = randomSignum();
-    //}
+   
     if (overlapBlock != null)
     {
-      println("OVERLAPPING ROOT");
       //lastPoint = new PVector (overlapBlock.x, overlapBlock.y);
       mouseToVector(lastPoint);
       state = State.OVERLAPPING_ROOT;
@@ -63,6 +55,12 @@ void mousePressed()
       rootFlip = randomSignum();
       rootRotation = randomRotationNSEW();
     }
+    
+    //if (mouseButton == RIGHT)
+    //{
+    //  state = State.PREVIEWING_TIP;
+    //  tipFlip = randomSignum();
+    //}
     break;
 
   default:
@@ -130,17 +128,11 @@ void ifMouseDragged()
 void mouseReleased()
 {
   mouseIsPressed = false;
-  //println("MOUSE IS RELEASED");
   attractTimerReset();
-
-  // Check MenuBar Buttons
-  if (showMenuBar)
-  {
-    for (MenuBarButton button : menuBarButtons) button.select();
-  }
-
   lastRoot = null;
   //clearPreview();
+  
+  if (showMenuBar) for (MenuBarButton button : menuBarButtons) button.select();
 
   switch(state) {
   case DRAGGING:
@@ -150,8 +142,7 @@ void mouseReleased()
 
   case CHOOSING:
     if (!overChoiceMenu()) hideChoiceMenu();
-    // let player choose stamps
-    // Check Stamp Buttons
+    
     for (StampButton button : rootButtons) button.select();
     for (StampButton button : segmentButtons) button.select();
     for (StampButton button : tipButtons) button.select();
@@ -185,6 +176,7 @@ void mouseReleased()
   case PREVIEWING_TIP:
     if (!overlapsAnyButLastSegment()) //if (!overlaps()) //rootCanvas) && !overlaps(tipCanvas))
     {
+      //stampTip();
       thread("stampTip");
     }
     state = State.WAITING;

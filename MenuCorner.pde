@@ -35,6 +35,7 @@ void dragCorner()
 void drawCornerMenu()
 {
   // Draw preview of root/segment/tip
+  int bottomY = cornerY+cornerH;
   int strokeW = 3;
   cornerMenuCanvas.beginDraw();
   cornerMenuCanvas.background(255, 255, 255, 0);
@@ -43,6 +44,7 @@ void drawCornerMenu()
   cornerMenuCanvas.strokeWeight(strokeW);
   cornerMenuCanvas.fill(255, 255, 255, 200);
   cornerMenuCanvas.rect(0, 0, cornerW-strokeW, cornerH, 3);
+  cornerMenuCanvas.blendMode(MULTIPLY);
 
   //PVector previewMargin = new PVector (50, 50);
   //float marginX = 25;
@@ -53,28 +55,21 @@ void drawCornerMenu()
   //PVector location = new PVector(marginX, previewMargin.y); // margin
 
 
+  //y += marginY;
 
-  // "Choose Stamps"
-  cornerMenuCanvas.fill(255, 0, 0);
-  cornerMenuCanvas.textFont(fjordFont);
-  cornerMenuCanvas.textSize(28);
-  cornerMenuCanvas.textAlign(CENTER);
-  cornerMenuCanvas.text("Choose", x, y);
-  y += textHeight;
-  cornerMenuCanvas.text("Stamps", x, y);
-  y += marginY;
-  
-  cornerMenuCanvas.blendMode(MULTIPLY);
-
-  SpriteSet set = rootSets[currentRoot];
+  // Draw Tip
+  SpriteSet set = tipSets[currentTip];
   if (set != null) {
     y += set.width/2;
-    //x += set.height/2;
-    x = cornerW/2;
-    drawCurrentTools(set, x, y);
+    float drawY = y;
+    if (set.name.contains("hand")) drawY += set.width/2;
+    drawCurrentTools(set, x, drawY);
+    if (set.name.contains("eye")) 
+      cornerMenuCanvas.image(eyeballSet.sprites[0], x - eyeballX, y - eyeballY);
     y += set.width/2;
   }
-
+  
+  // Draw Segment
   set = segmentSets[currentSegment];
   if (set != null) {
     int loops = 3;
@@ -87,28 +82,33 @@ void drawCornerMenu()
       y += set.armSegmentDistance/2;
     }
   }
-
-  set = tipSets[currentTip];
+  
+  // Draw Root
+  set = rootSets[currentRoot];
   if (set != null) {
-    if (!set.name.contains("hand")) {
-      y += set.width/2;
-    }
+    y += set.width/2;
+    //x += set.height/2;
+    x = cornerW/2;
     drawCurrentTools(set, x, y);
-    //location.y -= set.width/2;
-
-    if (set.name.contains("eye"))
-    {
-      cornerMenuCanvas.image(eyeballSet.sprites[0], x - eyeballX, y - eyeballY);
-    }
-    y += set.width/2 + marginY;
-
-    if (set.name.contains("hand")) {
-      y += set.width/2;
-    }
+    y += set.width/2;
   }
+  
+  
+  // "Choose Stamps"
+  y += marginY*2;
+  cornerMenuCanvas.fill(255, 0, 0);
+  cornerMenuCanvas.textFont(headingFont);
+  cornerMenuCanvas.textSize(28);
+  cornerMenuCanvas.textAlign(CENTER);
+  cornerMenuCanvas.text("Choose", x, y);
+  y += textHeight;
+  cornerMenuCanvas.text("Elegir", x, y);
+  y += marginY;
+  
   cornerMenuCanvas.endDraw();
 
   cornerH = (int)y;
+  if (cornerY > 0) cornerY = bottomY - cornerH;
   cornerY = constrain(cornerY, 0, height - cornerH);
 
   image(cornerMenuCanvas, cornerX, cornerY);
@@ -125,8 +125,9 @@ void drawCurrentTools(SpriteSet set, float x, float y)
   //canvas.rotate(radians(90));
   if (!set.name.contains("eye"))
   {
-    canvas.rotate(radians(90));
+    canvas.rotate(radians(-90));
   }
+
   canvas.image(set.sprites[0], set.offsetX, set.offsetY);
   canvas.popMatrix();
 }

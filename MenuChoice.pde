@@ -33,10 +33,44 @@ void hideChoiceMenu()
   state = State.WAITING;
 }
 
-int scaleUI (int input)
+
+void drawChoiceMenu()
 {
-  float output = input / refScale;
-  return (int)output;
+  //if (!showChoiceMenu) return;
+  if (state != State.CHOOSING) return;
+
+  choiceCanvas.beginDraw();
+  choiceCanvas.background(255, 255, 255, 0);
+  choiceCanvas.fill(255, 255, 255, 200);
+  choiceCanvas.rect(choiceX, choiceY, choiceW, choiceH, 3);
+
+  
+  choiceCanvas.fill(255, 0, 0);
+  choiceCanvas.textFont(headingFont);
+  choiceCanvas.textAlign(LEFT);
+  choiceCanvas.textSize(36);
+
+  rootHeading.draw();
+  segmentHeading.draw();
+  tipHeading.draw();
+
+  choiceCanvas.textAlign(CENTER);
+  choiceCanvas.noStroke();
+  choiceCanvas.textSize(18);
+
+  // DRAW BUTTONS
+  for (StampButton button : rootButtons) button.draw();
+  for (StampButton button : segmentButtons) button.draw();
+  for (StampButton button : tipButtons) button.draw();
+   
+  //choiceCanvas.textSize(30);
+  randomButton.draw();
+  eraseButton.draw();
+  closeButton.draw();
+  
+  choiceCanvas.endDraw();
+  image(choiceCanvas, 0,0);
+
 }
 
 
@@ -48,47 +82,32 @@ void choiceMenuSetup()
   int buttonSpacing = 10;
   int offsetY = 140;
 
-  // create Menu Heading
-  //menuHeading = new Heading("Choose Stamps", margin, menuY);
-  //menuY += 60;
-  
-
-  // create Root menu section
-  rootHeading = new Heading("Root", margin, menuY);
+  // create Tip menu section
+  tipHeading = new Heading("Tip   Punta", margin, menuY);
   menuY += offsetY;
-  rootButtons = createButtonsInRows(rootSets, margin, menuY, buttonSize, buttonSpacing);
-  menuY = rootButtons[rootButtons.length - 1].y + offsetY;
-  //menuY += nextSectionOffsetY;
+  tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
+  menuY = tipButtons[tipButtons.length - 1].y + offsetY;
 
   // create Segment menu section
-  segmentHeading = new Heading("Segment", margin, menuY);
+  segmentHeading = new Heading("Segment   Segmento", margin, menuY);
   menuY += offsetY;
   segmentButtons = createButtonsInRows(segmentSets, margin, menuY, buttonSize, buttonSpacing);
   menuY = segmentButtons[segmentButtons.length - 1].y + offsetY;
-  // menuY += nextSectionOffsetY;
-
-  // create Tip menu section
-  tipHeading = new Heading("Tip", margin, menuY);
+  
+  // create Root menu section
+  rootHeading = new Heading("Base   Base", margin, menuY); //"Root   Raíz"
   menuY += offsetY;
-  tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
-  
-  
+  rootButtons = createButtonsInRows(rootSets, margin, menuY, buttonSize, buttonSpacing);
 
-  // create Enter button
-  
-  textFont(fjordFont);  
-  textSize(48);
-  
+  // create TEXT BUTTONS
+  textFont(headingFont);  
+  textSize(36);
   int buttonX = margin;
-  int buttonW = (int)textWidth("Random");
-  randomButton = new TextButton(buttonX, menuY, buttonW, 80, "Random", "randomizeAllStamps");
-  buttonX += buttonW + margin;
-  buttonW = (int)textWidth("Erase Screen");
-  eraseButton = new TextButton(buttonX, menuY, buttonW, 80, "Erase Screen", "eraseScreen");
-  buttonX += buttonW + margin;
-  buttonW = (int)textWidth("Close");
-  closeButton = new TextButton(buttonX, menuY, buttonW, 80, "Close", "hideChoiceMenu");
-  //menuY += offsetY;
+  randomButton = new TextButton(buttonX, menuY, 80, "Azar   Random", "randomizeAllStamps");
+  buttonX += randomButton.w + margin;
+  eraseButton = new TextButton(buttonX, menuY, 80, "Borrar   Erase", "eraseScreen");
+  buttonX += eraseButton.w + margin;
+  closeButton = new TextButton(buttonX, menuY, 80, "Cerrar   Close", "hideChoiceMenu");
   
   choiceW = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
   choiceH = menuY + buttonSize + margin;
@@ -183,56 +202,3 @@ StampButton[] createButtonsInRows(SpriteSet[] sets, int startX, int startY, int 
 
 //  return buttons;
 //}
-
-void drawChoiceMenu()
-{
-  //if (!showChoiceMenu) return;
-  if (state != State.CHOOSING) return;
-  //int menuTopY = 100;
-  //int categoryTopY = 150;
-  //int currentY = 200;
-
-  choiceCanvas.beginDraw();
-  choiceCanvas.background(255, 255, 255, 0);
-  choiceCanvas.fill(255, 255, 255, 200);
-  choiceCanvas.rect(choiceX, choiceY, choiceW, choiceH, 3);
-  
-  randomButton.draw();
-  eraseButton.draw();
-  closeButton.draw();
-  
-  choiceCanvas.fill(255, 0, 0);
-  choiceCanvas.textFont(fjordFont);  
-  choiceCanvas.textSize(48);
-  choiceCanvas.textAlign(LEFT);
-  //choiceCanvas.text("Choose Stamps", width/2, menuTopY);
-  //menuHeading.draw();
-
-  // LEFT -- CENTER PIECES
-  //choiceCanvas.textAlign(LEFT);
-  choiceCanvas.textSize(36);
-
-  rootHeading.draw();
-  segmentHeading.draw();
-  tipHeading.draw();
-
-  //choiceCanvas.text("ROOT", leftMargin, 400);
-  //choiceCanvas.text("SEGMENT", leftMargin, 600);
-  //choiceCanvas.text("TIP", leftMargin, 800);
-  //choiceCanvas.text("ROOT", width/6, categoryTopY);
-  //choiceCanvas.text("SEGMENT", width/2, categoryTopY);
-  //choiceCanvas.text("TIP", width*5/6, categoryTopY);
-
-  choiceCanvas.textAlign(CENTER);
-  choiceCanvas.noStroke();
-  choiceCanvas.textSize(18);
-
-  // DRAW BUTTONS
-  for (StampButton button : rootButtons) button.draw();
-  for (StampButton button : segmentButtons) button.draw();
-  for (StampButton button : tipButtons) button.draw();
-  
-  choiceCanvas.endDraw();
-  image(choiceCanvas, 0,0);
-
-}

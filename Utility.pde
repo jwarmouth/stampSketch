@@ -5,16 +5,17 @@
 // Find TargetPoint if mouse is far enough from LastPoint
 boolean findTargetCenterPoints(float distance)
 {
-  // Check to see if current x,y is beyond threshold distance away from lastX, lastY
-  // find vector from lastXY to mouseXY
   PVector toTarget = new PVector(mouseX - lastPoint.x, mouseY - lastPoint.y);
 
-    toTarget.limit(distance/2);
-    centerPoint = PVector.add(lastPoint, toTarget);
-    targetPoint = PVector.add(centerPoint, toTarget);
-    targetAngle = angleLastToTarget();
-    return (toTarget.magSq() > sq(distance));
+  toTarget.limit(distance/2);
+  centerPoint = PVector.add(lastPoint, toTarget);
+  targetPoint = PVector.add(centerPoint, toTarget);
+  targetAngle = angleLastToTarget();
+  return (toTarget.magSq() > sq(distance));
 
+
+  // Check to see if current x,y is beyond threshold distance away from lastX, lastY
+  // find vector from lastXY to mouseXY
   // targetXY is stampLength distance along that vector
 }
 
@@ -118,21 +119,33 @@ float findDistSq(float x, float y)
 
 void centerPointMatchesTip(SpriteSet set)
 {
-  switch(set.name)
+  if (set.name.contains("hand"))
   {
-  case "hand-red":
-  case "hand-black":
-    centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
-    break;
-
-    //case "swab":
-    //  centerPoint = PVector.add(lastPoint,  PVector.fromAngle(lastAngle, targetPoint));
-    //  break;
-
-  default:
+    centerPoint = lastPoint;
+    //centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width/2));
+    //centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
+    //centerPoint = PVector.add(centerPoint, PVector.fromAngle(lastAngle, targetPoint));
+    //targetPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width));
+  } else
+  {
     centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width/2));
-    break;
+    //centerPoint = PVector.add(centerPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width*2/3));
   }
+  //switch(set.name)
+  //{
+  //case "hand-red":
+  //case "hand-black":
+  //  centerPoint = PVector.add(lastPoint, PVector.fromAngle(lastAngle, targetPoint));
+  //  break;
+
+  //  //case "swab":
+  //  //  centerPoint = PVector.add(lastPoint,  PVector.fromAngle(lastAngle, targetPoint));
+  //  //  break;
+
+  //default:
+  //  centerPoint = PVector.add(lastPoint, PVector.mult(PVector.fromAngle(lastAngle), set.width/2));
+  //  break;
+  //}
 }
 
 
@@ -141,16 +154,27 @@ SpriteSet rightOrLeftHand(SpriteSet set)
 {
   int whichSet = floor(random(2));
   /*int whichSet = tipFlip;
-  if (whichSet == -1) {
-    whichSet = 0;
-  } */
+   if (whichSet == -1) {
+   whichSet = 0;
+   } */
   println("Tip Set: " + set.name + " " + whichSet);
-  if (set.name == "hand-red") {
+  //if (set.name == "hand-red")
+  if (set.name.contains("hand red")) 
+  {
     return handRedSets[whichSet];
     //return handRedSets[(int)random(handRedSets.length)];
-  } else if (set.name == "hand-black") {
+  } 
+  //else if (set.name == "hand-black") 
+  if (set.name.contains("hand-black"))
+  {
     return handBlackSets[whichSet];
     //return handBlackSets[(int)random(handBlackSets.length)];
   }
   return set;
+}
+
+int scaleUI (int input)
+{
+  float output = input / refScale;
+  return (int)output;
 }

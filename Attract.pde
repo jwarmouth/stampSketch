@@ -6,20 +6,34 @@ void drawAttract()
 {
   if (state != State.ATTRACTING) return;
   
+  image(attractCanvas, 0, 0);
+}
+
+void attractSetup()
+{
   attractCanvas.beginDraw();
   attractCanvas.background(255);
   attractCanvas.fill(255, 0, 0);
   attractCanvas.textAlign(CENTER);
+  attractCanvas.textFont(headingFont);
+  int y = 300;
+  //int lineHeight = 144;
+
+  // BIG TITLE
   attractCanvas.textSize(96);
-  attractCanvas.textFont(fjordFont);  
-  attractCanvas.text("StampSketch", width/2, height/3);
-  attractCanvas.textSize(48);
-  //attractCanvas.text("(attract mode)", width/2, height/2);
-  //attractCanvas.textSize(24);
-  attractCanvas.text("Press Screen with finger to draw", width/2, height/2);
-  attractCanvas.endDraw();
-  image(attractCanvas, 0, 0);
+  attractCanvas.text("SelloBoceto", width/2, y);
+  y += 132;
+  attractCanvas.text("StampSketch", width/2, y);
+  y += 220;
   
+  // SUBTITLE
+  attractCanvas.textSize(48);
+  //attractCanvas.text("Press Screen with finger to draw", width/2, height/2);
+  attractCanvas.text("dibuja con tu dedo", width/2, y);
+  y += 72;
+  attractCanvas.text("draw with your finger", width/2, y);
+  
+  attractCanvas.endDraw();
 }
 
 void randomizeAllStamps()

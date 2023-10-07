@@ -3,6 +3,7 @@
  *********************************************************
  
  404 TODO
+ [ ] Spanish Translation
  [ ] Allow Corner menu to minimize
  [ ] Optimize for multiple users on touch screen
  [ ] Attract Mode - finger that drags on screen to entice participants

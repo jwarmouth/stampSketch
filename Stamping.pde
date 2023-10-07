@@ -106,35 +106,29 @@ void stampTip(float stampAngle)
   
   thread("playTipSound");
   saveFrames(1); // Extra delay before drawing tip -- could be 2 for that "pop"
-  mouseToVector(centerPoint);
+  //mouseToVector(centerPoint); // NEEDED???
+  
+  //calculateCenterAndTarget(set.width);
+  //float maxDistance = set.armSegmentDistance;
+  //calculateCenterAndTarget(maxDistance);
   centerPointMatchesTip(set);
   set = rightOrLeftHand(set);
   
   if (stampAngle == 0) stampAngle = angleToMouse(lastPoint); 
   if (set.name.contains("horn")) stampAngle = lastAngle;
-  
-  if (set.name.contains("hand")) centerPoint = lastPoint;
-
+  if (set.name == "circles") stampAngle += radians (random(200) - 100);
   if (set.name.contains("eye"))
   {
+    stampAngle += radians(90);
     if (overlaps(tipCanvas))
     {
       set = eyeballSet;
       set.loadSprites();
     }
-    stampAngle += radians(90);
-    if (autoEyeball)
-    {
-      eyeballRandomLook();
-    }
-    if (set.name == "circles")
-    {
-      stampAngle += radians (random(200) - 100);
-    }
+    if (autoEyeball) eyeballRandomLook();
   }
   
   stamp (set, centerPoint, stampAngle, tipFlip, tipCanvas);
-
   lastTip = new Block(centerPoint.x, centerPoint.y, set.width, set.height, stampAngle, lastPoint, targetPoint);
   tipBlocks.add(lastTip);
   
@@ -143,7 +137,6 @@ void stampTip(float stampAngle)
 
 void eyeballRandomLook()
 {
-  // AUTO-STAMP EYEBALL!
   eyeballX = random(-95, 95);
   eyeballY = random(-45, 45);
   float absX = abs(eyeballX);
@@ -156,20 +149,6 @@ void eyeballRandomLook()
   
   eyeballX /= scaleFactor;
   eyeballY /= scaleFactor;
-      //eyeballSet.loadSprites();
-      //eyeballPoint = centerPoint;
-      //eyeballPoint.x += random(40)-20;
-      //eyeballPoint.y += random(20)-10 - (abs(eyeballPoint.x)/4);
-      
-      //eyeballX = random(36)-18;
-      //eyeballY = random(18)-9;
-      //if (abs(eyeballX) > 8)
-      //{
-      //  eyeballY /= abs(eyeballX)/5 + 1;
-      //}
-      
-      // - (abs(eyeballX)/5);
-      //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
 }
 
 
@@ -180,16 +159,12 @@ void stamp(SpriteSet spriteSet, PVector centerPoint, float rotation, float flipX
 {
   if (spriteSet == null) return; // quick fix???
   
-  // NOT SURE WHY WE DO THIS
-  //stampToPreviewCanvas(spriteSet, rotation, flipX);
-  
   int index = (int)random(spriteSet.length);
   for (int i=0; i<canvasFramesCount; i++)
   {
     stampToCanvas(canvasFrames[i], centerPoint, spriteSet, (index+i)%spriteSet.length, rotation, flipX);
   }
   stampToCanvas(previewCanvas, centerPoint, spriteSet, index, rotation, flipX);
-  
 
   if (hiResEnabled)
   {

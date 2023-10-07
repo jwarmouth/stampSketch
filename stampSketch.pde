@@ -27,6 +27,7 @@ void setup()
   armSegmentDistance = armSet.width * .9; //.8;
   createCanvases();
   soundSetup();
+  attractSetup();
   //showMenu = true;
   //state = State.ATTRACTING;
   //savePrefs();

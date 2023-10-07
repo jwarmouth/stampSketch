@@ -87,7 +87,8 @@ class MenuBarButton
     x = _x + cornerW;
     y = _y;
     //w = text.length() * 10;
-    w = (int)textWidth(text) + margin * 4;
+    textSize(16);
+    w = (int)textWidth(text) + margin; //* 4;
     h = 40;
     bgColor = color(200);
     textColor = color(0);

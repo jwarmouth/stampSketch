@@ -100,7 +100,7 @@ SoundFile rootSound, segmentSound, tipSound;
 
 
 // Font
-PFont fjordFont, frescoFont;
+PFont headingFont, buttonFont;
 
 
 // Screen Size

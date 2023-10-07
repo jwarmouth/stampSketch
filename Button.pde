@@ -72,7 +72,6 @@ class StampButton
       choiceCanvas.rect(x-margin+choiceX, y-margin+choiceY, w+margin*2, h+margin*2, 3);
     }
     
-    
     float textHeight = 18;
     float textY;
     
@@ -81,25 +80,20 @@ class StampButton
       choiceCanvas.imageMode(CENTER);
       choiceCanvas.image(image, x+w/2+choiceX, y+h/2+choiceY, image.width, image.height);
       
-      //choiceCanvas.image(image, x, y+h-image.height, image.width, image.height);
       if (pupil != null)
       {
         choiceCanvas.image(pupil, x+w/2+choiceX, y+h/2+choiceY, pupil.width/5, pupil.height/5);
       }
       
       choiceCanvas.imageMode(CORNER);
-      //choiceCanvas.rect(x, y+h-20, w, textHeight);
       textY = y+h+textHeight+margin;
     } 
     else
     {
-      //choiceCanvas.rect(x, y, w, h, 3);
-      //choiceCanvas.rect(x-margin, y-margin, w+margin*2, h+margin*2, 3);
       textY = y+h/1.75;
+      choiceCanvas.fill(textColor);
+      choiceCanvas.text(text, x+w/2+choiceX, textY+choiceY);
     }
-    
-    choiceCanvas.fill(textColor);
-    choiceCanvas.text(text, x+w/2+choiceX, textY+choiceY);
   }
 
   void hover()
@@ -110,32 +104,14 @@ class StampButton
   void select()
   {
     if (!isOver()) return;
-    
-    
-    if (methodToCall != null)
-    {
-      method(methodToCall);
-    }
-    if (sets == rootSets)
-    {
-      currentRoot = index;
-    }
-    if (sets == segmentSets)
-    {
-      currentSegment = index;
-    }
-    if (sets == tipSets)
-    {
-      currentTip = index;
-    }
-    if (sets[index] != null)
-    {
-      sets[index].loadSprites();
-      //if (sets[index].name == "eye block")
-      //{
-      //  eyeballSet.loadSprites();
-      //}
-    }
+    if (methodToCall != null) method(methodToCall);
+    if (sets == rootSets) currentRoot = index;
+    if (sets == segmentSets) currentSegment = index;
+    if (sets == tipSets) currentTip = index;
+    if (sets[index] != null) sets[index].loadSprites();
+    //if (sets[index].name.contains("eye")) eyeballSet.loadSprites();
+    //if (sets[index].name.contains("hand red")) for (SpriteSet set : handRedSets) set.loadSprites();
+    //if (sets[index].name.contains("hand black")) for (SpriteSet set : handBlackSets) set.loadSprites();
     savePrefs();
   }
   
@@ -173,11 +149,11 @@ class TextButton
   boolean active;
   boolean hover;
 
-  TextButton(int _x, int _y, int _w, int _h, String _text, String _method)
+  TextButton(int _x, int _y, int _h, String _text, String _method)
   {
     x = _x;
     y = _y;
-    w = _w;
+    w = (int)textWidth(_text) + margin; //w = _w;
     h = _h;
     text = _text;
     method = _method;
