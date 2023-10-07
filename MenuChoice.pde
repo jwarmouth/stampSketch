@@ -75,7 +75,19 @@ void choiceMenuSetup()
   
 
   // create Enter button
-  eraseButton = new TextButton(margin, menuY, 240, 80, "Erase Screen", "eraseScreen");
+  
+  textFont(fjordFont);  
+  textSize(48);
+  
+  int buttonX = margin;
+  int buttonW = (int)textWidth("Random");
+  randomButton = new TextButton(buttonX, menuY, buttonW, 80, "Random", "randomizeAllStamps");
+  buttonX += buttonW + margin;
+  buttonW = (int)textWidth("Erase Screen");
+  eraseButton = new TextButton(buttonX, menuY, buttonW, 80, "Erase Screen", "eraseScreen");
+  buttonX += buttonW + margin;
+  buttonW = (int)textWidth("Close");
+  closeButton = new TextButton(buttonX, menuY, buttonW, 80, "Close", "hideChoiceMenu");
   //menuY += offsetY;
   
   choiceW = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
@@ -185,8 +197,9 @@ void drawChoiceMenu()
   choiceCanvas.fill(255, 255, 255, 200);
   choiceCanvas.rect(choiceX, choiceY, choiceW, choiceH, 3);
   
-  
+  randomButton.draw();
   eraseButton.draw();
+  closeButton.draw();
   
   choiceCanvas.fill(255, 0, 0);
   choiceCanvas.textFont(fjordFont);  

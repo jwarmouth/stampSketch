@@ -102,7 +102,7 @@ void eraseScreen()
 {
   //createCanvases();
   clearAllCanvases();
-  hideChoiceMenu();
+  //hideChoiceMenu();
   //showMenu = true;
   //state = State.CHOOSING;
 }

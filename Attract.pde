@@ -24,7 +24,6 @@ void drawAttract()
 
 void randomizeAllStamps()
 {
-  saveHiResImage();
   println("RANDOMIZING ALL STAMPS");
   int ranRoot, ranSeg, ranTip;
   ranRoot = (int)random(1, rootSets.length);
@@ -55,16 +54,17 @@ void attractTimerTick()
 
 void enterAttractMode()
 {
+  saveHiResImage();
   saveThreeFrames();
   eraseScreen();
   state = State.ATTRACTING;
   showChoiceMenu = false;
+  randomizeAllStamps();
   attractTimerReset();
 }
 
 void exitAttractMode()
 {
-  randomizeAllStamps();
   attractTimerReset();
 }
 
