@@ -2,36 +2,36 @@
  ***  ATTRACT MODE   *************************************
  *********************************************************/
 
-import com.hirschandmann.image.*;
-ISPlayer attractPlayer;
+//import com.hirschandmann.image.*;
+//ISPlayer attractPlayer;
 
-void firstFrameLoaded(ISPlayer player){
-  println(player+" first frame loaded");
-}
+//void firstFrameLoaded(ISPlayer player){
+//  println(player+" first frame loaded");
+//}
 
-void onSequenceLoaded(ISPlayer player){
-  println(player+" sequence fully loaded");
-  player.loop();
-}
+//void onSequenceLoaded(ISPlayer player){
+//  println(player+" sequence fully loaded");
+//  player.loop();
+//}
 
-// triggered when an sequence finished playing
-void onSequencePlayed(ISPlayer player){
-  println(player+" sequence played");
-}
+//// triggered when an sequence finished playing
+//void onSequencePlayed(ISPlayer player){
+//  println(player+" sequence played");
+//}
 
 void drawAttract()
 {
-  if (state != State.ATTRACTING) return;
-  image(attractPlayer, 0, 0);
-  blendMode(MULTIPLY);
+  //if (state != State.ATTRACTING) return;
+  //image(attractPlayer, 0, 0);
+  //blendMode(MULTIPLY);
   image(attractCanvas, 0, 0);
-  blendMode(BLEND);
+  //blendMode(BLEND);
 }
 
 void attractSetup()
 {
-  attractPlayer = new ISPlayer(this,dataPath("attract/attract" + (int)random(1,4)));
-  attractPlayer.setDelay(1000/12);
+  //attractPlayer = new ISPlayer(this,dataPath("attract/attract" + (int)random(1,4)));
+  //attractPlayer.setDelay(1000/12);
   
   attractCanvas.beginDraw();
   attractCanvas.background(255);
@@ -98,13 +98,13 @@ void enterAttractMode()
   randomizeAllStamps();
   attractTimerReset();
   
-  attractPlayer = new ISPlayer(this,dataPath("attract/attract1"));
-  attractPlayer.setDelay(1000/12);
+  //attractPlayer = new ISPlayer(this,dataPath("attract/attract1"));
+  //attractPlayer.setDelay(1000/12);
 }
 
 void exitAttractMode()
 {
-  attractPlayer = null; // hopefully this will clear the RAM
+  //attractPlayer = null; // hopefully this will clear the RAM
   attractTimerReset();
 }
 
