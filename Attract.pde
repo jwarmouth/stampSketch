@@ -1,16 +1,38 @@
 /*********************************************************
  ***  ATTRACT MODE   *************************************
  *********************************************************/
- 
+
+import com.hirschandmann.image.*;
+ISPlayer attractPlayer;
+
+void firstFrameLoaded(ISPlayer player){
+  println(player+" first frame loaded");
+}
+
+void onSequenceLoaded(ISPlayer player){
+  println(player+" sequence fully loaded");
+  player.loop();
+}
+
+// triggered when an sequence finished playing
+void onSequencePlayed(ISPlayer player){
+  println(player+" sequence played");
+}
+
 void drawAttract()
 {
   if (state != State.ATTRACTING) return;
-  
+  image(attractPlayer, 0, 0);
+  blendMode(MULTIPLY);
   image(attractCanvas, 0, 0);
+  blendMode(BLEND);
 }
 
 void attractSetup()
 {
+  attractPlayer = new ISPlayer(this,dataPath("attract/attract" + (int)random(1,4)));
+  attractPlayer.setDelay(1000/12);
+  
   attractCanvas.beginDraw();
   attractCanvas.background(255);
   attractCanvas.fill(255, 0, 0);
@@ -75,10 +97,14 @@ void enterAttractMode()
   showChoiceMenu = false;
   randomizeAllStamps();
   attractTimerReset();
+  
+  attractPlayer = new ISPlayer(this,dataPath("attract/attract1"));
+  attractPlayer.setDelay(1000/12);
 }
 
 void exitAttractMode()
 {
+  attractPlayer = null; // hopefully this will clear the RAM
   attractTimerReset();
 }
 
