@@ -150,5 +150,8 @@ void startAttractPlayer()
     currentSegment = 9;
     currentTip = 5;
   }
+  if (rootSets[currentRoot] != null) rootSets[currentRoot].loadSprites();
+  if (segmentSets[currentSegment] != null) segmentSets[currentSegment].loadSprites();
+  if (tipSets[currentTip] != null) tipSets[currentTip].loadSprites();
   savePrefs();
 }
