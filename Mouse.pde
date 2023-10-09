@@ -20,17 +20,20 @@ void mousePressed()
     for (MenuBarButton button : menuBarButtons) button.hover();
   }
 
-  switch(state) {
-  case CHOOSING:
+
+  if (state == State.CHOOSING)
+  {
     // let player choose stamps
+    if (!overChoiceMenu()) hideChoiceMenu();
     for (StampButton button : rootButtons) button.hover();
     for (StampButton button : segmentButtons) button.hover();
     for (StampButton button : tipButtons) button.hover();
     randomButton.hover();
     eraseButton.hover();
     closeButton.hover();
-    break;
+  }
 
+switch(state) {
   case ATTRACTING:
     exitAttractMode();
     state = State.WAITING;
@@ -141,8 +144,6 @@ void mouseReleased()
     break;
 
   case CHOOSING:
-    if (!overChoiceMenu()) hideChoiceMenu();
-    
     for (StampButton button : rootButtons) button.select();
     for (StampButton button : segmentButtons) button.select();
     for (StampButton button : tipButtons) button.select();

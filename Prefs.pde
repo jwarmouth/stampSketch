@@ -6,7 +6,7 @@
 {
     // Open the file from the createWriter() example
     // https://processing.org/reference/createReader_.html
-  BufferedReader reader = createReader("prefs/prefs.txt");
+  BufferedReader reader = createReader(dataPath("prefs/prefs.txt"));
   String line = null;
   try {
     while ((line = reader.readLine()) != null) {
@@ -20,6 +20,7 @@
       choiceX = int(pieces[6]);
       choiceY = int(pieces[7]);
       mouseAutoTip = boolean(pieces[8]);
+      println("prefs loaded");
       // root
     }
     reader.close();
@@ -30,7 +31,7 @@
 
 void savePrefs()
 {
-  PrintWriter prefsFile = createWriter("prefs/prefs.txt");
+  PrintWriter prefsFile = createWriter(dataPath("prefs/prefs.txt"));
   prefsFile.println(currentRoot + "\t" + currentSegment + "\t" + currentTip + "\t" + attractModeDelay + 
                     "\t" + cornerX + "\t" + cornerY + "\t" + choiceX + "\t" + choiceY+ "\t" + str(mouseAutoTip));
   prefsFile.flush();

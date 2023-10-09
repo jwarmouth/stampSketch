@@ -104,9 +104,9 @@ void choiceMenuSetup()
   textSize(36);
   int buttonX = margin;
   randomButton = new TextButton(buttonX, menuY, 80, "Azar   Random", "randomizeAllStamps");
-  buttonX += randomButton.w + margin;
+  buttonX += randomButton.w + margin*2;
   eraseButton = new TextButton(buttonX, menuY, 80, "Borrar   Erase", "eraseScreen");
-  buttonX += eraseButton.w + margin;
+  buttonX += eraseButton.w + margin*2;
   closeButton = new TextButton(buttonX, menuY, 80, "Cerrar   Close", "hideChoiceMenu");
   
   choiceW = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;

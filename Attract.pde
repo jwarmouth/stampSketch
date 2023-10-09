@@ -43,7 +43,11 @@ void drawAttract()
 
 void attractSetup()
 {
-  attractPlayer = new ISPlayer(this, dataPath("attract/attract" + (int)random(1, 4)));
+  
+  //randomizeAllStamps();
+  attractPlayer = new ISPlayer(this);
+  startAttractPlayer();
+  //attractPlayer = new ISPlayer(this, dataPath("attract/attract" + (int)random(1, 4)));
   //attractPlayer.setDelay(1000/12);
   attractCanvas.beginDraw();
   attractCanvas.background(255);
@@ -125,6 +129,26 @@ void attractTimerReset()
 
 void startAttractPlayer()
 {
-  attractPlayer.init(dataPath("attract/attract" + (int)random(1, 4)));
+  int i = (int)random(1, 4);
+  attractPlayer.init(dataPath("attract/attract" + i));
   attractPlayer.setDelay(1000/12);
+  if (i == 1)
+  {
+    currentRoot = 3;
+    currentSegment = 1;
+    currentTip = 1;
+  }
+  if (i == 2)
+  {
+    currentRoot = 6;
+    currentSegment = 4;
+    currentTip = 8;
+  }
+  if (i == 3)
+  {
+    currentRoot = 5;
+    currentSegment = 9;
+    currentTip = 5;
+  }
+  savePrefs();
 }

@@ -18,7 +18,7 @@ void setup()
   //scaleFactor *= refScale;
 
   loadPrefs();
-  resetChoices();
+  //resetChoices();
   loadSpriteSets();
   resetArrayLists();
   cornerMenuSetup();
