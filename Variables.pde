@@ -86,9 +86,7 @@ boolean autoEyeball = true;
 boolean mouseIsPressed;
 boolean touchMode = true;
 
-// Attract Mode
-float attractModeDelay; // seconds until Attract Mode starts
-float attractTimerStart;
+
 
 // Sound
 boolean soundEnabled = true;

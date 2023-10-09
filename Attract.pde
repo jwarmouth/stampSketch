@@ -5,26 +5,34 @@
 import com.hirschandmann.image.*;
 ISPlayer attractPlayer;
 
+// Attract Mode
+float attractModeDelay; // seconds until Attract Mode starts
+float attractTimerStart;
+
 void firstFrameLoaded(ISPlayer player) {
   println(player+" first frame loaded");
 }
 
 void onSequenceLoaded(ISPlayer player) {
-  println(player+" sequence fully loaded");
+  //println(player+" sequence fully loaded");
+  player.setDelay(1000/12);
   player.play();
 }
 
 // triggered when an sequence finished playing
 void onSequencePlayed(ISPlayer player) {
-  attractPlayer = null;
-  println(player+" sequence played");
+  //player.clean();
+  player.dispose();
+  //println(player+" sequence played");
+  //player.jump(player.currentFrame()-2);
+  //player.play();
 }
 
 void drawAttract()
 {
   if (state != State.ATTRACTING) return;
 
-  if (attractPlayer != null)
+  if (attractPlayer.isPlaying())
   {
     image(attractPlayer, 0, 0);
     blendMode(MULTIPLY);
@@ -35,7 +43,8 @@ void drawAttract()
 
 void attractSetup()
 {
-  startAttractPlayer();
+  attractPlayer = new ISPlayer(this, dataPath("attract/attract" + (int)random(1, 4)));
+  //attractPlayer.setDelay(1000/12);
   attractCanvas.beginDraw();
   attractCanvas.background(255);
   attractCanvas.fill(255, 0, 0);
@@ -105,7 +114,7 @@ void enterAttractMode()
 
 void exitAttractMode()
 {
-  attractPlayer = null; // hopefully this will clear the RAM
+  attractPlayer.clean();
   attractTimerReset();
 }
 
@@ -116,6 +125,6 @@ void attractTimerReset()
 
 void startAttractPlayer()
 {
-  attractPlayer = new ISPlayer(this, dataPath("attract/attract" + (int)random(1, 4)));
+  attractPlayer.init(dataPath("attract/attract" + (int)random(1, 4)));
   attractPlayer.setDelay(1000/12);
 }
