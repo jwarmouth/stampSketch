@@ -108,8 +108,8 @@ void enterAttractMode()
   startAttractPlayer();
   if (state == State.ATTRACTING) return;
   
-  saveHiResImage();
-  saveThreeFrames();
+  //saveHiResImage();
+  //saveThreeFrames();
   eraseScreen();
   state = State.ATTRACTING;
   showChoiceMenu = false;

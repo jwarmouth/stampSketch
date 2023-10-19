@@ -10,10 +10,10 @@ void setup()
   background(255);
   frameRate(48);
   
-  scaleFactor = 3;
+  scaleFactor = 3.25;
   cornerScale = 0.5;
   spanish = false;
-  //noCursor();
+  noCursor();
   
   loadFonts();
   eyeballRandomLook();

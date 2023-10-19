@@ -47,7 +47,7 @@ void keyReleased()
 
   case 'X':
   case 'x':
-    eraseScreen();
+    saveAndEraseScreen();
     break;
 
   case 'U':

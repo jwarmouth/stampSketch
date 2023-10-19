@@ -101,6 +101,8 @@ void drawTipCanvas()
 void eraseScreen()
 {
   //createCanvases();
+  saveHiResImage();
+  saveThreeFrames();
   clearAllCanvases();
   //hideChoiceMenu();
   //showMenu = true;
