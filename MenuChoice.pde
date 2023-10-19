@@ -81,21 +81,40 @@ void choiceMenuSetup()
   int buttonSize = 80;
   int buttonSpacing = 10;
   int offsetY = 140;
+  String menuText;
 
   // create Tip menu section
-  tipHeading = new Heading("Tip   Punta", margin, menuY);
+  if (spanish) {
+    menuText = "Tip   Punta";
+  }
+  else {
+    menuText = "Tip";
+  }
+  tipHeading = new Heading(menuText, margin, menuY);
   menuY += offsetY;
   tipButtons = createButtonsInRows(tipSets, margin, menuY, buttonSize, buttonSpacing);
   menuY = tipButtons[tipButtons.length - 1].y + offsetY;
 
   // create Segment menu section
-  segmentHeading = new Heading("Segment   Segmento", margin, menuY);
+  if (spanish) {
+    menuText = "Segment   Segmento";
+  }
+  else {
+    menuText = "Segment";
+  }
+  segmentHeading = new Heading(menuText, margin, menuY);
   menuY += offsetY;
   segmentButtons = createButtonsInRows(segmentSets, margin, menuY, buttonSize, buttonSpacing);
   menuY = segmentButtons[segmentButtons.length - 1].y + offsetY;
   
-  // create Root menu section
-  rootHeading = new Heading("Base   Base", margin, menuY); //"Root   Raíz"
+  // create Root menu section  
+  if (spanish) {
+    menuText = "Base   Base";
+  }
+  else {
+    menuText = "Root";
+  }
+  rootHeading = new Heading(menuText, margin, menuY); //"Root   Raíz"
   menuY += offsetY;
   rootButtons = createButtonsInRows(rootSets, margin, menuY, buttonSize, buttonSpacing);
 
@@ -103,11 +122,31 @@ void choiceMenuSetup()
   textFont(headingFont);  
   textSize(36);
   int buttonX = margin;
-  randomButton = new TextButton(buttonX, menuY, 80, "Azar   Random", "randomizeAllStamps");
+  if (spanish) {
+    menuText = "Azar   Random";
+  }
+  else {
+    menuText = "Random";
+  }
+  randomButton = new TextButton(buttonX, menuY, 80, menuText, "randomizeAllStamps");
   buttonX += randomButton.w + margin*2;
-  eraseButton = new TextButton(buttonX, menuY, 80, "Borrar   Erase", "eraseScreen");
+
+  if (spanish) {
+    menuText = "Borrar   Erase";
+  }
+  else {
+    menuText = "Erase";
+  }
+  eraseButton = new TextButton(buttonX, menuY, 80, menuText, "eraseScreen");
   buttonX += eraseButton.w + margin*2;
-  closeButton = new TextButton(buttonX, menuY, 80, "Cerrar   Close", "hideChoiceMenu");
+  
+  if (spanish) {
+    menuText = "Cerrar   Close";
+  }
+  else {
+    menuText = "Close";
+  }
+  closeButton = new TextButton(buttonX, menuY, 80, menuText, "hideChoiceMenu");
   
   choiceW = max(rootButtons.length, segmentButtons.length, tipButtons.length) * (buttonSize + buttonSpacing) + margin * 2;
   choiceH = menuY + buttonSize + margin;

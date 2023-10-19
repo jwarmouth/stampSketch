@@ -210,6 +210,11 @@ void stampToHiRes(PVector location, SpriteSet set, int index, float rotation, fl
   hiResCanvas.rotate(rotation);
   hiResCanvas.scale(1, flipX);
   hiResCanvas.image(set.hiResSprites[index], set.offsetX * scaleFactor, set.offsetY * flipX * scaleFactor);
+  if (autoEyeball && set.name.contains("eye"))
+  {
+    hiResCanvas.image(eyeballSet.hiResSprites[index], eyeballX * scaleFactor, eyeballY * scaleFactor);
+  //stamp (eyeballSet, eyeballPoint, stampAngle, tipFlip);
+  }
   hiResCanvas.popMatrix();
   hiResCanvas.endDraw();
 }

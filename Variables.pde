@@ -11,7 +11,7 @@ PVector targetPoint = new PVector(0, 0);
 PVector centerPoint = new PVector(0, 0);
 PVector eyeballPoint = new PVector(0, 0);
 float eyeballX, eyeballY;
-float scaleFactor = 7; //2.0 - 8.0, default 2.5;
+float scaleFactor; //2.0 - 8.0, default 2.5;
 
 //PImage[] armSprites, handSprites, handLeftSprites, blockSprites, bigBlockSprites;
 // ROOTS
@@ -41,7 +41,7 @@ String saveFolder = "saved/";
 String fileName = "stamp";
 String saveFormat = ".png";
 String saveHiResFormat = ".png"; //.tif
-boolean hiResEnabled = false;
+boolean hiResEnabled = true;
 int frameIndex, currentCanvas, saveCanvasNum;
 
 // Screen Info
@@ -61,20 +61,23 @@ int canvasFramesCount = 3; // how many looping canvases? Default = 3
 int animationRate = 12;
 int animFrameCount;
 
-
+// Menu Stuff
 MenuBarButton[] menuBarButtons;
 float menuBarWidth;
-int choiceX;
-int choiceY;
-int choiceW;
-int choiceH;
+float choiceX;
+float choiceY;
+float choiceW;
+float choiceH;
 
-int cornerX;
-int cornerY;
-int cornerW;
-int cornerH;
-int cornerOffsetX;
-int cornerOffsetY;
+float cornerX;
+float cornerY;
+float cornerW;
+float cornerH;
+float cornerOffsetX;
+float cornerOffsetY;
+float cornerScale;
+
+boolean spanish;
 
 StampButton[] rootButtons, segmentButtons, tipButtons;
 Heading menuHeading, rootHeading, segmentHeading, tipHeading;

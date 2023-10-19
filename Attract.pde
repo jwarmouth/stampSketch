@@ -59,7 +59,7 @@ void attractSetup()
 
   // BIG TITLE
   attractCanvas.textSize(96);
-  attractCanvas.text("SelloBoceto", width/2, y);
+  if (spanish) attractCanvas.text("SelloBoceto", width/2, y);
   y += 132;
   attractCanvas.text("StampSketch", width/2, y);
   y += 220;
@@ -67,7 +67,7 @@ void attractSetup()
   // SUBTITLE
   attractCanvas.textSize(48);
   //attractCanvas.text("Press Screen with finger to draw", width/2, height/2);
-  attractCanvas.text("dibuja con tu dedo", width/2, y);
+  if (spanish) attractCanvas.text("dibuja con tu dedo", width/2, y);
   y += 72;
   attractCanvas.text("draw with your finger", width/2, y);
 

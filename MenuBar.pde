@@ -69,8 +69,9 @@ void menuBarToggle()
 
 class MenuBarButton
 {
-  int index, x, y, w, h;
-  int margin = 10;
+  int index;
+  float x, y, w, h;
+  float margin = 10;
   String text;
   color activeColor, bgColor, textColor, overColor;
   boolean active;
@@ -79,7 +80,7 @@ class MenuBarButton
   String method;
   String activeVar;
 
-  MenuBarButton(String _text, String _method, String _activeVar, int _x, int _y)
+  MenuBarButton(String _text, String _method, String _activeVar, float _x, float _y)
   {
     text = _text;
     method = _method;

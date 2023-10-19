@@ -4,10 +4,10 @@
 
 void cornerMenuSetup()
 {
-  cornerW = (int)(1320/scaleFactor);
-  cornerH = 600;
-  //cornerX = 0;
-  //cornerY = 0;
+  cornerW = 1320/scaleFactor * cornerScale;
+  cornerH = 600 * cornerScale;
+  cornerX = 0;
+  cornerY = height;
   
   choiceX = cornerW;
 }
@@ -35,7 +35,7 @@ void dragCorner()
 void drawCornerMenu()
 {
   // Draw preview of root/segment/tip
-  int bottomY = cornerY+cornerH;
+  float bottomY = cornerY + cornerH;
   int strokeW = 3;
   cornerMenuCanvas.beginDraw();
   cornerMenuCanvas.background(255, 255, 255, 0);
@@ -48,7 +48,7 @@ void drawCornerMenu()
 
   //PVector previewMargin = new PVector (50, 50);
   //float marginX = 25;
-  float marginY = cornerW/10;
+  float marginY = cornerW/5 * cornerScale;
   float textHeight = marginY * 1.5;
   float x = cornerW/2;
   float y = textHeight;
@@ -60,13 +60,13 @@ void drawCornerMenu()
   // Draw Tip
   SpriteSet set = tipSets[currentTip];
   if (set != null) {
-    y += set.width/2;
+    y += set.width/2 * cornerScale;
     float drawY = y;
-    if (set.name.contains("hand")) drawY += set.width/2;
+    if (set.name.contains("hand")) drawY += set.width * cornerScale;
     drawCurrentTools(set, x, drawY);
-    if (set.name.contains("eye")) 
-      cornerMenuCanvas.image(eyeballSet.sprites[0], x - eyeballX, y - eyeballY);
-    y += set.width/2;
+    //if (set.name.contains("eye")) 
+      //cornerMenuCanvas.image(eyeballSet.sprites[0], x - eyeballX, y - eyeballY, set.width * cornerScale, set.height * cornerScale);
+    y += set.width/2 * cornerScale;
   }
   
   // Draw Segment
@@ -77,20 +77,20 @@ void drawCornerMenu()
       loops = 1;
     }
     for (int i=0; i<loops; i++) {
-      y += set.armSegmentDistance/2;
+      y += set.armSegmentDistance/2 * cornerScale;
       drawCurrentTools(set, x, y);
-      y += set.armSegmentDistance/2;
+      y += set.armSegmentDistance/2 * cornerScale;
     }
   }
   
   // Draw Root
   set = rootSets[currentRoot];
   if (set != null) {
-    y += set.width/2;
+    y += set.width/2 * cornerScale;
     //x += set.height/2;
     x = cornerW/2;
     drawCurrentTools(set, x, y);
-    y += set.width/2;
+    y += set.width/2 * cornerScale;
   }
   
   
@@ -98,11 +98,13 @@ void drawCornerMenu()
   y += marginY*2;
   cornerMenuCanvas.fill(255, 0, 0);
   cornerMenuCanvas.textFont(headingFont);
-  cornerMenuCanvas.textSize(28);
+  cornerMenuCanvas.textSize(200/scaleFactor * cornerScale);
   cornerMenuCanvas.textAlign(CENTER);
   cornerMenuCanvas.text("Choose", x, y);
-  y += textHeight;
-  cornerMenuCanvas.text("Elegir", x, y);
+  if (spanish) {
+    y += textHeight;
+    cornerMenuCanvas.text("Elegir", x, y);
+  }
   y += marginY;
   
   cornerMenuCanvas.endDraw();
@@ -117,17 +119,22 @@ void drawCornerMenu()
 
 void drawCurrentTools(SpriteSet set, float x, float y)
 {
+  boolean isEye = set.name.contains("eye");
   PGraphics canvas = cornerMenuCanvas;
   canvas.blendMode(MULTIPLY);
   canvas.imageMode(CENTER); // use image center instead of top left
   canvas.pushMatrix(); // remember current drawing matrix
   canvas.translate(x, y);
   //canvas.rotate(radians(90));
-  if (!set.name.contains("eye"))
-  {
+  if (!isEye) {
     canvas.rotate(radians(-90));
   }
-
-  canvas.image(set.sprites[0], set.offsetX, set.offsetY);
+  
+  canvas.image(set.sprites[0], set.offsetX, set.offsetY, set.width * cornerScale, set.height * cornerScale);
+  
+  if (isEye) {
+    canvas.image(eyeballSet.sprites[0], eyeballX * cornerScale, eyeballY * cornerScale, eyeballSet.width * cornerScale, eyeballSet.height * cornerScale);
+  }
+;
   canvas.popMatrix();
 }
