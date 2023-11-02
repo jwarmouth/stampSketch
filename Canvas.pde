@@ -98,7 +98,7 @@ void drawTipCanvas()
   image(tipCanvas, 0, 0);
 }
 
-void eraseScreen()
+void saveAndEraseScreen()
 {
   //createCanvases();
   saveHiResImage();

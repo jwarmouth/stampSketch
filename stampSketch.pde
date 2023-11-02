@@ -5,15 +5,15 @@
 void setup()
 {
   //fullScreen(FX2D, 1);
-  //fullScreen();
-  size(1920, 1080);
+  fullScreen();
+  //size(1920, 1080);
   background(255);
   frameRate(48);
   
   scaleFactor = 3.25;
   cornerScale = 0.5;
   spanish = false;
-  noCursor();
+  //noCursor();
   
   loadFonts();
   eyeballRandomLook();

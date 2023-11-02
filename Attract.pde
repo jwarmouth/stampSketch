@@ -110,7 +110,7 @@ void enterAttractMode()
   
   //saveHiResImage();
   //saveThreeFrames();
-  eraseScreen();
+  saveAndEraseScreen();
   state = State.ATTRACTING;
   showChoiceMenu = false;
   randomizeAllStamps();
